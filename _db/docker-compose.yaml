@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  postgres:
+    # postgres://alfonzso:@localhost:5432/ch_diary
+    image: bitnami/postgresql:11.14.0-debian-10-r24
+    restart: always
+    environment:
+      - POSTGRES_USER=alfonzso
+      - POSTGRES_PASSWORD=zsolt3131
+      - POSTGRESQL_DATABASE=ch_diary
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data:/var/lib/postgresql/data
