@@ -10,7 +10,7 @@ const router = Router();
 
 // signup route
 router.post(
-  '/signup',
+  '/register',
   body('email').isEmail().withMessage('Please provide a valid email address'),
   body('password')
     .isLength({ min: 4, max: 24 })
@@ -20,7 +20,7 @@ router.post(
 );
 
 // signin route
-router.post('/signin', logIn);
+router.post('/login', logIn);
 
 router.post('/refreshToken', refreshToken);
 
