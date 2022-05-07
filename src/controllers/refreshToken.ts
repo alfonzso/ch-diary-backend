@@ -11,31 +11,25 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     console.log(
       'refTok-->', req.cookies
     )
-    const refreshToken = req.cookies.refresh_token;
+    const refreshToken: string = req.cookies.refresh_token;
     // const refreshToken = req.cookies;
     if (!refreshToken) throw new MissingRefreshToken()
 
     // const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as jwt.JwtPayload;
-    let payload = null
+    let payload: jwt.JwtPayload = {}
 
     try {
-      // const token = authorization.split(' ')[1];
-      // req.payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as UserPayload;
       payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as jwt.JwtPayload;
     } catch (err) {
       if (err instanceof TokenExpiredError) {
+        await deleteRefreshToken((jwt.decode(refreshToken) as jwt.JwtPayload).jti!)
         throw new TokenExpiredError(err.message, err.expiredAt);
       }
     }
 
-    const savedRefreshToken = await findRefreshTokenById(payload?.jti!);
+    const savedRefreshToken = await findRefreshTokenById(payload.jti!);
     if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
 
-    // const hashedToken = await Password.toHash(refreshToken);
-    // console.log(
-    //   'refTok-hashedToken->', hashedToken, savedRefreshToken.hashedToken
-    // )
-    // if (hashedToken !== savedRefreshToken.hashedToken) throw new UnauthorizedError('refTokens mismatch')
     const validPassword = await Password.compare(savedRefreshToken.hashedToken, refreshToken);
     if (!validPassword) throw new UnauthorizedError('refTokens mismatch')
 
@@ -45,6 +39,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     // await deleteRefreshToken(savedRefreshToken.id);
     const jti = uuidv4();
     const { accessToken, ...vals } = generateTokens(user, jti);
+    // const { accessToken, refreshToken: newRefreshToken } = generateTokens(user, jti);
     // await addRefreshTokenToWhitelist({ jti, refreshToken: newRefreshToken, userId: user.id });
 
     // sendRefreshToken(res, newRefreshToken);
