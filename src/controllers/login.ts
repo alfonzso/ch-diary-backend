@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
-import { BadRequestError } from '../errors/badRequestError';
 import { addRefreshTokenToWhitelist } from '../services/auth';
 import { findUserByEmail } from '../services/users';
-import { v4 as uuidv4 } from 'uuid';
-import { generateTokens } from '../utils/generateToken';
-import { Password } from '../utils/password';
+import { Password, generateTokens, sendRefreshToken, uuidv4 } from '../utils';
+import { BadRequest } from '../errors';
 
 type User = {
   email: string;
@@ -19,18 +17,19 @@ export const logIn = async (req: Request, res: Response) => {
     const User = await findUserByEmail(userWhoWantsToLogIn.email);
 
     if (!User) {
-      throw new BadRequestError('Invalid login credentials.');
+      throw new BadRequest('Invalid login credentials.');
     }
 
     const validPassword = await Password.compare(User.password, userWhoWantsToLogIn.password);
     if (!validPassword) {
-      throw new BadRequestError('Invalid login credentials.');
+      throw new BadRequest('Invalid login credentials.');
     }
 
     const jti = uuidv4();
     const { accessToken, refreshToken } = generateTokens(User, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: User.id });
 
+    sendRefreshToken(res, refreshToken);
     res.json({
       accessToken,
       refreshToken

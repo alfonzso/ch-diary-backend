@@ -1,6 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { Request } from 'express-validator/src/base';
-import { CustomError } from '../errors/CustomError';
+import { TokenExpiredError } from 'jsonwebtoken';
+import { CustomError } from '../errors';
 
 export default (
   err: Error,
@@ -8,10 +9,12 @@ export default (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(err instanceof CustomError)
-
   if (err instanceof CustomError) {
     return res.status(err.statusCode).json({ errors: err.serializeErrors() });
+  }
+
+  if (err instanceof TokenExpiredError) {
+    return res.status(401).json({ error: err.message });
   }
 
   res

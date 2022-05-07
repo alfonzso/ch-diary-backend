@@ -14,7 +14,7 @@ type User = {
 
 function generateAccessToken(user: User) {
   return jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_ACCESS_SECRET!, {
-    expiresIn: '5m',
+    expiresIn: '5s',
   });
 }
 
@@ -31,7 +31,7 @@ function generateRefreshToken(user: User, jti: string) {
   });
 }
 
-function generateTokens(user: User, jti: string) {
+function generateTokens(user: User, jti: string): { accessToken: string; refreshToken: string; } {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user, jti);
 

@@ -22,7 +22,7 @@ router.post(
 // signin route
 router.post('/login', logIn);
 
-router.post('/refreshToken', refreshToken);
+router.get('/refreshToken', refreshToken);
 
 // get auth user
 router.get('/auth-user', isAuthenticated, authUser);

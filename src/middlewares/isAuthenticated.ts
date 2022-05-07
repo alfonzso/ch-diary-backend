@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { UnauthorizedError } from '../errors/unauthorized';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import { UnauthorizedError } from '../errors';
 
 type UserPayload = {
   id: string;

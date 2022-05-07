@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { RequestValidationError } from '../errors/requestValidationError';
+import { InvalidRequestParameters } from '../errors';
 
 export const validateRequest = async (
   req: Request,
@@ -10,7 +10,7 @@ export const validateRequest = async (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    throw new RequestValidationError(errors.array());
+    throw new InvalidRequestParameters(errors.array());
   }
 
   next();

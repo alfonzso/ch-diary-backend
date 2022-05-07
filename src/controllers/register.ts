@@ -1,13 +1,8 @@
-import db from '../utils/db';
 import { Request, Response } from 'express';
-// import { Password } from '../utils/password';
-import { v4 as uuidv4 } from 'uuid';
-import { BadRequestError } from '../errors/badRequestError';
-// import generateToken from '../utils/generateToken';
-
 import { findUserByEmail, createUserByEmailAndPassword } from '../services/users';
 import { addRefreshTokenToWhitelist } from '../services/auth';
-import { generateTokens } from '../utils/generateToken';
+import { BadRequest } from '../errors';
+import { uuidv4, generateTokens, sendRefreshToken } from '../utils';
 
 type User = {
   // id: string;
@@ -20,18 +15,10 @@ export const register = async (req: Request, res: Response) => {
   try {
     const userFromRequest: User = req.body;
 
-    // const userExists = await db.user.findUnique({
-    //   where: { email },
-    // });
-
-    // if (userExists) {
-    //   throw new BadRequestError('Email already in use');
-    // }
-
     const existingUser = await findUserByEmail(userFromRequest.email);
 
     if (existingUser) {
-      throw new BadRequestError('Email already in use.');
+      throw new BadRequest('Email already in use.');
     }
 
     const user = await createUserByEmailAndPassword(userFromRequest);
@@ -39,23 +26,8 @@ export const register = async (req: Request, res: Response) => {
     const { accessToken, refreshToken } = generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
 
+    sendRefreshToken(res, refreshToken);
 
-    // // let's hash password before we save to our db
-    // const hash = await Password.toHash(enteredPassword);
-
-    // const user = await db.user.create({
-    //   data: {
-    //     email,
-    //     password: hash,
-    //   },
-    // });
-
-    // // let's format this to return what we want, you can choose to return what you want
-    // const { password, createdAt, updatedAt, ...newUser } = user;
-
-    // const token = generateToken(user);
-
-    // res.status(201).json({ success: true, data: { ...newUser, token } });
     res.status(201).json({
       success: true, data: {
         accessToken,
