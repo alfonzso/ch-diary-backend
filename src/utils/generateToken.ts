@@ -1,16 +1,5 @@
+import { User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
-
-type User = {
-  id: string;
-  email: string;
-};
-
-// export default function (user: User) {
-//   // return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET!);
-//   return jwt.sign({ userId: user.id }, process.env.JWT_ACCESS_SECRET!, {
-//     expiresIn: '5m',
-//   });
-// }
 
 function generateAccessToken(user: User) {
   return jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_ACCESS_SECRET!, {

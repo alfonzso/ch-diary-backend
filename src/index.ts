@@ -1,7 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
 import { RouteNotFound } from './errors/routeNotFound';
-import errorHandler from './middlewares/error-handler';
+import errorHandler from './middlewares/errorHandler';
 import authRoutes from './routes/auth';
 import diaryRoutes from './routes/diary';
 import cookieParser from "cookie-parser";

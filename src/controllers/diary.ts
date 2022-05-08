@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { addRefreshTokenToWhitelist } from '../services/auth';
+import { addRefreshTokenToWhitelist } from '../repositorys/refreshToken';
 import { findUserByEmail } from '../services/users';
 import { Password, generateTokens, sendRefreshToken, uuidv4 } from '../utils';
 import { BadRequest } from '../errors';

@@ -7,7 +7,6 @@ type RefreshToken = {
   userId: any;
 };
 
-
 // used when we create a refresh token.
 async function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: RefreshToken) {
   return db.refreshToken.create({

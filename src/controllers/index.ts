@@ -1,7 +1,10 @@
-import { logIn } from './login';
-import { register } from './register';
-import { authUser } from './authUser';
-import { refreshToken } from './refreshToken';
+import { register, logIn, refreshToken, authUser } from './auth';
 import { test, test1 } from './diary';
 
-export { logIn  , register  , authUser , refreshToken, test, test1};
+export {
+  test, test1,
+  register,
+  logIn,
+  refreshToken,
+  authUser,
+};
