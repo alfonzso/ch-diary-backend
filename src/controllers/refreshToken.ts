@@ -8,14 +8,9 @@ import { Password, generateTokens, sendRefreshToken, uuidv4 } from '../utils';
 
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(
-      'refTok-->', req.cookies
-    )
     const refreshToken: string = req.cookies.refresh_token;
-    // const refreshToken = req.cookies;
     if (!refreshToken) throw new MissingRefreshToken()
 
-    // const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as jwt.JwtPayload;
     let payload: jwt.JwtPayload = {}
 
     try {
@@ -36,13 +31,8 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
     const user = await findUserById(payload.userId);
     if (!user) throw new UnauthorizedError('user not exists')
 
-    // await deleteRefreshToken(savedRefreshToken.id);
     const jti = uuidv4();
-    const { accessToken, ...vals } = generateTokens(user, jti);
-    // const { accessToken, refreshToken: newRefreshToken } = generateTokens(user, jti);
-    // await addRefreshTokenToWhitelist({ jti, refreshToken: newRefreshToken, userId: user.id });
-
-    // sendRefreshToken(res, newRefreshToken);
+    const { accessToken, } = generateTokens(user, jti);
 
     res.json({
       accessToken,

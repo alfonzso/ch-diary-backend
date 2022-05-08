@@ -14,7 +14,7 @@ type User = {
 
 function generateAccessToken(user: User) {
   return jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_ACCESS_SECRET!, {
-    expiresIn: '5s',
+    expiresIn: '5m',
   });
 }
 
