@@ -1,8 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { addRefreshTokenToWhitelist } from '../repositorys/refreshToken';
-import { findUserByEmail } from '../services/users';
-import { Password, generateTokens, sendRefreshToken, uuidv4 } from '../utils';
-import { BadRequest } from '../errors';
 
 export const test = async (req: Request, res: Response, next: NextFunction) => {
   try {

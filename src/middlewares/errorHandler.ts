@@ -14,7 +14,8 @@ export default (
   }
 
   if (err instanceof TokenExpiredError) {
-    return res.status(401).json({ error: err.message });
+    // return res.status(401).json({ error: err.message });
+    return res.redirect('/login')
   }
 
   res

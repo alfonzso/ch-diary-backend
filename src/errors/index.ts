@@ -1,5 +1,5 @@
 import { BadRequest } from "./badRequest";
-import { CustomError } from "./CustomError";
+import { CustomError } from "./customError";
 import { InvalidRequestParameters } from "./invalidRequestParameters";
 import { MissingRefreshToken } from "./missingRefreshToken";
 import { RouteNotFound } from "./routeNotFound";
