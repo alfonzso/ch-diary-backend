@@ -2,9 +2,10 @@ import { Router } from 'express';
 import { test, test1 } from '../controllers';
 import { isAuthenticated } from '../middlewares/';
 
-const router = Router();
+const route = Router();
 
-router.get('/test', isAuthenticated, test);
-router.get('/test1', isAuthenticated, test1);
-
-export default router;
+export default (app: Router) => {
+  app.use('/diary', route);
+  route.get('/test', isAuthenticated, test);
+  route.get('/test1', isAuthenticated, test1);
+}

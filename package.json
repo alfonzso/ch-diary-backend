@@ -29,6 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "typedi": "^0.10.0",
+    "util": "^0.12.4",
     "uuidv4": "^6.2.13",
     "winston": "^3.7.2"
   }

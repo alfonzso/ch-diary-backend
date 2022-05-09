@@ -18,16 +18,16 @@ declare global {
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
 
-  if (!authorization) throw new UnauthorizedError()
+  if (!authorization) return next(new UnauthorizedError())
 
-  const token = authorization.split(' ')[1];
   try {
+    const token = authorization!.split(' ')[1];
     req.payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as UserPayload;
   } catch (err) {
     if (err instanceof TokenExpiredError) {
-      throw new TokenExpired({ reason: err.message, expiredAt: err.expiredAt });
+      return next(new TokenExpired({ reason: err.message, expiredAt: err.expiredAt }))
     }
-    throw new UnauthorizedError()
+    return next(new UnauthorizedError())
   }
   return next();
 };

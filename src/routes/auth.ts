@@ -9,42 +9,45 @@ import { sendRefreshToken } from '../utils';
 import { Container } from 'typedi';
 import { Logger } from 'winston';
 
-const router = Router();
+const route = Router();
 
-// signup route
-router.post(
-  '/register',
-  body('email').isEmail().withMessage('Please provide a valid email address'),
-  body('password')
-    .isLength({ min: 4, max: 24 })
-    .withMessage('Ensure password is between 4 and 24 characters'),
-  validateRequest,
-  register
-);
+export default (app: Router) => {
+  app.use('/auth', route);
 
-// signin route
-// router.post('/login', logIn);
-router.post('/login', async (req: Request, res: Response, next: NextFunction) => {
-  const logger: Logger = Container.get('logger');
-  try {
-    const userDTO: User = req.body;
-    const authServiceInstance = Container.get(AuthService);
-    // const authServiceInstance = new AuthService()
-    const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
-    sendRefreshToken(res, refreshToken);
-    res.json({
-      accessToken,
-      refreshToken
-    });
-  } catch (e) {
-    logger.error('🔥 error: %o', e);
-    return next(e);
-  }
-});
+  // signup route
+  route.post(
+    '/register',
+    body('email').isEmail().withMessage('Please provide a valid email address'),
+    body('password')
+      .isLength({ min: 4, max: 24 })
+      .withMessage('Ensure password is between 4 and 24 characters'),
+    validateRequest,
+    register
+  );
 
-router.get('/refreshToken', refreshToken);
+  // signin route
+  // router.post('/login', logIn);
+  route.post('/login', async (req: Request, res: Response, next: NextFunction) => {
+    const logger: Logger = Container.get('logger');
+    try {
+      const userDTO: User = req.body;
+      const authServiceInstance = Container.get(AuthService);
+      // const authServiceInstance = new AuthService()
+      const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
+      sendRefreshToken(res, refreshToken);
+      res.json({
+        accessToken,
+        refreshToken
+      });
+    } catch (e) {
+      logger.error('🔥 error: %o', e);
+      return next(e);
+    }
+  });
 
-// get auth user
-router.get('/auth-user', isAuthenticated, authUser);
+  route.get('/refreshToken', refreshToken);
 
-export default router;
+  // get auth user
+  route.get('/auth-user', isAuthenticated, authUser);
+}
+// export default router;

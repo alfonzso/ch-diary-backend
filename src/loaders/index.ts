@@ -3,11 +3,15 @@ import dependencyInjectorLoader from './dependencyInjector';
 // import mongooseLoader from './mongoose';
 // import jobsLoader from './jobs';
 import Logger from './logger';
+import express from "express";
+
 //We have to import at least all the events once so they can be triggered
 // import './events';
-import * as core from 'express-serve-static-core';
+// import * as core from 'express-serve-static-core';
 
-export default async ({ expressApp }: { expressApp: core.Express }): Promise<void> => {
+// export default async ({ expressApp }: { expressApp: core.Express }): Promise<void> => {
+export default async ({ expressApp }: { expressApp: express.Application }): Promise<void> => {
+
   // const mongoConnection = await mongooseLoader();
   // Logger.info('✌️ DB loaded and connected!');
 
