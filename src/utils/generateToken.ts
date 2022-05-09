@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 function generateAccessToken(user: User) {
   return jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_ACCESS_SECRET!, {
     expiresIn: '5m',
+    // expiresIn: '10s',
   });
 }
 
@@ -17,7 +18,7 @@ function generateRefreshToken(user: User, jti: string) {
     jti
   }, process.env.JWT_REFRESH_SECRET!, {
     expiresIn: '8h',
-    // expiresIn: '5s',
+    // expiresIn: '15s',
   });
 }
 
