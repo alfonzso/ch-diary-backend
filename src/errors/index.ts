@@ -1,5 +1,5 @@
 import { BadRequest } from "./badRequest";
-import { TokenExpired } from "./TokenExpired";
+import { TokenExpired } from "./tokenExpired";
 import { CustomError } from "./customError";
 import { InvalidRequestParameters } from "./invalidRequestParameters";
 import { MissingRefreshToken } from "./missingRefreshToken";

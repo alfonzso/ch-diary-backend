@@ -1,7 +1,7 @@
 import express from 'express';
 import 'express-async-errors';
-import { RouteNotFound } from './errors/routeNotFound';
-import errorHandler from './middlewares/errorHandler';
+import { RouteNotFound } from './errors/';
+import { errorHandler } from './middlewares';
 import authRoutes from './routes/auth';
 import diaryRoutes from './routes/diary';
 import cookieParser from "cookie-parser";
@@ -11,7 +11,6 @@ const port = process.env.PORT || 8080;
 // let's initialize our express app
 const app = express();
 
-
 app.use(cookieParser());
 
 // let's parse our incoming request with JSON payload using the express.json() middleware
@@ -19,7 +18,6 @@ app.use(express.json());
 
 // Add headers before the routes are defined
 app.use(function (req, res, next) {
-
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,set-cookie,cookie,authorization');
