@@ -2,9 +2,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 import { authUser, logIn, refreshToken, register } from '../controllers';
 import isAuthenticated from '../middlewares/isAuthenticated';
-import { validateRequest } from '../middlewares/validate-request';
-
-// import { NextFunction, Request, Response } from 'express';
+import { validateRequest } from '../middlewares/validateRequest';
 
 const router = Router();
 

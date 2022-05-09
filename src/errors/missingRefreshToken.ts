@@ -10,6 +10,7 @@ export class MissingRefreshToken extends CustomError {
 
   // serializeErrors
   serializeErrors() {
-    return [{ message: 'Missing refresh token !' }];
+    // return [{ message: 'Missing refresh token !' }];
+    return { message: 'Missing refresh token !' };
   }
 }

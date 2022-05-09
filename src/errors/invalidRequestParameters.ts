@@ -9,6 +9,8 @@ export class InvalidRequestParameters extends CustomError {
   }
 
   serializeErrors() {
-    return this.errors.map((err) => ({ message: err.msg, field: err.param }));
+    // return this.errors.map((err) => ({ message: err.msg, field: err.param }));
+    // return this.errors.map((err) => ({ msg: err.msg, param: err.param }));
+    return { message: "ValidationError", fields: this.errors.map((err) => ({ msg: err.msg, param: err.param })) };
   }
 }

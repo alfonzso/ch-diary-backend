@@ -10,13 +10,12 @@ export default (
   next: NextFunction
 ) => {
   if (err instanceof CustomError) {
-    return res.status(err.statusCode).json({ errors: err.serializeErrors() });
+    return res.status(err.statusCode).json({ error: err.serializeErrors() });
   }
 
-  if (err instanceof TokenExpiredError) {
-    // return res.status(401).json({ error: err.message });
-    return res.redirect('/login')
-  }
+  // if (err instanceof TokenExpiredError) {
+  //   return res.status(401).json({ error: { message: 'TokenExpiredError', reason: err.message } });
+  // }
 
   res
     .status(400)

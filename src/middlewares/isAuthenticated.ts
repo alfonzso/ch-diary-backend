@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
-import { UnauthorizedError } from '../errors';
+import { TokenExpired, UnauthorizedError } from '../errors';
+// import { TokenExpired } from '../errors';
 
 type UserPayload = {
   id: string;
@@ -25,7 +26,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     req.payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as UserPayload;
   } catch (err) {
     if (err instanceof TokenExpiredError) {
-      throw new TokenExpiredError(err.message, err.expiredAt);
+      // throw new TokenExpiredError(err.message, err.expiredAt);
+      throw new TokenExpired({ reason: err.message, expiredAt: err.expiredAt });
+
     }
     throw new UnauthorizedError()
   }

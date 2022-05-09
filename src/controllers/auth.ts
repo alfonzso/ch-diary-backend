@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
-import { BadRequest, MissingRefreshToken, UnauthorizedError } from "../errors";
+import { BadRequest, MissingRefreshToken, TokenExpired, UnauthorizedError } from "../errors";
 import {
   findUserByEmail, createUserByEmailAndPassword, findUserById,
   addRefreshTokenToWhitelist, deleteRefreshToken, findRefreshTokenById
@@ -83,7 +83,7 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
     } catch (err) {
       if (err instanceof TokenExpiredError) {
         await deleteRefreshToken((jwt.decode(refreshToken) as jwt.JwtPayload).jti!)
-        throw new TokenExpiredError(err.message, err.expiredAt);
+        throw new TokenExpired({ reason: err.message, expiredAt: err.expiredAt });
       }
     }
 

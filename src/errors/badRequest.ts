@@ -1,4 +1,5 @@
 import { CustomError } from './customError';
+// import { TokenExpiredError } from 'jsonwebtoken';
 
 export class BadRequest extends CustomError {
   statusCode = 400;
@@ -9,6 +10,11 @@ export class BadRequest extends CustomError {
   }
 
   serializeErrors() {
-    return [{ message: this.message }];
+    // return [{ message: this.message }];
+    return { message: this.message };
   }
 }
+
+
+
+
