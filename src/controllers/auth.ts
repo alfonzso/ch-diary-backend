@@ -39,37 +39,37 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-const logIn = async (req: Request, res: Response) => {
-  try {
-    const userWhoWantsToLogIn: User = req.body;
+// const logIn = async (req: Request, res: Response) => {
+//   try {
+//     const userWhoWantsToLogIn: User = req.body;
 
-    const User = await findUserByEmail(userWhoWantsToLogIn.email);
+//     const User = await findUserByEmail(userWhoWantsToLogIn.email);
 
-    if (!User) {
-      throw new BadRequest('Invalid login credentials.');
-    }
+//     if (!User) {
+//       throw new BadRequest('Invalid login credentials.');
+//     }
 
-    const validPassword = await Password.compare(User.password, userWhoWantsToLogIn.password);
-    if (!validPassword) {
-      throw new BadRequest('Invalid login credentials.');
-    }
+//     const validPassword = await Password.compare(User.password, userWhoWantsToLogIn.password);
+//     if (!validPassword) {
+//       throw new BadRequest('Invalid login credentials.');
+//     }
 
-    const jti = uuidv4();
-    const { accessToken, refreshToken } = generateTokens(User, jti);
-    await addRefreshTokenToWhitelist({ jti, refreshToken, userId: User.id });
+//     const jti = uuidv4();
+//     const { accessToken, refreshToken } = generateTokens(User, jti);
+//     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: User.id });
 
-    sendRefreshToken(res, refreshToken);
-    res.json({
-      accessToken,
-      refreshToken
-    });
-  } catch (e) {
-    let message;
-    if (e instanceof Error) message = e.message;
-    else message = String(e);
-    res.status(400).json({ success: false, message });
-  }
-};
+//     sendRefreshToken(res, refreshToken);
+//     res.json({
+//       accessToken,
+//       refreshToken
+//     });
+//   } catch (e) {
+//     let message;
+//     if (e instanceof Error) message = e.message;
+//     else message = String(e);
+//     res.status(400).json({ success: false, message });
+//   }
+// };
 
 const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -121,7 +121,7 @@ const authUser = async (req: Request, res: Response) => {
 
 export {
   register,
-  logIn,
+  // logIn,
   refreshToken,
   authUser,
 }
