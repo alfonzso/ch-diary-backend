@@ -32,9 +32,8 @@ async function startServer() {
       🛡️  Server listening on port: ${config.port} 🛡️
       ################################################
     `);
-  // })
   }).on('error', err => {
-    Logger.error('------------------------------------------>',err);
+    Logger.error(' --src/err-- ', err);
     process.exit(1);
   });
 

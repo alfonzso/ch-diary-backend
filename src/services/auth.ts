@@ -4,6 +4,7 @@ import { findUserByEmail, addRefreshTokenToWhitelist } from "../repositorys";
 import { Password, uuidv4, generateTokens, sendRefreshToken } from "../utils";
 import { Service, Inject } from 'typedi';
 import { Logger } from "winston";
+import myLogger from "../utils/myLogger";
 
 class BaseService {
   // constructor(parameters) {
@@ -29,6 +30,7 @@ export default class AuthService {
 
   public async LogIn(userWhoWantsToLogIn: User): Promise<any> {
     try {
+      myLogger('userDTO: ', userWhoWantsToLogIn)
       const User = await findUserByEmail(userWhoWantsToLogIn.email);
 
       if (!User) {
@@ -43,21 +45,11 @@ export default class AuthService {
       const jti = uuidv4();
       const { accessToken, refreshToken } = generateTokens(User, jti);
       await addRefreshTokenToWhitelist({ jti, refreshToken, userId: User.id });
+      return [accessToken, refreshToken]
 
     } catch (e) {
       this.logger.error(e);
       throw e;
     }
-    //     sendRefreshToken(res, refreshToken);
-    //     res.json({
-    //       accessToken,
-    //       refreshToken
-    //     });
-    //   } catch (e) {
-    //     let message;
-    //     if (e instanceof Error) message = e.message;
-    //     else message = String(e);
-    //     res.status(400).json({ success: false, message });
-    //   }
   }
 }
