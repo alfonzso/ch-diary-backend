@@ -1,11 +1,14 @@
 import { User } from "@prisma/client";
-import { BadRequest } from "../errors";
-import { addRefreshTokenToWhitelist, UserRepository, userRepositoryInstance } from "../repositorys";
+import { BadRequest, TokenExpired, UnauthorizedError } from "../errors";
+import { RefreshTokenRepository, UserRepository, userRepositoryInstance } from "../repositorys";
 // import { passwordInstance, uuidv4, generateTokens, sendRefreshToken, Password } from "../utils";
 import { Service, Inject } from 'typedi';
 import { Logger } from "winston";
 import myLogger from "../utils/myLogger";
 import { MyUtils, Password, uuidv4 } from "../utils";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
+import { myJWTInstance } from "../utils/generateToken";
+import { passwordInstance } from "../utils/password";
 
 // class BaseService {
 //   // constructor(parameters) {
@@ -22,19 +25,16 @@ import { MyUtils, Password, uuidv4 } from "../utils";
 @Service()
 export default class AuthService {
   constructor(
-    // @Inject('userModel') private userModel: Models.UserModel,
-    // private mailer: MailerService,
     @Inject('logger') private logger: Logger,
-    // @Inject('passwordManager') private password: Password,
-    @Inject('userRepository') private userRepository: UserRepository,
     @Inject('myUtils') private myUtils: MyUtils,
-    // @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
+    @Inject('userRepository') private userRepository: UserRepository,
+    @Inject('refreshToken') private refreshToken: RefreshTokenRepository,
   ) {
   }
 
   public async LogIn(userDTO: User): Promise<any> {
     try {
-      myLogger('userDTO: ', userDTO)
+      myLogger('Login -> userDTO: ', userDTO)
       const User = await this.userRepository.findUserByEmail(userDTO.email);
 
       if (!User) {
@@ -49,8 +49,73 @@ export default class AuthService {
 
       const jti = uuidv4();
       const { accessToken, refreshToken } = this.myUtils.myJWT.generateTokens(User, jti);
-      await addRefreshTokenToWhitelist({ jti, refreshToken, userId: User.id });
+      await this.refreshToken.addRefreshTokenToWhitelist({ jti, refreshToken, userId: User.id });
       return [accessToken, refreshToken]
+
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  public async Register(userDTO: User): Promise<any> {
+    try {
+      const existingUser = await userRepositoryInstance.findUserByEmail(userDTO.email);
+
+      if (existingUser) {
+        throw new BadRequest('Email already in use.');
+      }
+
+      const user = await userRepositoryInstance.createUserByEmailAndPassword(userDTO);
+      const jti = uuidv4();
+      const { accessToken, refreshToken } = this.myUtils.myJWT.generateTokens(user, jti);
+      await this.refreshToken.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
+      return [accessToken, refreshToken]
+
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  public async RefreshToken(refreshToken: string): Promise<any> {
+    try {
+
+      let payload: jwt.JwtPayload = {}
+
+      try {
+        payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as jwt.JwtPayload;
+      } catch (err) {
+        if (err instanceof TokenExpiredError) {
+          await this.refreshToken.deleteRefreshToken((jwt.decode(refreshToken) as jwt.JwtPayload).jti!)
+          throw new TokenExpired({ reason: err.message, expiredAt: err.expiredAt });
+        }
+      }
+
+      const savedRefreshToken = await this.refreshToken.findRefreshTokenById(payload.jti!);
+      if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
+
+      const validPassword = await passwordInstance.compare(savedRefreshToken.hashedToken, refreshToken);
+      if (!validPassword) throw new UnauthorizedError('refTokens mismatch')
+
+      const user = await userRepositoryInstance.findUserById(payload.userId);
+      if (!user) throw new UnauthorizedError('user not exists')
+
+      const jti = uuidv4();
+      const { accessToken, } = myJWTInstance.generateTokens(user, jti);
+
+      return accessToken
+
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  public async AuthUser(): Promise<any> {
+    try {
+
+      return true
 
     } catch (e) {
       this.logger.error(e);

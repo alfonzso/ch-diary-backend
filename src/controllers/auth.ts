@@ -2,46 +2,43 @@ import { User } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { BadRequest, MissingRefreshToken, TokenExpired, UnauthorizedError } from "../errors";
-import {
-  // findUserByEmail, createUserByEmailAndPassword, findUserById,
-  addRefreshTokenToWhitelist, deleteRefreshToken, findRefreshTokenById, userRepositoryInstance
-} from "../repositorys";
+import { userRepositoryInstance } from "../repositorys";
 import { myUtilsInstance, uuidv4 } from "../utils";
 import { myJWTInstance } from "../utils/generateToken";
 const jwtInstance = myUtilsInstance.myJWT
 const passwordInstance = myUtilsInstance.password
 // const passwordInstance = myUtilsInstance.prismaClient
 
-const register = async (req: Request, res: Response) => {
-  try {
-    const userFromRequest: User = req.body;
+// const register = async (req: Request, res: Response) => {
+//   try {
+//     const userFromRequest: User = req.body;
 
-    const existingUser = await userRepositoryInstance.findUserByEmail(userFromRequest.email);
+//     const existingUser = await userRepositoryInstance.findUserByEmail(userFromRequest.email);
 
-    if (existingUser) {
-      throw new BadRequest('Email already in use.');
-    }
+//     if (existingUser) {
+//       throw new BadRequest('Email already in use.');
+//     }
 
-    const user = await userRepositoryInstance.createUserByEmailAndPassword(userFromRequest);
-    const jti = uuidv4();
-    const { accessToken, refreshToken } = jwtInstance.generateTokens(user, jti);
-    await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
+//     const user = await userRepositoryInstance.createUserByEmailAndPassword(userFromRequest);
+//     const jti = uuidv4();
+//     const { accessToken, refreshToken } = jwtInstance.generateTokens(user, jti);
+//     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
 
-    myUtilsInstance.sendRefreshToken(res, refreshToken);
+//     myUtilsInstance.sendRefreshToken(res, refreshToken);
 
-    res.status(201).json({
-      success: true, data: {
-        accessToken,
-        refreshToken,
-      }
-    });
-  } catch (e) {
-    let message;
-    if (e instanceof Error) message = e.message;
-    else message = String(e);
-    res.status(400).json({ success: false, message });
-  }
-};
+//     res.status(201).json({
+//       success: true, data: {
+//         accessToken,
+//         refreshToken,
+//       }
+//     });
+//   } catch (e) {
+//     let message;
+//     if (e instanceof Error) message = e.message;
+//     else message = String(e);
+//     res.status(400).json({ success: false, message });
+//   }
+// };
 
 // const logIn = async (req: Request, res: Response) => {
 //   try {
@@ -75,57 +72,57 @@ const register = async (req: Request, res: Response) => {
 //   }
 // };
 
-const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const refreshToken: string = req.cookies.refresh_token;
-    if (!refreshToken) throw new MissingRefreshToken()
+// const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const refreshToken: string = req.cookies.refresh_token;
+//     if (!refreshToken) throw new MissingRefreshToken()
 
-    let payload: jwt.JwtPayload = {}
+//     let payload: jwt.JwtPayload = {}
 
-    try {
-      payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as jwt.JwtPayload;
-    } catch (err) {
-      if (err instanceof TokenExpiredError) {
-        await deleteRefreshToken((jwt.decode(refreshToken) as jwt.JwtPayload).jti!)
-        throw new TokenExpired({ reason: err.message, expiredAt: err.expiredAt });
-      }
-    }
+//     try {
+//       payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as jwt.JwtPayload;
+//     } catch (err) {
+//       if (err instanceof TokenExpiredError) {
+//         await deleteRefreshToken((jwt.decode(refreshToken) as jwt.JwtPayload).jti!)
+//         throw new TokenExpired({ reason: err.message, expiredAt: err.expiredAt });
+//       }
+//     }
 
-    const savedRefreshToken = await findRefreshTokenById(payload.jti!);
-    if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
+//     const savedRefreshToken = await findRefreshTokenById(payload.jti!);
+//     if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
 
-    const validPassword = await passwordInstance.compare(savedRefreshToken.hashedToken, refreshToken);
-    if (!validPassword) throw new UnauthorizedError('refTokens mismatch')
+//     const validPassword = await passwordInstance.compare(savedRefreshToken.hashedToken, refreshToken);
+//     if (!validPassword) throw new UnauthorizedError('refTokens mismatch')
 
-    const user = await userRepositoryInstance.findUserById(payload.userId);
-    if (!user) throw new UnauthorizedError('user not exists')
+//     const user = await userRepositoryInstance.findUserById(payload.userId);
+//     if (!user) throw new UnauthorizedError('user not exists')
 
-    const jti = uuidv4();
-    const { accessToken, } = myJWTInstance.generateTokens(user, jti);
+//     const jti = uuidv4();
+//     const { accessToken, } = myJWTInstance.generateTokens(user, jti);
 
-    res.json({
-      accessToken,
-      refreshToken
-    });
-  } catch (e) {
-    next(e)
-  }
-};
+//     res.json({
+//       accessToken,
+//       refreshToken
+//     });
+//   } catch (e) {
+//     next(e)
+//   }
+// };
 
-const authUser = async (req: Request, res: Response) => {
-  try {
-    return res.status(200).json({ success: true, data: req.payload });
-  } catch (e) {
-    let message;
-    if (e instanceof Error) message = e.message;
-    else message = String(e);
-    res.status(400).json({ success: false, message });
-  }
-};
+// const authUser = async (req: Request, res: Response) => {
+//   try {
+//     return res.status(200).json({ success: true, data: req.payload });
+//   } catch (e) {
+//     let message;
+//     if (e instanceof Error) message = e.message;
+//     else message = String(e);
+//     res.status(400).json({ success: false, message });
+//   }
+// };
 
-export {
-  register,
-  // logIn,
-  refreshToken,
-  authUser,
-}
+// export {
+//   // register,
+//   // logIn,
+//   // refreshToken,
+//   authUser,
+// }
