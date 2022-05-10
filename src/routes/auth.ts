@@ -32,7 +32,6 @@ export default (app: Router) => {
     try {
       const userDTO: User = req.body;
       const authServiceInstance = Container.get(AuthService);
-      // const authServiceInstance = new AuthService()
       const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
       sendRefreshToken(res, refreshToken);
       res.json({

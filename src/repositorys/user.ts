@@ -1,6 +1,5 @@
 import { User } from "@prisma/client";
-import db from "../utils/db";
-import { Password } from "../utils/password";
+import { db, Password } from "../utils";
 
 function findUserByEmail(email: string) {
   return db.user.findUnique({
@@ -11,7 +10,7 @@ function findUserByEmail(email: string) {
 }
 
 async function createUserByEmailAndPassword(user: User) {
-  user.password = await Password.toHash(user.password);
+  user.password = await new Password().toHash(user.password);
 
   return db.user.create({
     data: user,

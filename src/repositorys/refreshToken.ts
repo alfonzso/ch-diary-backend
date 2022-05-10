@@ -1,5 +1,5 @@
+import { Password } from "../utils";
 import db from "../utils/db";
-import { Password } from "../utils/password";
 
 type RefreshToken = {
   jti: any;
@@ -12,7 +12,7 @@ async function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: Refresh
   return db.refreshToken.create({
     data: {
       id: jti,
-      hashedToken: await Password.toHash(refreshToken),
+      hashedToken: await new Password().toHash(refreshToken),
       userId
     },
   });

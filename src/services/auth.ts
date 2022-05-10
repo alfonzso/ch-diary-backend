@@ -24,20 +24,22 @@ export default class AuthService {
     // @Inject('userModel') private userModel: Models.UserModel,
     // private mailer: MailerService,
     @Inject('logger') private logger: Logger,
+    @Inject('passwordManager') private password: Password,
     // @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {
   }
 
-  public async LogIn(userWhoWantsToLogIn: User): Promise<any> {
+  public async LogIn(userDTO: User): Promise<any> {
     try {
-      myLogger('userDTO: ', userWhoWantsToLogIn)
-      const User = await findUserByEmail(userWhoWantsToLogIn.email);
+      myLogger('userDTO: ', userDTO)
+      const User = await findUserByEmail(userDTO.email);
 
       if (!User) {
         throw new BadRequest('Invalid login credentials.');
       }
 
-      const validPassword = await Password.compare(User.password, userWhoWantsToLogIn.password);
+      // const validPassword = await Password.compare(User.password, userWhoWantsToLogIn.password);
+      const validPassword = await this.password.compare(User.password, userDTO.password);
       if (!validPassword) {
         throw new BadRequest('Invalid login credentials.');
       }

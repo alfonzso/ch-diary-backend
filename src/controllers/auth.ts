@@ -90,7 +90,7 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
     const savedRefreshToken = await findRefreshTokenById(payload.jti!);
     if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
 
-    const validPassword = await Password.compare(savedRefreshToken.hashedToken, refreshToken);
+    const validPassword = await new Password().compare(savedRefreshToken.hashedToken, refreshToken);
     if (!validPassword) throw new UnauthorizedError('refTokens mismatch')
 
     const user = await findUserById(payload.userId);
