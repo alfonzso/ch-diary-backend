@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts --exec \"ts-node\" src/index.ts -e ts"
+    "dev": " nodemon src/index.ts --exec \"ts-node\" src/index.ts -e ts"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
     "@types/node": "^16.11.10",
+    "express-list-endpoints": "^6.0.0",
     "nodemon": "^2.0.15",
     "prisma": "^3.5.0",
     "ts-node": "^10.4.0",

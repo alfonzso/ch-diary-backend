@@ -40,4 +40,9 @@ export default ({ app }: { app: express.Application }) => {
   // add our error handler middleware
   app.use(errorHandler);
 
+  const all_routes = require('express-list-endpoints');
+  console.log(all_routes(app)
+    .filter((route: any) => route.path != "*")
+    .map((route: any) => route.path + " --> "+ route.methods));
+
 }
