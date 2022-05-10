@@ -26,6 +26,14 @@ class UserRepository {
     });
   }
 
+  async deleteUserByEmail(email: string) {
+    return db.user.delete({
+      where: {
+        email,
+      },
+    });
+  }
+
   findUserById(id: string) {
     return db.user.findUnique({
       where: {

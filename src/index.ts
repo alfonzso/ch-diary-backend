@@ -8,13 +8,15 @@
 //   console.log(`Our Application is up and running on port ${port}`);
 // });
 
-import 'reflect-metadata'; // We need this in order to use @Decorators
+import 'reflect-metadata';
 import config from './config';
 import express from 'express';
 import Logger from './loaders/logger';
 // import { errorHandler } from './middlewares';
 
+import * as http from 'http';
 export const app = express();
+export let appServer: http.Server
 
 async function startServer() {
 
@@ -27,7 +29,7 @@ async function startServer() {
   await require('./loaders').default({ expressApp: app });
 
 
-  app.listen(config.port, () => {
+  appServer = app.listen(config.port, () => {
     Logger.info(`
       ################################################
       🛡️  Server listening on port: ${config.port} 🛡️

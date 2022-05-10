@@ -35,7 +35,4 @@ export default () => {
     throw e;
   }
 };
-function MyUtils(arg0: string, MyUtils: any) {
-  throw new Error('Function not implemented.');
-}
 

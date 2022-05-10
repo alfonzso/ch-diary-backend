@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { NextFunction, Request, Response, Router } from 'express';
 import { body, cookie } from 'express-validator';
 import { User } from '@prisma/client';
@@ -71,7 +73,7 @@ export default (app: Router) => {
     cookie('refresh_token').not().isEmpty().withMessage('Token cannot be empty'),
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
-      const logger: Logger = Container.get('logger');
+      // const logger: Logger = Container.get('logger');
       try {
         const refreshToken: string = req.cookies.refresh_token;
         const authServiceInstance = Container.get(AuthService);
@@ -82,7 +84,7 @@ export default (app: Router) => {
           refreshToken
         });
       } catch (e) {
-        logger.error('🔥 error: %o', e);
+        // logger.error('🔥 error: %o', e);
         return next(e);
       }
     });
