@@ -1,8 +1,10 @@
 import { Container } from 'typedi';
-import { Password } from '../utils';
+import { userRepositoryInstance } from '../repositorys';
+import { myUtilsInstance } from '../utils';
+// import { Password, passwordInstance } from '../utils';
 // import formData from 'form-data';
 // import Mailgun from 'mailgun.js';
-import LoggerInstance from './logger';
+import loggerInstance from './logger';
 // import agendaFactory from './agenda';
 // import config from '@/config';
 
@@ -18,8 +20,9 @@ export default () => {
 
 
     // Container.set('agendaInstance', agendaInstance);
-    Container.set('logger', LoggerInstance);
-    Container.set('passwordManager', new Password());
+    Container.set('logger', loggerInstance);
+    Container.set('myUtils', myUtilsInstance);
+    Container.set('userRepository', userRepositoryInstance);
     // Container.set('emailClient', mgInstance.client({ key: config.emails.apiKey, username: config.emails.apiUsername }));
     // Container.set('emailDomain', config.emails.domain);
 
@@ -27,7 +30,11 @@ export default () => {
 
     // return { agenda: agendaInstance };
   } catch (e) {
-    LoggerInstance.error('🔥 Error on dependency injector loader: %o', e);
+    loggerInstance.error('🔥 Error on dependency injector loader: %o', e);
     throw e;
   }
 };
+function MyUtils(arg0: string, MyUtils: any) {
+  throw new Error('Function not implemented.');
+}
+

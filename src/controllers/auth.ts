@@ -3,27 +3,31 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { BadRequest, MissingRefreshToken, TokenExpired, UnauthorizedError } from "../errors";
 import {
-  findUserByEmail, createUserByEmailAndPassword, findUserById,
-  addRefreshTokenToWhitelist, deleteRefreshToken, findRefreshTokenById
+  // findUserByEmail, createUserByEmailAndPassword, findUserById,
+  addRefreshTokenToWhitelist, deleteRefreshToken, findRefreshTokenById, userRepositoryInstance
 } from "../repositorys";
-import { uuidv4, generateTokens, sendRefreshToken, Password } from "../utils";
+import { myUtilsInstance, uuidv4 } from "../utils";
+import { myJWTInstance } from "../utils/generateToken";
+const jwtInstance = myUtilsInstance.myJWT
+const passwordInstance = myUtilsInstance.password
+// const passwordInstance = myUtilsInstance.prismaClient
 
 const register = async (req: Request, res: Response) => {
   try {
     const userFromRequest: User = req.body;
 
-    const existingUser = await findUserByEmail(userFromRequest.email);
+    const existingUser = await userRepositoryInstance.findUserByEmail(userFromRequest.email);
 
     if (existingUser) {
       throw new BadRequest('Email already in use.');
     }
 
-    const user = await createUserByEmailAndPassword(userFromRequest);
+    const user = await userRepositoryInstance.createUserByEmailAndPassword(userFromRequest);
     const jti = uuidv4();
-    const { accessToken, refreshToken } = generateTokens(user, jti);
+    const { accessToken, refreshToken } = jwtInstance.generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
 
-    sendRefreshToken(res, refreshToken);
+    myUtilsInstance.sendRefreshToken(res, refreshToken);
 
     res.status(201).json({
       success: true, data: {
@@ -90,14 +94,14 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
     const savedRefreshToken = await findRefreshTokenById(payload.jti!);
     if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
 
-    const validPassword = await new Password().compare(savedRefreshToken.hashedToken, refreshToken);
+    const validPassword = await passwordInstance.compare(savedRefreshToken.hashedToken, refreshToken);
     if (!validPassword) throw new UnauthorizedError('refTokens mismatch')
 
-    const user = await findUserById(payload.userId);
+    const user = await userRepositoryInstance.findUserById(payload.userId);
     if (!user) throw new UnauthorizedError('user not exists')
 
     const jti = uuidv4();
-    const { accessToken, } = generateTokens(user, jti);
+    const { accessToken, } = myJWTInstance.generateTokens(user, jti);
 
     res.json({
       accessToken,

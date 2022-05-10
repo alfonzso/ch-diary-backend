@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-export default function sendRefreshToken(res: Response, token: string) {
+export default (res: Response, token: string) => {
   res.cookie('refresh_token', token, {
     httpOnly: true,
     sameSite: true,

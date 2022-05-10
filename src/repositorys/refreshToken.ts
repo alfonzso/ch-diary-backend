@@ -1,5 +1,9 @@
-import { Password } from "../utils";
-import db from "../utils/db";
+import { myUtilsInstance } from "../utils";
+
+// import { passwordInstance, db } from "../utils";
+const db = myUtilsInstance.prismaClient
+const jwtInstance = myUtilsInstance.myJWT
+const passwordInstance = myUtilsInstance.password
 
 type RefreshToken = {
   jti: any;
@@ -12,7 +16,7 @@ async function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: Refresh
   return db.refreshToken.create({
     data: {
       id: jti,
-      hashedToken: await new Password().toHash(refreshToken),
+      hashedToken: await passwordInstance.toHash(refreshToken),
       userId
     },
   });
