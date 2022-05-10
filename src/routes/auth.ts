@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { body } from 'express-validator';
 import { User } from '@prisma/client';
 import { validateRequest, isAuthenticated } from '../middlewares';
-import AuthService from '../services/auth';
+import { AuthService } from '../services/';
 import { myUtilsInstance } from '../utils';
 
 import { Container } from 'typedi';
