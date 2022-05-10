@@ -10,7 +10,8 @@ export const validateRequest = async (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    throw new InvalidRequestParameters(errors.array());
+    console.log('FFFFFFFFFFFFFFFFFFFFFFFFFSSSSKKKKKKAKAKAKAK')
+    return next(new InvalidRequestParameters(errors.array()))
   }
 
   next();

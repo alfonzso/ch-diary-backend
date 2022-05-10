@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import { userRepositoryInstance, refreshTokenInstance } from '../repositorys';
+import { userRepositoryInstance, refreshTokenRepositoryInstance } from '../repositorys';
 import { myUtilsInstance } from '../utils';
 // import { Password, passwordInstance } from '../utils';
 // import formData from 'form-data';
@@ -23,7 +23,7 @@ export default () => {
     Container.set('logger', loggerInstance);
     Container.set('myUtils', myUtilsInstance);
     Container.set('userRepository', userRepositoryInstance);
-    Container.set('refreshToken', refreshTokenInstance);
+    Container.set('refreshToken', refreshTokenRepositoryInstance);
     // Container.set('emailClient', mgInstance.client({ key: config.emails.apiKey, username: config.emails.apiUsername }));
     // Container.set('emailDomain', config.emails.domain);
 

@@ -1,7 +1,5 @@
 import { NextFunction, Response } from 'express';
 import { Request } from 'express-validator/src/base';
-import Container from 'typedi';
-import { Logger } from 'winston';
 import { CustomError } from '../errors';
 import myLogger from '../utils/myLogger';
 

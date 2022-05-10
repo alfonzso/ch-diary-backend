@@ -58,12 +58,8 @@ class RefreshTokenRepository {
   }
 }
 
-const refreshTokenInstance = new RefreshTokenRepository()
+const refreshTokenRepositoryInstance = new RefreshTokenRepository()
 export {
   RefreshTokenRepository,
-  refreshTokenInstance
-  // addRefreshTokenToWhitelist,
-  // findRefreshTokenById,
-  // deleteRefreshToken,
-  // revokeTokens
+  refreshTokenRepositoryInstance
 };

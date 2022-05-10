@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { body } from 'express-validator';
+import { body, cookie } from 'express-validator';
 import { User } from '@prisma/client';
 import { validateRequest, isAuthenticated } from '../middlewares';
 import { AuthService } from '../services/';
@@ -42,39 +42,50 @@ export default (app: Router) => {
 
   // signin route
   // router.post('/login', logIn);
-  route.post('/login', async (req: Request, res: Response, next: NextFunction) => {
-    const logger: Logger = Container.get('logger');
-    try {
-      const userDTO: User = req.body;
-      const authServiceInstance = Container.get(AuthService);
-      const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
-      myUtilsInstance.sendRefreshToken(res, refreshToken);
-      res.json({
-        accessToken,
-        refreshToken
-      });
-    } catch (e) {
-      logger.error('🔥 error: %o', e);
-      return next(e);
-    }
-  });
+  route.post('/login',
+    body('email').isEmail().withMessage('Please provide a valid email address'),
+    body('password')
+      .not().isEmpty()
+      .withMessage('Password cannot be empty'),
+    validateRequest,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const logger: Logger = Container.get('logger');
+      try {
+        const userDTO: User = req.body;
+        const authServiceInstance = Container.get(AuthService);
+        const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
+        myUtilsInstance.sendRefreshToken(res, refreshToken);
+        res.json({
+          accessToken,
+          refreshToken
+        });
+      } catch (e) {
+        logger.error('🔥 error: %o', e);
+        return next(e);
+      }
+    });
 
-  route.get('/refreshToken', async (req: Request, res: Response, next: NextFunction) => {
-    const logger: Logger = Container.get('logger');
-    try {
-      const refreshToken: string = req.cookies.refresh_token;
-      const authServiceInstance = Container.get(AuthService);
-      const [accessToken,] = await authServiceInstance.RefreshToken(refreshToken)
+  route.get(
+    '/refreshToken',
+    // body('email').isEmail().withMessage('Please provide a valid email address'),
+    cookie('refresh_token').not().isEmpty().withMessage('Token cannot be empty'),
+    validateRequest,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const logger: Logger = Container.get('logger');
+      try {
+        const refreshToken: string = req.cookies.refresh_token;
+        const authServiceInstance = Container.get(AuthService);
+        const accessToken = await authServiceInstance.RefreshToken(refreshToken)
 
-      res.json({
-        accessToken,
-        refreshToken
-      });
-    } catch (e) {
-      logger.error('🔥 error: %o', e);
-      return next(e);
-    }
-  });
+        res.json({
+          accessToken,
+          refreshToken
+        });
+      } catch (e) {
+        logger.error('🔥 error: %o', e);
+        return next(e);
+      }
+    });
 
   // get auth user
   route.get('/authUser', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {

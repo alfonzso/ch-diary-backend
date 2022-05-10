@@ -14,8 +14,9 @@ import express from 'express';
 import Logger from './loaders/logger';
 // import { errorHandler } from './middlewares';
 
+export const app = express();
+
 async function startServer() {
-  const app = express();
 
   /**
    * A little hack here
