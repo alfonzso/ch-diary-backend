@@ -1,54 +1,14 @@
 import 'reflect-metadata'
-import winston, { Logger } from "winston";
 import { AuthService } from "../../../src/services";
 import { MyUtils, myUtilsInstance } from "../../../src/utils";
 import { RefreshTokenRepository, UserRepository, userRepositoryInstance } from "../../../src/repositorys";
 import LoggerInstance from '../../../src/loaders/logger';
-import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 
 describe('User', () => {
   describe('RefreshToken', () => {
     test('Should user refresh his/her accessToken', async () => {
-      // const eventEmitterService = {
-      //   emit: jest.fn(),
-      // };
-      // const logger = {
-      //   debug: jest.fn(),
-      //   log: jest.fn(),
-      //   silly: jest.fn()
-      // } as  Logger ;
-      // const MockedVoiceChannel = Logger as jest.Mock<Logger>;
-      // let logger = new jest.Mock<Logger>()
-      // let logger = jest.mock('winston') as Logger ;
-      // jest.mock('winston', () => {
-      //   const mLogger = {
-      //     error: jest.fn(),
-      //   };
-      //   // return {
-      //   //   LOG_LEVEL: require.requireActual('./Book-logger.ts').default.LOG_LEVEL,
-      //   //   getLogger: jest.fn(() => mLogger),
-      //   // };
-      // });
-      // let loggerMock: Logger;
-      // const mockCreateLogger = jest.spyOn(winston, 'createLogger');
-      // let loggerMock = mockCreateLogger.mock.instances[0];
-
-      // jest.mock("../../../src/utils")
-      // jest.mock("../../../src/repositorys")
-
-      // const fafafa = jest.spyOn(RefreshTokenRepository, 'findRefreshTokenById');
-      // // const fafafa = jest.spyOn(refreshTokenInstance, 'findRefreshTokenById');
-      // let fefefe = fafafa.mock.instances[0];
-
-      // const mockPlaySoundFile = jest.fn();
-      // jest.mock('../../../src/repositorys/refreshToken', () => {
-      //   return jest.fn().mockImplementation(() => {
-      //     // return { findRefreshTokenById: mockPlaySoundFile };
-      //     return { findRefreshTokenById: (id: string) => { return "fefe" } };
-      //   });
-      // });
-
 
       const refreshTokenRepositoryMock = jest
         .spyOn(RefreshTokenRepository.prototype, 'findRefreshTokenById')
@@ -63,12 +23,6 @@ describe('User', () => {
             updatedAt: '2022-05-10T13:50:02.977Z'
           }
         });
-
-      // const playSoundFileMock = jest
-      //   .spyOn(MyUtils.prototype, 'password')
-      //   .mockImplementation((id: string): any => {
-      //     console.log('mocked function');
-      //   });
 
       const fafMock = jest
         .spyOn(myUtilsInstance.password, 'compare')
@@ -99,37 +53,7 @@ describe('User', () => {
           }
         });
 
-
-
-
-      // const mockCreateLogger = jest.spyOn(MyUtils) as jest.Mock<Logger>;
-      // loggerMock = mockCreateLogger.mock.instances[0];
-
-      // const myUtils: MyUtils = {
-      // prismaClient: undefined,
-      // password: new Password,
-      // myJWT: new MyJWT,
-      // sendRefreshToken: function (res: Response<any, Record<string, any>>, token: string): void {
-      //   throw new Error("Function not implemented.");
-      // },
-      // logger: function (...msg: any): void {
-      //   throw new Error("Function not implemented.");
-      // }
-      // };
-      // const userRepository = {
-      //   debug: jest.fn(),
-      //   log: jest.fn(),
-      //   silly: jest.fn()
-      // };
-      // const refreshToken = {
-      //   debug: jest.fn(),
-      //   log: jest.fn(),
-      //   silly: jest.fn()
-      // };
-      // const logger: Logger = Container.get('logger');
-
       const userService = new AuthService(LoggerInstance, new MyUtils(), new UserRepository(), new RefreshTokenRepository());
-      // const userService = new AuthService(loggerMock, new MyUtils(), new UserRepository(), fefefe);
       const userRecord = await userService.RefreshToken("faf");
       console.log(
         userRecord
