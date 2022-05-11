@@ -21,8 +21,8 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
   if (!authorization) return next(new UnauthorizedError())
 
   try {
-    const token = authorization!.split(' ')[1];
-    req.payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as UserPayload;
+    const accessToken = authorization!.split(' ')[1];
+    req.payload = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET!) as UserPayload;
   } catch (err) {
     if (err instanceof TokenExpiredError) {
       return next(new TokenExpired({ reason: err.message, expiredAt: err.expiredAt }))

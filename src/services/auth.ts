@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+// import 'reflect-metadata';
 
 import { User } from "@prisma/client";
 import { BadRequest, TokenExpired, UnauthorizedError } from "../errors";
@@ -8,7 +8,6 @@ import { Logger } from "winston";
 import { MyUtils, uuidv4 } from "../utils";
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { myJWTInstance } from "../utils/generateToken";
-// import { passwordInstance } from "../utils/password";
 
 @Service()
 export default class AuthService {
@@ -40,7 +39,7 @@ export default class AuthService {
       return [accessToken, refreshToken]
 
     } catch (e) {
-      // this.logger.error(e);
+      this.logger.error(e);
       throw e;
     }
   }
@@ -60,19 +59,13 @@ export default class AuthService {
       return [accessToken, refreshToken]
 
     } catch (e) {
-      // this.logger.error(e);
+      this.logger.error(e);
       throw e;
     }
   }
 
   public async RefreshToken(refreshToken: string): Promise<any> {
     try {
-
-      // console.log("----------------------------------------------------------", refreshToken)
-      // console.log("----------------------------------------------------------fa ", this.logger)
-      // console.log("---------------------------------------------------------- utils ", this.myUtils)
-      // console.log("----------------------------------------------------------", this.userRepository)
-      // console.log("----------------------------------------------------------", this.refreshTokenRepository)
       let payload: jwt.JwtPayload = {}
 
       try {
@@ -89,12 +82,6 @@ export default class AuthService {
         throw new Error("Refresh jwt error !")
       }
 
-      // console.log("---------------------------------------------------------fe -", payload)
-      // console.log("----------------------------------------------------------fa ", this.logger)
-      // console.log("---------------------------------------------------------- utils ", this.myUtils)
-      // console.log("----------------------------------------------------------", this.userRepository)
-      // console.log("----------------------------------------------------------", this.refreshTokenRepository)
-
       const savedRefreshToken = await this.refreshTokenRepository.findRefreshTokenById(payload.jti!);
       if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
 
@@ -110,7 +97,7 @@ export default class AuthService {
       return accessToken
 
     } catch (e) {
-      // this.logger.error(e);
+      this.logger.error(e);
       throw e;
     }
   }
@@ -121,8 +108,19 @@ export default class AuthService {
       return true
 
     } catch (e) {
-      // this.logger.error(e);
+      this.logger.error(e);
       throw e;
     }
   }
+  // public async DeletUser(email: string): Promise<boolean> {
+  //   try {
+
+  //     await this.userRepository.deleteUserByEmail(email)
+  //     return true
+
+  //   } catch (e) {
+  //     this.logger.error(e);
+  //     throw e;
+  //   }
+  // }
 }

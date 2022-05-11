@@ -4,10 +4,12 @@
 
 import AuthService from "./auth";
 import DiaryService from "./diary";
+import UserService from "./user";
 
 export {
   AuthService,
-  DiaryService
+  DiaryService,
+  UserService
   // findUserByEmail,
   // createUserByEmailAndPassword,
   // addRefreshTokenToWhitelist,
