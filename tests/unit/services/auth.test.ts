@@ -1,7 +1,10 @@
+import 'reflect-metadata'
 import winston, { Logger } from "winston";
 import { AuthService } from "../../../src/services";
 import { MyUtils, myUtilsInstance } from "../../../src/utils";
 import { RefreshTokenRepository, UserRepository, userRepositoryInstance } from "../../../src/repositorys";
+import LoggerInstance from '../../../src/loaders/logger';
+import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
 
 describe('User', () => {
@@ -28,8 +31,8 @@ describe('User', () => {
       //   // };
       // });
       // let loggerMock: Logger;
-      const mockCreateLogger = jest.spyOn(winston, 'createLogger');
-      let loggerMock = mockCreateLogger.mock.instances[0];
+      // const mockCreateLogger = jest.spyOn(winston, 'createLogger');
+      // let loggerMock = mockCreateLogger.mock.instances[0];
 
       // jest.mock("../../../src/utils")
       // jest.mock("../../../src/repositorys")
@@ -69,6 +72,13 @@ describe('User', () => {
 
       const fafMock = jest
         .spyOn(myUtilsInstance.password, 'compare')
+        .mockImplementation((): any => {
+          console.log('mocked FEF function');
+          return true
+        });
+
+      const fff = jest
+        .spyOn(jwt, 'verify')
         .mockImplementation((): any => {
           console.log('mocked FEF function');
           return true
@@ -116,8 +126,9 @@ describe('User', () => {
       //   log: jest.fn(),
       //   silly: jest.fn()
       // };
+      // const logger: Logger = Container.get('logger');
 
-      const userService = new AuthService(loggerMock, new MyUtils(), new UserRepository(), new RefreshTokenRepository());
+      const userService = new AuthService(LoggerInstance, new MyUtils(), new UserRepository(), new RefreshTokenRepository());
       // const userService = new AuthService(loggerMock, new MyUtils(), new UserRepository(), fefefe);
       const userRecord = await userService.RefreshToken("faf");
       console.log(
