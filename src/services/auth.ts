@@ -112,15 +112,5 @@ export default class AuthService {
       throw e;
     }
   }
-  // public async DeletUser(email: string): Promise<boolean> {
-  //   try {
 
-  //     await this.userRepository.deleteUserByEmail(email)
-  //     return true
-
-  //   } catch (e) {
-  //     this.logger.error(e);
-  //     throw e;
-  //   }
-  // }
 }
