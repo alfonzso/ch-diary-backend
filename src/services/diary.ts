@@ -1,13 +1,13 @@
 import { Service, Inject } from "typedi";
 import { Logger } from "winston";
 import { UserRepository, RefreshTokenRepository } from "../repositorys";
-import { MyUtils } from "../utils";
+import { Utils } from "../utils";
 
 @Service()
 export default class DiaryService {
   constructor(
     @Inject('logger') private logger: Logger,
-    // @Inject('myUtils') private myUtils: MyUtils,
+    // @Inject('utils') private myUtils: MyUtils,
     // @Inject('userRepository') private userRepository: UserRepository,
     // @Inject('refreshToken') private refreshToken: RefreshTokenRepository,
   ) {

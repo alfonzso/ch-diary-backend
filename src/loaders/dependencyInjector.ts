@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
-import { userRepositoryInstance, refreshTokenRepositoryInstance } from '../repositorys';
-import { myUtilsInstance } from '../utils';
+// import { userRepositoryInstance } from '../repositorys';
+import { utilsInstance } from '../utils';
 // import { Password, passwordInstance } from '../utils';
 // import formData from 'form-data';
 // import Mailgun from 'mailgun.js';
@@ -21,9 +21,9 @@ export default () => {
 
     // Container.set('agendaInstance', agendaInstance);
     Container.set('logger', loggerInstance);
-    Container.set('myUtils', myUtilsInstance);
-    Container.set('userRepository', userRepositoryInstance);
-    Container.set('refreshToken', refreshTokenRepositoryInstance);
+    Container.set('utils', utilsInstance);
+    // Container.set('userRepository', userRepositoryInstance);
+    // Container.set('refreshToken', refreshTokenRepositoryInstance);
     // Container.set('emailClient', mgInstance.client({ key: config.emails.apiKey, username: config.emails.apiUsername }));
     // Container.set('emailDomain', config.emails.domain);
 

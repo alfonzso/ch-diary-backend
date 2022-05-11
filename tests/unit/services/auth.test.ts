@@ -1,14 +1,19 @@
 import 'reflect-metadata'
 import { AuthService } from "../../../src/services";
-import { MyUtils, myUtilsInstance } from "../../../src/utils";
-import { RefreshTokenRepository, UserRepository, userRepositoryInstance } from "../../../src/repositorys";
+import { Utils, utilsInstance } from "../../../src/utils";
+import { RefreshTokenRepository, UserRepository } from "../../../src/repositorys";
 import LoggerInstance from '../../../src/loaders/logger';
 import jwt from "jsonwebtoken";
-
+import Container from 'typedi';
+import dependencyInjectorLoader from '../../../src/loaders/dependencyInjector';
 
 describe('User', () => {
   describe('RefreshToken', () => {
     test('Should user refresh his/her accessToken', async () => {
+
+      dependencyInjectorLoader()
+      const refTok = Container.get(RefreshTokenRepository)
+      const userRep = Container.get(UserRepository)
 
       const mockedRefToken = {
         id: '2065db60-f4e0-431b-871c-ebb784a41f55',
@@ -28,7 +33,7 @@ describe('User', () => {
       }
 
       const refreshTokenRepositoryMock = jest
-        .spyOn(RefreshTokenRepository.prototype, 'findRefreshTokenById')
+        .spyOn(refTok, 'findRefreshTokenById')
         .mockImplementation((id: string): any => {
           let refToken = {}
           if (id = '2065db60-f4e0-431b-871c-ebb784a41f55') {
@@ -39,7 +44,7 @@ describe('User', () => {
 
 
       const jwtCompareMock = jest
-        .spyOn(myUtilsInstance.password, 'compare')
+        .spyOn(utilsInstance.passwordManager, 'compare')
         .mockImplementation((): any => {
           return true
         });
@@ -54,7 +59,7 @@ describe('User', () => {
         });
 
       const userRepoFindUserByIdMock = jest
-        .spyOn(userRepositoryInstance, 'findUserById')
+        .spyOn(userRep, 'findUserById')
         .mockImplementation((id: string): any => {
           let user = {}
           if (id == "cf04943b-3816-4381-9219-a407ef085f9d") {
@@ -63,7 +68,7 @@ describe('User', () => {
           return user
         });
 
-      const userService = new AuthService(LoggerInstance, new MyUtils(), new UserRepository(), new RefreshTokenRepository());
+      const userService = new AuthService(LoggerInstance, new Utils(), userRep, refTok);
       const userRecord = await userService.RefreshToken("faf");
 
       expect(refreshTokenRepositoryMock).toHaveBeenCalledTimes(1);

@@ -2,20 +2,20 @@
 
 import { User } from "@prisma/client";
 import { BadRequest, TokenExpired, UnauthorizedError } from "../errors";
-import { RefreshTokenRepository, UserRepository, userRepositoryInstance } from "../repositorys";
+import { RefreshTokenRepository, UserRepository } from "../repositorys";
 import { Service, Inject } from 'typedi';
 import { Logger } from "winston";
-import { MyUtils, uuidv4 } from "../utils";
+import { Utils, uuidv4 } from "../utils";
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
-import { myJWTInstance } from "../utils/generateToken";
+import { tokenManagerInstance } from "../utils/generateToken";
 
 @Service()
 export default class AuthService {
   constructor(
     @Inject('logger') private logger: Logger,
-    @Inject('myUtils') private myUtils: MyUtils,
-    @Inject('userRepository') private userRepository: UserRepository,
-    @Inject('refreshToken') private refreshTokenRepository: RefreshTokenRepository,
+    @Inject('utils') private utils: Utils,
+    private userRepository: UserRepository,
+    private refreshTokenRepository: RefreshTokenRepository,
   ) {
   }
 
@@ -28,13 +28,13 @@ export default class AuthService {
         throw new BadRequest('Invalid login credentials.');
       }
 
-      const validPassword = await this.myUtils.password.compare(User.password, userDTO.password);
+      const validPassword = await this.utils.passwordManager.compare(User.password, userDTO.password);
       if (!validPassword) {
         throw new BadRequest('Invalid login credentials.');
       }
 
       const jti = uuidv4();
-      const { accessToken, refreshToken } = this.myUtils.myJWT.generateTokens(User, jti);
+      const { accessToken, refreshToken } = this.utils.tokenManager.generateTokens(User, jti);
       await this.refreshTokenRepository.addRefreshTokenToWhitelist({ jti, refreshToken, userId: User.id });
       return [accessToken, refreshToken]
 
@@ -46,15 +46,15 @@ export default class AuthService {
 
   public async Register(userDTO: User): Promise<any> {
     try {
-      const existingUser = await userRepositoryInstance.findUserByEmail(userDTO.email);
+      const existingUser = await this.userRepository.findUserByEmail(userDTO.email);
 
       if (existingUser) {
         throw new BadRequest('Email already in use.');
       }
 
-      const user = await userRepositoryInstance.createUserByEmailAndPassword(userDTO);
+      const user = await this.userRepository.createUserByEmailAndPassword(userDTO);
       const jti = uuidv4();
-      const { accessToken, refreshToken } = this.myUtils.myJWT.generateTokens(user, jti);
+      const { accessToken, refreshToken } = this.utils.tokenManager.generateTokens(user, jti);
       await this.refreshTokenRepository.addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
       return [accessToken, refreshToken]
 
@@ -85,14 +85,14 @@ export default class AuthService {
       const savedRefreshToken = await this.refreshTokenRepository.findRefreshTokenById(payload.jti!);
       if (!savedRefreshToken || savedRefreshToken.revoked === true) throw new UnauthorizedError('refToken not exists or revoked')
 
-      const validPassword = await this.myUtils.password.compare(savedRefreshToken.hashedToken, refreshToken);
+      const validPassword = await this.utils.passwordManager.compare(savedRefreshToken.hashedToken, refreshToken);
       if (!validPassword) throw new UnauthorizedError('refTokens mismatch')
 
-      const user = await userRepositoryInstance.findUserById(payload.userId);
+      const user = await this.userRepository.findUserById(payload.userId);
       if (!user) throw new UnauthorizedError('user not exists')
 
       const jti = uuidv4();
-      const { accessToken, } = myJWTInstance.generateTokens(user, jti);
+      const { accessToken, } = tokenManagerInstance.generateTokens(user, jti);
 
       return accessToken
 

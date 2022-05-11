@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 
-class MyJWT {
+class TokenManager {
 
   generateAccessToken(user: User) {
     return jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_ACCESS_SECRET!, {
@@ -37,8 +37,8 @@ class MyJWT {
 
 }
 
-const myJWTInstance = new MyJWT()
+const tokenManagerInstance = new TokenManager()
 export {
-  MyJWT,
-  myJWTInstance
+  TokenManager,
+  tokenManagerInstance
 };

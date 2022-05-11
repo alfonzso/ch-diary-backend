@@ -1,8 +1,8 @@
 import { prismaClientInstance } from "./db";
 import { v4 as uuidv4 } from 'uuid';
-import { Password, passwordInstance } from "./password";
+import { PasswordManager, passwordManagerInstance } from "./password";
 import { PrismaClient } from "@prisma/client";
-import { MyJWT, myJWTInstance } from "./generateToken";
+import { TokenManager, tokenManagerInstance } from "./generateToken";
 import { Response } from "express";
 import sendRefreshToken from "./sendRefreshToken";
 import Container from "typedi";
@@ -10,11 +10,11 @@ import { Logger } from "winston";
 import util from 'util';
 
 
-class MyUtils {
+class Utils {
   constructor(
     public prismaClient: PrismaClient = prismaClientInstance,
-    public password: Password = passwordInstance,
-    public myJWT: MyJWT = myJWTInstance
+    public passwordManager: PasswordManager = passwordManagerInstance,
+    public tokenManager: TokenManager = tokenManagerInstance
   ) { }
   sendRefreshToken(res: Response, token: string) {
     sendRefreshToken(res, token)
@@ -25,15 +25,15 @@ class MyUtils {
   }
 }
 
-const myUtilsInstance = new MyUtils(
+const utilsInstance = new Utils(
   prismaClientInstance,
-  passwordInstance,
-  myJWTInstance
+  passwordManagerInstance,
+  tokenManagerInstance
 )
 export {
-  MyUtils,
-  Password,
-  MyJWT,
-  myUtilsInstance,
+  Utils,
+  PasswordManager,
+  TokenManager,
+  utilsInstance,
   uuidv4,
 }

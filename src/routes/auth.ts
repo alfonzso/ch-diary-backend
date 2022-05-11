@@ -5,7 +5,7 @@ import { body, cookie } from 'express-validator';
 import { User } from '@prisma/client';
 import { validateRequest, isAuthenticated } from '../middlewares';
 import { AuthService } from '../services/';
-import { myUtilsInstance } from '../utils';
+import { utilsInstance } from '../utils';
 
 import { Container } from 'typedi';
 import { Logger } from 'winston';
@@ -29,7 +29,7 @@ export default (app: Router) => {
         const userDTO: User = req.body;
         const authServiceInstance = Container.get(AuthService);
         const [accessToken, refreshToken] = await authServiceInstance.Register(userDTO)
-        myUtilsInstance.sendRefreshToken(res, refreshToken);
+        utilsInstance.sendRefreshToken(res, refreshToken);
         res.status(201).json({
           success: true, data: {
             accessToken,
@@ -56,7 +56,7 @@ export default (app: Router) => {
         const userDTO: User = req.body;
         const authServiceInstance = Container.get(AuthService);
         const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
-        myUtilsInstance.sendRefreshToken(res, refreshToken);
+        utilsInstance.sendRefreshToken(res, refreshToken);
         res.json({
           accessToken,
           refreshToken

@@ -1,10 +1,5 @@
-// import { refreshToken } from "../controllers";
-import { myUtilsInstance } from "../utils";
-
-// import { passwordInstance, db } from "../utils";
-const db = myUtilsInstance.prismaClient
-// const jwtInstance = myUtilsInstance.myJWT
-const passwordInstance = myUtilsInstance.password
+import { Inject, Service } from "typedi";
+import { Utils } from "../utils";
 
 type RefreshToken = {
   jti: any;
@@ -12,14 +7,22 @@ type RefreshToken = {
   userId: any;
 };
 
-class RefreshTokenRepository {
+@Service()
+export default class RefreshTokenRepository {
+  constructor(
+    // @Inject('logger') private logger: Logger,
+    @Inject('utils') private utils: Utils,
+    // @Inject('userRepository') private userRepository: UserRepository,
+    // @Inject('refreshToken') private refreshTokenRepository: RefreshTokenRepository,
+  ) {
+  }
 
   // used when we create a refresh token.
   public async addRefreshTokenToWhitelist({ jti, refreshToken, userId }: RefreshToken) {
-    return db.refreshToken.create({
+    return this.utils.prismaClient.refreshToken.create({
       data: {
         id: jti,
-        hashedToken: await passwordInstance.toHash(refreshToken),
+        hashedToken: await this.utils.passwordManager.toHash(refreshToken),
         userId
       },
     });
@@ -27,7 +30,7 @@ class RefreshTokenRepository {
 
   // used to check if the token sent by the client is in the database.
   public findRefreshTokenById(id: string) {
-    return db.refreshToken.findUnique({
+    return this.utils.prismaClient.refreshToken.findUnique({
       where: {
         id,
       },
@@ -36,7 +39,7 @@ class RefreshTokenRepository {
 
   // soft delete tokens after usage.
   public deleteRefreshToken(id: string) {
-    return db.refreshToken.update({
+    return this.utils.prismaClient.refreshToken.update({
       where: {
         id,
       },
@@ -47,7 +50,7 @@ class RefreshTokenRepository {
   }
 
   public revokeTokens(userId: any) {
-    return db.refreshToken.updateMany({
+    return this.utils.prismaClient.refreshToken.updateMany({
       where: {
         userId
       },
@@ -58,8 +61,8 @@ class RefreshTokenRepository {
   }
 }
 
-const refreshTokenRepositoryInstance = new RefreshTokenRepository()
-export {
-  RefreshTokenRepository,
-  refreshTokenRepositoryInstance
-};
+// const refreshTokenRepositoryInstance = new RefreshTokenRepository()
+// export {
+//   RefreshTokenRepository,
+//   // refreshTokenRepositoryInstance
+// };

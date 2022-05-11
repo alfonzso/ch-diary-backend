@@ -1,11 +1,8 @@
-// import 'reflect-metadata';
-
 import { NextFunction, Request, Response, Router } from 'express';
 import { body } from 'express-validator';
 import { User } from '@prisma/client';
 import { validateRequest, isAuthenticated } from '../middlewares';
-import { AuthService, UserService } from '../services/';
-// import { myUtilsInstance } from '../utils';
+import { UserService } from '../services/';
 
 import { Container } from 'typedi';
 import { Logger } from 'winston';
@@ -15,7 +12,6 @@ const route = Router();
 export default (app: Router) => {
   app.use('/user', route);
 
-  // get auth user
   route.delete(
     '/delete',
     body('email').isEmail().withMessage('Please provide a valid email address'),
@@ -34,4 +30,3 @@ export default (app: Router) => {
       }
     });
 }
-// export default router;

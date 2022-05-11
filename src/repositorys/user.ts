@@ -1,17 +1,19 @@
 import { User } from "@prisma/client";
-import { myUtilsInstance } from "../utils";
-// import { db, passwordInstance } from "../utils";
+import { Inject, Service } from "typedi";
+import { Utils } from "../utils";
 
-
-const db = myUtilsInstance.prismaClient
-const jwtInstance = myUtilsInstance.myJWT
-const passwordInstance = myUtilsInstance.password
-
-
-class UserRepository {
+@Service()
+export default class UserRepository {
+  constructor(
+    // @Inject('logger') private logger: Logger,
+    @Inject('utils') private utils: Utils,
+    // @Inject('userRepository') private userRepository: UserRepository,
+    // @Inject('refreshToken') private refreshTokenRepository: RefreshTokenRepository,
+  ) {
+  }
 
   findUserByEmail(email: string) {
-    return db.user.findUnique({
+    return this.utils.prismaClient.user.findUnique({
       where: {
         email,
       },
@@ -19,15 +21,15 @@ class UserRepository {
   }
 
   async createUserByEmailAndPassword(user: User) {
-    user.password = await passwordInstance.toHash(user.password);
+    user.password = await this.utils.passwordManager.toHash(user.password);
 
-    return db.user.create({
+    return this.utils.prismaClient.user.create({
       data: user,
     });
   }
 
   async deleteUserByEmail(email: string) {
-    return db.user.delete({
+    return this.utils.prismaClient.user.delete({
       where: {
         email,
       },
@@ -35,7 +37,7 @@ class UserRepository {
   }
 
   findUserById(id: string) {
-    return db.user.findUnique({
+    return this.utils.prismaClient.user.findUnique({
       where: {
         id,
       },
@@ -43,9 +45,3 @@ class UserRepository {
   }
 
 }
-const userRepositoryInstance = new UserRepository()
-// export default userRepositoryInstance
-export {
-  UserRepository,
-  userRepositoryInstance
-};
