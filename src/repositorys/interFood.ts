@@ -1,4 +1,6 @@
-import { Interfood } from "@prisma/client";
+import { Interfood, Prisma } from "@prisma/client";
+// import {   InterfoodCreateArgs } from "@prisma/client";
+// import * as pri from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Utils } from "../utils";
 
@@ -11,9 +13,14 @@ export default class InterFoodRepository {
     // @Inject('refreshToken') private refreshTokenRepository: RefreshTokenRepository,
   ) { }
 
-  public async add(interFood: Interfood) {
+  public async add(interFood: Prisma.InterfoodCreateArgs) {
+    // return this.utils.prismaClient.interfood.create({
+    //   data: {
+    //     interfoodTypeId: interFood.id
+    //   },
+    //   ))
     return this.utils.prismaClient.interfood.create({
-      data: interFood
+      data: interFood.data
     })
   }
   // public async get(type: string) {

@@ -34,7 +34,9 @@ model RefreshToken {
   updatedAt   DateTime @updatedAt
 }
 
+////////////////
 //  Food stuff
+////////////////
 
 model InterfoodType {
   id        String      @id @unique @default(uuid())
@@ -46,7 +48,7 @@ model InterfoodType {
 
 model Interfood {
   id              String        @id @unique @default(uuid())
-  foodTypeId      String
+  // foodTypeId      String
   // foodId     String
   // Food       Food   @relation(fields: [foodId], references: [id])
   // Food       Food[]
@@ -87,7 +89,7 @@ model ChDiary {
   id     String   @id @unique @default(uuid())
   date   DateTime @default(now())
   // User User[]
-  userId String    
+  userId String
   User   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   // Food   Food[]
   foodId String
