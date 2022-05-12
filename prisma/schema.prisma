@@ -15,8 +15,13 @@ model User {
   email         String         @unique
   password      String
   refreshTokens RefreshToken[]
+  ChDiary       ChDiary[]
+  // ChDiary       ChDiary?       @relation(fields: [chDiaryId], references: [id])
+  // chDiaryId     String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  // ChDiary       ChDiary?       @relation(fields: [chDiaryId], references: [id])
+  // chDiaryId     String?
 }
 
 model RefreshToken {
@@ -27,4 +32,64 @@ model RefreshToken {
   revoked     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+//  Food stuff
+
+model InterfoodType {
+  id        String      @id @unique @default(uuid())
+  name      String      @unique @default("-")
+  // foodId   String
+  // Food     Food   @relation(fields: [foodId], references: [id])
+  Interfood Interfood[]
+}
+
+model Interfood {
+  id              String        @id @unique @default(uuid())
+  foodTypeId      String
+  // foodId     String
+  // Food       Food   @relation(fields: [foodId], references: [id])
+  // Food       Food[]
+  interfoodTypeId String
+  InterfoodType   InterfoodType @relation(fields: [interfoodTypeId], references: [id])
+  Food            Food[]
+}
+
+model FoodProperite {
+  id String @id @unique @default(uuid())
+
+  gramm   Float
+  kcal    Float
+  portein Float
+  fat     Float
+  ch      Float
+  Food    Food[]
+}
+
+model Food {
+  id              String        @id @unique @default(uuid())
+  name            String
+  portion         Float
+  // Interfood     Interfood[]
+  // FoodProperite FoodProperite[]
+  // chDiaryId     String
+  // ChDiary       ChDiary         @relation(fields: [chDiaryId], references: [id])
+  ChDiary         ChDiary[]
+  foodProperiteId String
+  FoodProperite   FoodProperite @relation(fields: [foodProperiteId], references: [id])
+  interfoodId     String
+  Interfood       Interfood     @relation(fields: [interfoodId], references: [id])
+  // Interfood     Interfood[]
+  // FoodProperite FoodProperite[]
+}
+
+model ChDiary {
+  id     String   @id @unique @default(uuid())
+  date   DateTime @default(now())
+  // User User[]
+  userId String    
+  User   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Food   Food[]
+  foodId String
+  Food   Food     @relation(fields: [foodId], references: [id])
 }

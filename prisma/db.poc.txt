@@ -1,0 +1,65 @@
+create table foodType (
+    id serial primary key,
+    name text
+);
+
+create table food (
+    id serial primary key,
+    name text,
+    foodId numeric
+);
+
+-- INSERT INTO foodType (column1, column2, column3,...columnN)
+-- VALUES (1,  "D1" );
+
+INSERT INTO foodType ( id ,  name ) VALUES
+  (1, 'D1'),
+  (2, 'D2'),
+  (3, 'D3'),
+  (4, 'D4');
+
+INSERT INTO food ( id , name , foodId ) VALUES
+  (1, 'fafa', 0),
+  (2, 'fefe', 1),
+  (3, 'keke', 2),
+  (4, 'sasa', 0);
+
+Select
+food.name,
+COALESCE (
+		NULLIF (foodType.name, ''),
+		LEFT ('-', 40)
+	) as type
+from food
+LEFT OUTER JOIN foodType ON foodType.id=food.foodId
+
+
+create table foodType (
+    id serial primary key,
+    name text
+);
+
+create table food (
+    id serial primary key,
+    name text,
+    foodId numeric,
+    date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- INSERT INTO foodType (column1, column2, column3,...columnN)
+-- VALUES (1,  "D1" );
+
+INSERT INTO foodType ( id ,  name ) VALUES
+  (1, 'D1'),
+  (2, 'D2'),
+  (3, 'D3'),
+  (4, 'D4');
+
+INSERT INTO food ( id , name , foodId, date ) VALUES
+  (2, 'fefe', 1 , '2017-04-30'),
+  (3, 'keke', 2 , '2017-04-30')
+;
+INSERT INTO food ( id , name , foodId ) VALUES
+  (1, 'fafa', 0),
+  (4, 'sasa', 0)
+;
