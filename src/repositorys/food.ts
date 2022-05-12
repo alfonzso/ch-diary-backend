@@ -1,4 +1,4 @@
-import { Food } from "@prisma/client";
+import { Food, Prisma } from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Utils } from "../utils";
 
@@ -11,9 +11,9 @@ export default class FoodRepository {
     // @Inject('refreshToken') private refreshTokenRepository: RefreshTokenRepository,
   ) { }
 
-  public async add(food: Food) {
+  public async add({ data }: Prisma.FoodCreateArgs) {
     return this.utils.prismaClient.food.create({
-      data: food
+      data
     })
   }
   // public async get(type: string) {

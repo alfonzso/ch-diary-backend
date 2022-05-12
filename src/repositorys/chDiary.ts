@@ -1,4 +1,4 @@
-import { ChDiary } from "@prisma/client";
+import { ChDiary, Prisma } from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Utils } from "../utils";
 
@@ -11,9 +11,9 @@ export default class ChDiaryRepository {
     // @Inject('refreshToken') private refreshTokenRepository: RefreshTokenRepository,
   ) { }
 
-  public async add(diary: ChDiary) {
+  public async add({ data }: Prisma.ChDiaryCreateArgs) {
     return this.utils.prismaClient.chDiary.create({
-      data: diary
+      data
     })
   }
   public async getUserAllFood(userId: string) {
