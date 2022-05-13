@@ -11,7 +11,8 @@ const route = Router();
 export default (app: Router) => {
   app.use('/diary', route);
 
-  // route.post('/addNewEntry', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {
+  // TODO: id ---> to ---> email or nickname ( id toooo long, like it here: /getEntry/id/:id' )
+
   route.post(
     '/addNewEntry',
     body('userDTO.id').not().isEmpty(),
