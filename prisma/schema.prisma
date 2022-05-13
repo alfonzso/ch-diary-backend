@@ -58,8 +58,7 @@ model Interfood {
 }
 
 model FoodProperite {
-  id String @id @unique @default(uuid())
-
+  id      String @id @unique @default(uuid())
   gramm   Float
   kcal    Float
   portein Float
@@ -78,7 +77,7 @@ model Food {
   // ChDiary       ChDiary         @relation(fields: [chDiaryId], references: [id])
   ChDiary         ChDiary[]
   foodProperiteId String
-  FoodProperite   FoodProperite @relation(fields: [foodProperiteId], references: [id])
+  FoodProperite   FoodProperite @relation(fields: [foodProperiteId], references: [id], onDelete: Cascade)
   interfoodId     String
   Interfood       Interfood     @relation(fields: [interfoodId], references: [id])
   // Interfood     Interfood[]
@@ -86,12 +85,12 @@ model Food {
 }
 
 model ChDiary {
-  id     String   @id @unique @default(uuid())
-  date   DateTime @default(now())
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
   // User User[]
-  userId String
-  User   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   // Food   Food[]
-  foodId String
-  Food   Food     @relation(fields: [foodId], references: [id])
+  foodId    String
+  Food      Food     @relation(fields: [foodId], references: [id])
 }

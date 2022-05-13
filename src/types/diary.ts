@@ -1,10 +1,18 @@
 import { Prisma } from "@prisma/client";
 
+export interface IUser {
+  id: string
+  email?: string
+  password?: string
+}
+
 export interface addNewEntry {
-  userDTO: Prisma.UserCreateArgs,
+  // userDTO: Prisma.UserCreateArgs,
+  userDTO: IUser,
   foodName: string,
   foodPortion: number,
-  date?: Date,
+  createdAt?: Date,
   interFoodType?: string,
-  foodProp: Prisma.FoodProperiteCreateArgs
+  // foodProp: Prisma.FoodProperiteCreateArgs
+  foodProp: Prisma.FoodProperiteCreateInput
 }

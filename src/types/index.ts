@@ -1,5 +1,5 @@
-import { IUser } from '../types/request';
-import { addNewEntry } from './diary';
+// import { IUser } from '../types/request';
+import { addNewEntry, IUser } from './diary';
 
 export{
   IUser,

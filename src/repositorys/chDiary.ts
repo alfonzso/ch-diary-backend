@@ -21,14 +21,99 @@ export default class ChDiaryRepository {
       where: {
         userId
       },
+      select: {
+        userId: false,
+        User: {
+          select: {
+            email: true
+          }
+        },
+        Food: {
+          select: {
+            name: true,
+            portion: true,
+            FoodProperite: {
+              select: {
+                gramm: true,
+                kcal: true,
+                portein: true,
+                fat: true,
+                ch: true,
+              }
+            },
+            Interfood: {
+              select: {
+                InterfoodType: {
+                  select: {
+                    name: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      // include: {
+      //   // userId: false,
+      //   // posts: true,
+
+      //   User: {
+      //     select: {
+      //       email: true
+      //     }
+      //   },
+      //   Food: {
+      //     include: {
+      //       FoodProperite: true,
+      //       Interfood: {
+      //         include: {
+      //           InterfoodType: true
+      //         }
+      //       }
+      //     }
+      //   },
+      //   // User: true,
+      // },
     })
   }
-  public async getUserFoodByDate(userId: string, date: Date) {
+  public async getUserFoodByDate(userId: string, createdAt: Date) {
     return this.utils.prismaClient.chDiary.findMany({
       where: {
         userId,
-        date
+        createdAt
       },
+      select: {
+        userId: false,
+        User: {
+          select: {
+            email: true
+          }
+        },
+        Food: {
+          select: {
+            name: true,
+            portion: true,
+            FoodProperite: {
+              select: {
+                gramm: true,
+                kcal: true,
+                portein: true,
+                fat: true,
+                ch: true,
+              }
+            },
+            Interfood: {
+              select: {
+                InterfoodType: {
+                  select: {
+                    name: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     })
   }
 }

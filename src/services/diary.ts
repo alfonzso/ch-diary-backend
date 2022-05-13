@@ -1,8 +1,9 @@
 import { FoodProperite, Interfood, Prisma, User } from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Logger } from "winston";
+import { BadRequest, InvalidRequestParameters } from "../errors";
 import { UserRepository, RefreshTokenRepository, InterFoodTypeRepository, InterFoodRepository, FoodProperiteRepository, FoodRepository, ChDiaryRepository } from "../repositorys";
-import { addNewEntry } from "../types";
+import { addNewEntry, IUser } from "../types";
 import { Utils } from "../utils";
 
 @Service()
@@ -25,20 +26,18 @@ export default class DiaryService {
   ) {
   }
 
-  async AddNewEntry(
-    {
-      userDTO,
-      foodName,
-      foodPortion,
-      date,
-      interFoodType,
-      foodProp
-    }
-      : addNewEntry
+  async addNewEntry({
+    userDTO,
+    foodName,
+    foodPortion,
+    createdAt,
+    interFoodType,
+    foodProp
+  }: addNewEntry
   ) {
     try {
       // InterFoodTypeRepository
-      // if (date === undefined) date =
+      // if (userDTO === undefined) date =
       if (interFoodType === undefined) interFoodType = "-"
       const interFoodTypeResp = await this.interFoodType.add(interFoodType)
 
@@ -50,7 +49,9 @@ export default class DiaryService {
 
       const foodProperiteResp = await this.foodProperite.add(
         {
-          data: foodProp.data
+          data: {
+            ...foodProp
+          }
         }
       )
 
@@ -65,12 +66,13 @@ export default class DiaryService {
 
       let diaryData: Prisma.ChDiaryCreateArgs = {
         data: {
-          userId: userDTO.data.id!,
+          userId: userDTO.id!,
           foodId: foodResp.id
         }
       }
 
-      if (date !== undefined) diaryData.data.date = date
+      if (createdAt !== undefined) diaryData.data.createdAt = createdAt
+
 
       const chDiaryResp = await this.chDiary.add(diaryData)
 
@@ -80,6 +82,30 @@ export default class DiaryService {
       throw e;
     }
   }
+
+
+  async getEntryByUserId({ id }: IUser) {
+    try {
+      if (id===undefined) throw new BadRequest('Id was undefined')
+      const chDiaryResp = await this.chDiary.getUserAllFood(id)
+      return { success: true, data: chDiaryResp }
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+  async getEntryByUserIdAndDate({ id }: IUser, date: Date) {
+    try {
+      const chDiaryResp = await this.chDiary.getUserFoodByDate(id, date)
+      return { success: true, data: chDiaryResp }
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
+
+
 
   async Test() {
     try {
