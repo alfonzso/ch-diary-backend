@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { prisma, User } from "@prisma/client";
 import { Inject, Service } from "typedi";
 import { Utils } from "../utils";
 
@@ -12,8 +12,20 @@ export default class UserRepository {
   ) {
   }
 
-  findUserByEmail(email: string) {
-    return this.utils.prismaClient.user.findUnique({
+  async findUserByNickName(nickname: string) {
+    return await this.utils.prismaClient.user.findUnique({
+      where: {
+        nickname,
+      },
+      // select: {
+      //   id: true
+      // }
+    });
+    // return found?.id
+  }
+
+  async findUserByEmail(email: string) {
+    return await this.utils.prismaClient.user.findUnique({
       where: {
         email,
       },

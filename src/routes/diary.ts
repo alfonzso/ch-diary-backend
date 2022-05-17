@@ -5,6 +5,9 @@ import { Container } from 'typedi';
 import { Logger } from 'winston';
 import { addNewEntry, IUser } from '../types';
 import { body, param, query } from 'express-validator';
+import { Prisma, User } from '@prisma/client';
+import { UserRepository } from '../repositorys';
+import { BadRequest } from '../errors';
 
 const route = Router();
 
@@ -32,14 +35,15 @@ export default (app: Router) => {
     });
 
   route.get(
-    '/getEntry/id/:id',
-    param('id').not().isEmpty().withMessage('id needed!'),
+    '/getEntry/nickname/:nickname',
+    param('nickname').not().isEmpty().withMessage('id needed!'),
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
         const diaryServiceInstance = Container.get(DiaryService);
-        let user: IUser = { id: req.params.id as string }
+        const user = await Container.get(UserRepository).findUserByNickName(req.params.nickname as string)
+        if (!user) throw new BadRequest('Nick not exists')
         console.log(user)
         const response = await diaryServiceInstance.getEntryByUserId(user)
 
@@ -51,17 +55,18 @@ export default (app: Router) => {
     });
 
   route.get(
-    '/getEntry/id/:id/date/:date',
-    param('id').not().isEmpty().withMessage('id needed!'),
+    '/getEntry/nickname/:nickname/date/:date',
+    param('nickname').not().isEmpty().withMessage('id needed!'),
     param('date').not().isEmpty().withMessage('date needed!'),
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
         const diaryServiceInstance = Container.get(DiaryService);
-        const user: IUser = { id: req.params.id as string }
+        const user = await Container.get(UserRepository).findUserByNickName(req.params.nickname as string)
+        if (!user) throw new BadRequest('Nick not exists')
         const date: Date = new Date(req.params.date as string)
-        const response = await diaryServiceInstance.getEntryByUserIdAndDate(user, date)
+        const response = await diaryServiceInstance.getEntryByUserNickNameAndDate(user, date)
 
         return res.status(200).json({ ...response });
       } catch (e) {

@@ -18,6 +18,9 @@ export default (app: Router) => {
   // signup route
   route.post(
     '/register',
+    body('nickname')
+      .isLength({ min: 0, max: 24 })
+      .withMessage('Ensure nickname is between 0 and 24 characters'),
     body('email').isEmail().withMessage('Please provide a valid email address'),
     body('password')
       .isLength({ min: 4, max: 24 })

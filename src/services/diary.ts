@@ -84,9 +84,10 @@ export default class DiaryService {
   }
 
 
-  async getEntryByUserId({ id }: IUser) {
+  async getEntryByUserId({ id }: User) {
     try {
-      if (id===undefined) throw new BadRequest('Id was undefined')
+      // if (nickname === undefined) throw new BadRequest('Id was undefined')
+      // this.getEntryByUserId.
       const chDiaryResp = await this.chDiary.getUserAllFood(id)
       return { success: true, data: chDiaryResp }
     } catch (e) {
@@ -95,7 +96,7 @@ export default class DiaryService {
     }
   }
 
-  async getEntryByUserIdAndDate({ id }: IUser, date: Date) {
+  async getEntryByUserNickNameAndDate({ id }: User, date: Date) {
     try {
       const chDiaryResp = await this.chDiary.getUserFoodByDate(id, date)
       return { success: true, data: chDiaryResp }

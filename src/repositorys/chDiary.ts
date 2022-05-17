@@ -22,9 +22,12 @@ export default class ChDiaryRepository {
         userId
       },
       select: {
+        id: true,
         userId: false,
+        createdAt: true,
         User: {
           select: {
+            nickname: true,
             email: true
           }
         },
