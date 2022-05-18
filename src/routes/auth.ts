@@ -60,10 +60,7 @@ export default (app: Router) => {
         const authServiceInstance = Container.get(AuthService);
         const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
         utilsInstance.sendRefreshToken(res, refreshToken);
-        res.json({
-          accessToken,
-          refreshToken
-        });
+        res.json({ accessToken, refreshToken });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -82,10 +79,7 @@ export default (app: Router) => {
         const authServiceInstance = Container.get(AuthService);
         const accessToken = await authServiceInstance.RefreshToken(refreshToken)
 
-        res.json({
-          accessToken,
-          refreshToken
-        });
+        res.json({ accessToken, refreshToken });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

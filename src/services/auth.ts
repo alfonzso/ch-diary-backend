@@ -19,7 +19,7 @@ export default class AuthService {
   ) {
   }
 
-  public async LogIn(userDTO: User): Promise<any> {
+  public async LogIn(userDTO: User): Promise<[string, string]> {
     try {
       // this.myUtils.logger('Login -> userDTO: ', userDTO)
       const User = await this.userRepository.findUserByEmail(userDTO.email);
@@ -44,7 +44,7 @@ export default class AuthService {
     }
   }
 
-  public async Register(userDTO: User): Promise<any> {
+  public async Register(userDTO: User): Promise<[string, string]> {
     try {
       const existingUser = await this.userRepository.findUserByEmail(userDTO.email);
 
@@ -64,7 +64,7 @@ export default class AuthService {
     }
   }
 
-  public async RefreshToken(refreshToken: string): Promise<any> {
+  public async RefreshToken(refreshToken: string): Promise<string> {
     try {
       let payload: jwt.JwtPayload = {}
 

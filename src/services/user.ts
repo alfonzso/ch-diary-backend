@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import { UserRepository } from "../repositorys";
 import { Service, Inject } from 'typedi';
 import { Logger } from "winston";
+import { User } from '@prisma/client';
 
 @Service()
 export default class UserService {
@@ -13,6 +14,14 @@ export default class UserService {
     // @Inject('refreshToken') private refreshTokenRepository: RefreshTokenRepository,
   ) { }
 
+  public async GetUser(email: string)  {
+    try {
+      return await this.userRepository.findUserByEmail(email)
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
+  }
   public async DeletUser(email: string): Promise<boolean> {
     try {
 

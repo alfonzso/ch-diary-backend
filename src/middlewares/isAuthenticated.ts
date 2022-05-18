@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import { TokenExpired, UnauthorizedError } from '../errors';
-
-type UserPayload = {
-  id: string;
-  email: string;
-};
+import { UserPayload } from '../types';
 
 declare global {
   namespace Express {
