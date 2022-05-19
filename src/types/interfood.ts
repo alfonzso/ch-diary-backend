@@ -4,7 +4,7 @@ export interface InterfoodImport {
   userId?: string,
   foodName: string,
   foodPortion?: number,
-  createdAt: string,
+  createdAt: Date,
   interFoodType: string,
   foodProp?: Prisma.FoodProperiteCreateInput
 }

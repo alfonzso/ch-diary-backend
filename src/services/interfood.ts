@@ -1,37 +1,13 @@
-// import { FoodProperite, Interfood, Prisma, User } from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Logger } from "winston";
 import { InterfoodImport } from "../types";
-// import HtmlTableToJson from 'html-table-to-json';
-// import { BadRequest, InvalidRequestParameters } from "../errors";
-// import { UserRepository, RefreshTokenRepository, InterFoodTypeRepository, InterFoodRepository, FoodProperiteRepository, FoodRepository, ChDiaryRepository } from "../repositorys";
-// import { addNewEntry, IUser } from "../types";
-// import { Utils } from "../utils";
-
-// const tabletojson = require('tabletojson').Tabletojson;
-// import tabletojson from 'tabletojson';
 import { Tabletojson } from 'tabletojson';
 import { Prisma } from "@prisma/client";
-
-
 
 @Service()
 export default class InterfoodService {
   constructor(
     @Inject('logger') private logger: Logger,
-    // @Inject('utils') private myUtils: MyUtils,
-    // @Inject('userRepository') private userRepository: UserRepository,
-    // @Inject('refreshToken') private refreshToken: RefreshTokenRepository,
-    // @Inject('interFoodType') private interFoodType: InterFoodTypeRepository,
-    // @Inject('interFood') private interFood: InterFoodRepository,
-    // @Inject('foodProperite') private foodProperite: FoodProperiteRepository,
-    // @Inject('food') private food: FoodRepository,
-    // @Inject('chDiary') private chDiary: ChDiaryRepository,
-    // private interFoodType: InterFoodTypeRepository,
-    // private interFood: InterFoodRepository,
-    // private foodProperite: FoodProperiteRepository,
-    // private food: FoodRepository,
-    // private chDiary: ChDiaryRepository,
   ) {
   }
 
@@ -47,20 +23,9 @@ export default class InterfoodService {
         padTo2Digits(date.getDate()),
       ].join('-');
     }
-    // var date = new Date(dateTime.getTime());
-    // var date = new Date(dateTime.getFullYear(),dateTime.getMonth() , dateTime.getDate())
     const year = dateTime.getFullYear()
     const month = dateTime.getMonth()
     const day = dateTime.getDate()
-    // var date = new Date(dateTime.getFullYear())
-    // var date = new Date(dateTime.getFullYear())
-    // date.setHours(0, 0, 0, 0);
-    // console.log(date, dateTime.getFullYear())
-    // console.log(formatDate(new Date(
-    //   year,
-    //   month,
-    //   day,
-    // )));
 
     return formatDate(new Date(year, month, day))
   }
@@ -70,7 +35,7 @@ export default class InterfoodService {
     return (num)!.match(regex)!.map(function (v) { return parseFloat(v); })[0]
   }
 
-  async import(userId: string, multiLine: string) {
+  async import(userId: string, multiLine: string): Promise<InterfoodImport[]> {
     try {
 
       interface foodPropFromInterfood {
@@ -79,13 +44,12 @@ export default class InterfoodService {
         '2': string;
       }
 
-      let yesterday: string[] = []
+      let yesterday: Date[] = []
       let interfoodImports: InterfoodImport[] = await Promise.all(
         multiLine.trim().split("\n").map(async line => {
           let [createdAt, interFoodType, foodName] = line.trim().split(";")
 
-
-          let res = ((await Tabletojson.convertUrl(
+          let foodPropsFromTable = ((await Tabletojson.convertUrl(
             `https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt}&l=hu`,
             function (tablesAsJson) {
               return tablesAsJson
@@ -93,31 +57,78 @@ export default class InterfoodService {
           )) as foodPropFromInterfood[][])[0]
 
           let foodProp: Prisma.FoodProperiteCreateInput = {
-            gramm: this.stringToNumber(res[0][2]),
-            kcal: this.stringToNumber(res[1][2]),
-            fat: this.stringToNumber(res[2][2]),
-            ch: this.stringToNumber(res[4][2]),
-            portein: this.stringToNumber(res[6][2]),
+            gramm: this.stringToNumber(foodPropsFromTable[0][2]),
+            kcal: this.stringToNumber(foodPropsFromTable[1][2]),
+            fat: this.stringToNumber(foodPropsFromTable[2][2]),
+            ch: this.stringToNumber(foodPropsFromTable[4][2]),
+            portein: this.stringToNumber(foodPropsFromTable[6][2]),
           }
 
-          if (yesterday && yesterday.includes(createdAt)) {
-            const latestDay = yesterday.sort()[yesterday.length - 1]
-            let yesterdayAsDay = new Date(latestDay)
-            yesterdayAsDay.setDate(yesterdayAsDay.getDate() + 1)
-            createdAt = this.withoutTime(yesterdayAsDay)
-            yesterday.push(createdAt)
+          // if (yesterday && yesterday.includes(createdAt)) {
+          //   const latestDay = yesterday.sort()[yesterday.length - 1]
+          //   let yesterdayAsDay = new Date(latestDay)
+          //   yesterdayAsDay.setDate(yesterdayAsDay.getDate() + 1)
+          //   yesterdayAsDay.setHours(12, 0, 0)
+          //   // createdAt = this.withoutTime(yesterdayAsDay)
+          //   createdAt = yesterdayAsDay.toDateString()
+          //   yesterday.push(createdAt)
+          // } else {
+          //   const setToNoon = new Date(createdAt)
+          //   setToNoon.setHours(12, 0, 0)
+          //   // yesterday.push(this.withoutTime(setToNoon))
+          //   yesterday.push(setToNoon.toDateString()+setToNoon.toTimeString())
+          // }
+          let createdAtAsDate = new Date(createdAt)
+          // if (yesterday.includes(createdAtAsDate)) {
+          // console.log(
+          //   yesterday.filter(day => {
+          //     console.log(day, createdAtAsDate)
+          //     console.log(day.getTime(), createdAtAsDate.getTime())
+          //     return day.getTime() === createdAtAsDate.getTime()
+          //   }).length
+          // )
+          if (yesterday.filter(day => day.getTime() === createdAtAsDate.getTime()).length > 0) {
+            // const latestDay = yesterday.sort()[yesterday.length - 1]
+            const lastDay = yesterday.sort((a, b) => a.getTime() - b.getTime())[yesterday.length - 1];
+
+            // console.log(
+            //   "lastDay date --->", lastDay
+            // )
+            // let yesterdayAsDay = new Date(latestDay)
+            createdAtAsDate.setDate(new Date(lastDay).getDate() + 1)
+            // createdAt = this.withoutTime(yesterdayAsDay)
+            // createdAt = yesterdayAsDay
+            // createdAtAsDate = yesterdayAsDay
+            yesterday.push(createdAtAsDate)
           } else {
-            yesterday.push(createdAt)
+            yesterday.push(createdAtAsDate)
           }
-          return { userId, foodName, foodPortion: 450, createdAt, interFoodType, foodProp }
+
+          // set all date to noon // +2 to gmt
+          // createdAtAsDate.setHours(10, 0, 0)
+          // console.log(
+          //   "xxxxxxxxxxxxxxxxxxxxxxxx--->", createdAtAsDate
+          // )
+          // createdAtAsDate.setTime(createdAtAsDate.getTime() + 10 * 60 * 60 * 1000);
+          const newDate = new Date(createdAtAsDate.getTime()) // .setHours(12, 0, 0)  // .setTime(createdAtAsDate.getTime() + 10 * 60 * 60 * 1000);
+          newDate.setHours(12 +2, 0, 0)
+          // console.log(
+          //   "xxxxxxxxxxxxxxxxxxxxxxxx--->", newDate
+          // )
+
+          // return { userId, foodName, foodPortion: 450, createdAt: this.createDateAsUTC(createdAtAsDate), interFoodType, foodProp }
+          return { userId, foodName, foodPortion: 450, createdAt: newDate, interFoodType, foodProp }
         }))
 
-      // return { success: true, data: {} }
       return interfoodImports
     } catch (e) {
       this.logger.error(e);
       throw e;
     }
+  }
+
+  createDateAsUTC(date: Date) {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 2, date.getMinutes(), date.getSeconds()));
   }
 
 }

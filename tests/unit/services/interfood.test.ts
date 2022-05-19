@@ -127,7 +127,6 @@ describe('User', () => {
       expect(tabelToJsonConvertUrl).toHaveBeenCalledTimes(6);
     });
 
-
     test('Should success, no food in middleweek', async () => {
 
       dependencyInjectorLoader()
