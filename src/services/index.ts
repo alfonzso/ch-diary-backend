@@ -4,12 +4,14 @@
 import 'reflect-metadata'
 import AuthService from "./auth";
 import DiaryService from "./diary";
+import InterfoodService from './interfood';
 import UserService from "./user";
 
 export {
   AuthService,
   DiaryService,
-  UserService
+  UserService,
+  InterfoodService
   // findUserByEmail,
   // createUserByEmailAndPassword,
   // addRefreshTokenToWhitelist,

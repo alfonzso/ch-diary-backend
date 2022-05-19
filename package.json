@@ -42,6 +42,7 @@
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "^0.13.9",
+    "tabletojson": "^2.0.7",
     "typedi": "^0.10.0",
     "util": "^0.12.4",
     "uuidv4": "^6.2.13",

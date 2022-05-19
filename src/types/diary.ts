@@ -7,12 +7,10 @@ export interface IUser {
 }
 
 export interface addNewEntry {
-  // userDTO: Prisma.UserCreateArgs,
   userDTO: IUser,
   foodName: string,
   foodPortion: number,
   createdAt?: Date,
   interFoodType?: string,
-  // foodProp: Prisma.FoodProperiteCreateArgs
   foodProp: Prisma.FoodProperiteCreateInput
 }
