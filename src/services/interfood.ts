@@ -35,7 +35,7 @@ export default class InterfoodService {
     return (num)!.match(regex)!.map(function (v) { return parseFloat(v); })[0]
   }
 
-  async import(userId: string, multiLine: string): Promise<InterfoodImport[]> {
+  async import(userId: string, multiLine: string[]): Promise<InterfoodImport[]> {
     try {
 
       interface foodPropFromInterfood {
@@ -46,7 +46,7 @@ export default class InterfoodService {
 
       let yesterday: Date[] = []
       let interfoodImports: InterfoodImport[] = await Promise.all(
-        multiLine.trim().split("\n").map(async line => {
+        multiLine.map(async line => {
           let [createdAt, interFoodType, foodName] = line.trim().split(";")
 
           let foodPropsFromTable = ((await Tabletojson.convertUrl(
@@ -64,59 +64,19 @@ export default class InterfoodService {
             portein: this.stringToNumber(foodPropsFromTable[6][2]),
           }
 
-          // if (yesterday && yesterday.includes(createdAt)) {
-          //   const latestDay = yesterday.sort()[yesterday.length - 1]
-          //   let yesterdayAsDay = new Date(latestDay)
-          //   yesterdayAsDay.setDate(yesterdayAsDay.getDate() + 1)
-          //   yesterdayAsDay.setHours(12, 0, 0)
-          //   // createdAt = this.withoutTime(yesterdayAsDay)
-          //   createdAt = yesterdayAsDay.toDateString()
-          //   yesterday.push(createdAt)
-          // } else {
-          //   const setToNoon = new Date(createdAt)
-          //   setToNoon.setHours(12, 0, 0)
-          //   // yesterday.push(this.withoutTime(setToNoon))
-          //   yesterday.push(setToNoon.toDateString()+setToNoon.toTimeString())
-          // }
           let createdAtAsDate = new Date(createdAt)
-          // if (yesterday.includes(createdAtAsDate)) {
-          // console.log(
-          //   yesterday.filter(day => {
-          //     console.log(day, createdAtAsDate)
-          //     console.log(day.getTime(), createdAtAsDate.getTime())
-          //     return day.getTime() === createdAtAsDate.getTime()
-          //   }).length
-          // )
           if (yesterday.filter(day => day.getTime() === createdAtAsDate.getTime()).length > 0) {
-            // const latestDay = yesterday.sort()[yesterday.length - 1]
             const lastDay = yesterday.sort((a, b) => a.getTime() - b.getTime())[yesterday.length - 1];
-
-            // console.log(
-            //   "lastDay date --->", lastDay
-            // )
-            // let yesterdayAsDay = new Date(latestDay)
             createdAtAsDate.setDate(new Date(lastDay).getDate() + 1)
-            // createdAt = this.withoutTime(yesterdayAsDay)
-            // createdAt = yesterdayAsDay
-            // createdAtAsDate = yesterdayAsDay
             yesterday.push(createdAtAsDate)
           } else {
             yesterday.push(createdAtAsDate)
           }
 
-          // set all date to noon // +2 to gmt
-          // createdAtAsDate.setHours(10, 0, 0)
-          // console.log(
-          //   "xxxxxxxxxxxxxxxxxxxxxxxx--->", createdAtAsDate
-          // )
-          // createdAtAsDate.setTime(createdAtAsDate.getTime() + 10 * 60 * 60 * 1000);
-          const newDate = new Date(createdAtAsDate.getTime()) // .setHours(12, 0, 0)  // .setTime(createdAtAsDate.getTime() + 10 * 60 * 60 * 1000);
-          newDate.setHours(12 +2, 0, 0)
-          // console.log(
-          //   "xxxxxxxxxxxxxxxxxxxxxxxx--->", newDate
-          // )
+          const newDate = new Date(createdAtAsDate.getTime())
+          // gmt + 2, set to 'noon'
+          newDate.setHours(12 + 2, 0, 0)
 
-          // return { userId, foodName, foodPortion: 450, createdAt: this.createDateAsUTC(createdAtAsDate), interFoodType, foodProp }
           return { userId, foodName, foodPortion: 450, createdAt: newDate, interFoodType, foodProp }
         }))
 

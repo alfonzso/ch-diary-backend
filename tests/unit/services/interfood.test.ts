@@ -18,14 +18,14 @@ describe('User', () => {
       const interFood = Container.get(InterfoodService)
 
       const userId = "123456789"
-      const multiLine: string = `
-      2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;
-      2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;
-      2022-05-18;D13;Bakonyi sertésszelet, tészta köret;
-      2022-05-19;D6;Thai zöldséges csirkés tészta;
-      2022-05-19;D7;Mátrai borzas csirkemell, rizses zöldség;
-      2022-05-20;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);
-      `
+      const multiLine: string[] = [
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-18;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-19;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-19;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-20;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+      ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convertUrl')
         .mockImplementation((url: string, callback: any): any => {
@@ -54,14 +54,14 @@ describe('User', () => {
       const interFood = Container.get(InterfoodService)
 
       const userId = "123456789"
-      const multiLine: string = `
-      2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;
-      2022-05-16;D7;Csirkemell sajtos bundában, zöldséges barnarizs;
-      2022-05-16;D13;Bakonyi sertésszelet, tészta köret;
-      2022-05-16;D6;Thai zöldséges csirkés tészta;
-      2022-05-16;D7;Mátrai borzas csirkemell, rizses zöldség;
-      2022-05-16;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);
-      `
+      const multiLine: string[] = [
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-16;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-16;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-16;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-16;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-16;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+      ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convertUrl')
         .mockImplementation((url: string, callback: any): any => {
@@ -98,14 +98,14 @@ describe('User', () => {
       const interFood = Container.get(InterfoodService)
 
       const userId = "123456789"
-      const multiLine: string = `
-      2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;
-      2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;
-      2022-05-17;D13;Bakonyi sertésszelet, tészta köret;
-      2022-05-19;D6;Thai zöldséges csirkés tészta;
-      2022-05-20;D7;Mátrai borzas csirkemell, rizses zöldség;
-      2022-05-21;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);
-      `
+      const multiLine: string[] = [
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-17;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-19;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-20;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-21;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+      ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convertUrl')
         .mockImplementation((url: string, callback: any): any => {
@@ -133,14 +133,14 @@ describe('User', () => {
       const interFood = Container.get(InterfoodService)
 
       const userId = "123456789"
-      const multiLine: string = `
-      2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;
-      2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;
-      2022-05-19;D13;Bakonyi sertésszelet, tészta köret;
-      2022-05-19;D6;Thai zöldséges csirkés tészta;
-      2022-05-20;D7;Mátrai borzas csirkemell, rizses zöldség;
-      2022-05-21;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);
-      `
+      const multiLine: string[] = [
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-19;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-19;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-20;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-21;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+      ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convertUrl')
         .mockImplementation((url: string, callback: any): any => {
