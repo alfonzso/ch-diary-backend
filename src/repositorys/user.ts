@@ -35,7 +35,7 @@ export default class UserRepository {
   async createUserByEmailAndPassword(user: User) {
     user.password = await this.utils.passwordManager.toHash(user.password);
 
-    return this.utils.prismaClient.user.create({
+    return await this.utils.prismaClient.user.create({
       data: user,
     });
   }

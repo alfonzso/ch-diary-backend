@@ -1,4 +1,4 @@
-import { FoodProperite, Interfood, Prisma, User } from "@prisma/client";
+import { ChDiary, Food, FoodProperite, Interfood, InterfoodType, Prisma, User } from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Logger } from "winston";
 import { BadRequest, InvalidRequestParameters } from "../errors";
@@ -39,15 +39,15 @@ export default class DiaryService {
       // InterFoodTypeRepository
       // if (userDTO === undefined) date =
       if (interFoodType === undefined) interFoodType = "-"
-      const interFoodTypeResp = await this.interFoodType.add(interFoodType)
+      const interFoodTypeResp: InterfoodType = await this.interFoodType.add(interFoodType)
 
-      const interFoodResp = await this.interFood.add({
+      const interFoodResp: Interfood = await this.interFood.add({
         data: {
           interfoodTypeId: interFoodTypeResp.id
         }
       })
 
-      const foodProperiteResp = await this.foodProperite.add(
+      const foodProperiteResp: FoodProperite = await this.foodProperite.add(
         {
           data: {
             ...foodProp
@@ -55,7 +55,7 @@ export default class DiaryService {
         }
       )
 
-      const foodResp = await this.food.add({
+      const foodResp: Food = await this.food.add({
         data: {
           name: foodName,
           portion: foodPortion,
@@ -73,8 +73,7 @@ export default class DiaryService {
 
       if (createdAt !== undefined) diaryData.data.createdAt = createdAt
 
-
-      const chDiaryResp = await this.chDiary.add(diaryData)
+      const chDiaryResp: ChDiary = await this.chDiary.add(diaryData)
 
       return { success: true, message: 'sucsucsuc', db: chDiaryResp }
     } catch (e) {

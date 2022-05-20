@@ -35,6 +35,29 @@ export default class InterfoodService {
     return (num)!.match(regex)!.map(function (v) { return parseFloat(v); })[0]
   }
 
+  private sortInterfoodData(multiLine: string[]): InterfoodImport[] {
+    type interFoodDataAsObject = {
+      date: string;
+      typeLetter: string;
+      typeNumber: number;
+      name: string;
+    }
+    const res: InterfoodImport[] = (multiLine.map(line => {
+      let [date, typeLetter, typeNumber, name] = line.trim().split(";")
+      return { date, typeLetter, typeNumber: parseInt(typeNumber), name }
+    }) as interFoodDataAsObject[])
+      .sort((a, b) => {
+        if (a.date === b.date) {
+          return a.typeNumber - b.typeNumber
+        } else {
+          return a.date.localeCompare(b.date)
+        }
+      }).map(line => {
+        return { createdAt: new Date(line.date), foodName: line.name, interFoodType: `${line.typeLetter}${line.typeNumber}` }
+      })
+    return res
+  }
+
   async import(userId: string, multiLine: string[]): Promise<InterfoodImport[]> {
     try {
 
@@ -45,12 +68,18 @@ export default class InterfoodService {
       }
 
       let yesterday: Date[] = []
+
+      console.log(
+        multiLine.sort()
+      )
+
       let interfoodImports: InterfoodImport[] = await Promise.all(
-        multiLine.map(async line => {
-          let [createdAt, interFoodType, foodName] = line.trim().split(";")
+        this.sortInterfoodData(multiLine).map(async ({ createdAt, interFoodType, foodName }) => {
+          // multiLine.sort().map(async line => {
+          // let [createdAt, interFoodType, foodName] = line.trim().split(";")
 
           let foodPropsFromTable = ((await Tabletojson.convertUrl(
-            `https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt}&l=hu`,
+            `https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt.toLocaleDateString('en-CA')}&l=hu`,
             function (tablesAsJson) {
               return tablesAsJson
             }
@@ -87,8 +116,8 @@ export default class InterfoodService {
     }
   }
 
-  createDateAsUTC(date: Date) {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 2, date.getMinutes(), date.getSeconds()));
-  }
+  // createDateAsUTC(date: Date) {
+  //   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - 2, date.getMinutes(), date.getSeconds()));
+  // }
 
 }

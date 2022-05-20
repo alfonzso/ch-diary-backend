@@ -10,8 +10,8 @@ import { Prisma, User } from '@prisma/client';
 import { IUser } from '../../../src/types';
 
 describe('User', () => {
-  describe('RefreshToken', () => {
-    test('Should user refresh his/her accessToken', async () => {
+  describe('Add new entry to chdiary', () => {
+    test('Should success', async () => {
 
       dependencyInjectorLoader()
       const interFoodType = Container.get(InterFoodTypeRepository)
@@ -20,8 +20,62 @@ describe('User', () => {
       const food = Container.get(FoodRepository)
       const chDiary = Container.get(ChDiaryRepository)
 
+      const tabelToJsonConvertUrl = jest
+        .spyOn(interFoodType, 'add')
+        .mockImplementation((name: string): any => {
+          return {
+            id: "1",
+            name: "D999"
+          }
+        });
+
+      const fef = jest
+        .spyOn(interFood, 'add')
+        .mockImplementation((): any => {
+          return {
+            id: "1",
+            interfoodTypeId: "1"
+          }
+        });
+
+      const faf = jest
+        .spyOn(foodProperite, 'add')
+        .mockImplementation((): any => {
+          return {
+            id: "1",
+            ch: 100,
+            fat: 100,
+            gramm: 100,
+            kcal: 100,
+            portein: 100,
+          }
+        });
+
+      const efe = jest
+        .spyOn(food, 'add')
+        .mockImplementation((): any => {
+          return {
+            id: "1",
+            name: "foodName",
+            portion: 450,
+            foodProperiteId: "1",
+            interfoodId: "1",
+          }
+        });
+
+      const rere = jest
+        .spyOn(chDiary, 'add')
+        .mockImplementation((): any => {
+          return {
+            id: "1",
+            createdAt: new Date("2022-05-05"),
+            userId: "1",
+            foodId: "1",
+          }
+        });
+
       const userDTO: IUser = {
-        id: "fafa",
+        id: "1",
         email: "foo@bar.com",
         password: "fefe"
       }
@@ -36,16 +90,14 @@ describe('User', () => {
       );
 
       const foodProp: Prisma.FoodProperiteCreateInput = {
-        // data: {
         ch: 100,
         fat: 100,
         gramm: 100,
         kcal: 100,
         portein: 100,
-        // }
       }
 
-      const userRecord = await userService.addNewEntry({
+      const newEntry = await userService.addNewEntry({
         userDTO: userDTO,
         foodName: "foodName",
         foodPortion: 450,
@@ -54,19 +106,16 @@ describe('User', () => {
         foodProp: foodProp
       });
 
-      // expect(refreshTokenRepositoryMock).toHaveBeenCalledTimes(1);
-      // expect(refreshTokenRepositoryMock).toReturnWith(mockedRefToken)
-
-      // expect(userRepoFindUserByIdMock).toHaveBeenCalledTimes(1);
-      // expect(userRepoFindUserByIdMock).toReturnWith(mockedUser)
-
-      // expect(jwtVerifyMock).toHaveBeenCalledTimes(1);
-      // expect(jwtVerifyMock).toReturnWith({
-      //   userId: "1bbd258b-4599-4406-bbc3-9a2ad569fbae",
-      //   jti: '2065db60-f4e0-431b-871c-ebb784a41f55'
-      // })
-
-      // expect(userRecord.length).not.toEqual(0)
+      expect(newEntry).toEqual({
+        success: true,
+        message: 'sucsucsuc',
+        db: {
+          id: '1',
+          createdAt: new Date("2022-05-05"),
+          userId: '1',
+          foodId: '1'
+        }
+      })
 
     });
   })

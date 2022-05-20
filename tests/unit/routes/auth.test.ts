@@ -1,6 +1,10 @@
 import 'reflect-metadata';
 import { app, appServer } from '../../../src';
 import request from 'supertest';
+import { UserService } from '../../../src/services';
+import Container from 'typedi';
+import { UserRepository } from '../../../src/repositorys';
+import dependencyInjectorLoader from '../../../src/loaders/dependencyInjector';
 
 type data = {
   accessToken: string,
@@ -12,6 +16,11 @@ describe('register -> refreshToken -> delete ', () => {
   let token: data
 
   beforeAll(async () => {
+    try {
+      dependencyInjectorLoader()
+      const UserRepositoryInstance = Container.get(UserRepository);
+      await UserRepositoryInstance.deleteUserByEmail('foo@bar.com')
+    } catch (error) { }
   });
 
   afterAll(async () => {
@@ -22,7 +31,7 @@ describe('register -> refreshToken -> delete ', () => {
   test('register API Request', async () => {
     let response = await request(app)
       .post('/api/auth/register')
-      .send({ email: 'foo@bar.com', password: "barbar" })
+      .send({ email: 'foo@bar.com', password: "barbar", nickname: "foo" })
     token = response.body.data
     expect(token.accessToken.length).not.toEqual(0)
     expect(token.refreshToken.length).not.toEqual(0)

@@ -1,6 +1,6 @@
 
 type UserPayload = {
-  id: string;
+  userId: string;
   email: string;
 };
 

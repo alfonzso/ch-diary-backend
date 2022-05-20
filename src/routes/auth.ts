@@ -15,18 +15,28 @@ const route = Router();
 export default (app: Router) => {
   app.use('/auth', route);
 
+  interface RegisterRequest<T> extends Express.Request {
+    body: T
+  }
+
   // signup route
   route.post(
     '/register',
+
     body('nickname')
-      .isLength({ min: 0, max: 24 })
-      .withMessage('Ensure nickname is between 0 and 24 characters'),
+      .exists()
+      .withMessage('Ensure nickname is not empty')
+      .bail()
+      .isLength({ min: 1, max: 24 })
+      .withMessage('Ensure nickname lenght greater than 1'),
     body('email').isEmail().withMessage('Please provide a valid email address'),
     body('password')
       .isLength({ min: 4, max: 24 })
       .withMessage('Ensure password is between 4 and 24 characters'),
-    validateRequest,
-    async (req: Request, res: Response, next: NextFunction) => {
+    validateRequest
+    ,
+    // async (req: TypedRequestBody<User>, res: Response, next: NextFunction) => {
+    async (req: RegisterRequest<User>, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
         const userDTO: User = req.body;
