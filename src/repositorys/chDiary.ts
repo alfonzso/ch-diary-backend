@@ -80,12 +80,19 @@ export default class ChDiaryRepository {
     })
   }
   public async getUserFoodByDate(userId: string, createdAt: Date) {
+    const tomorow = new Date(createdAt)
+    tomorow.setDate(new Date(tomorow).getDate() + 1)
     return this.utils.prismaClient.chDiary.findMany({
       where: {
         userId,
-        createdAt
+        createdAt: {
+          gte: createdAt,
+          lt: tomorow
+        }
       },
       select: {
+        id: true,
+        createdAt: true,
         userId: false,
         User: {
           select: {

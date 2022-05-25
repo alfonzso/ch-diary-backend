@@ -43,6 +43,6 @@ export default ({ app }: { app: express.Application }) => {
   const all_routes = require('express-list-endpoints');
   console.log(all_routes(app)
     .filter((route: any) => route.path != "*")
-    .map((route: any) => route.path + " --> "+ route.methods));
+    .map((route: any) => route.path + " --> " + route.methods));
 
 }

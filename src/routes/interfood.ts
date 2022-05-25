@@ -32,18 +32,14 @@ export default (app: Router) => {
     async (req: RegisterRequest<{ data: string[], payload: UserPayload }>, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
-        // const user = req.payload as UserPayload
         const interFoodTypeInstance = Container.get(InterfoodService);
         const diaryServiceInstance = Container.get(DiaryService);
-        // const newEntry: addNewEntry = req.body
         const response: InterfoodImport[] = await interFoodTypeInstance.import(req.payload!.userId, req.body.data)
 
-        response.map(food => {
-          // console.log(
-          //   "---", req.payload, "--", { userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food }
-          // )
-          return diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });
-        })
+        for (const food of response) {
+          const addResp = await diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });
+          console.log(addResp);
+        }
 
         return res.status(200).json({ ...response, data: req.payload });
       } catch (e) {

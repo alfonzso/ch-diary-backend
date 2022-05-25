@@ -75,6 +75,9 @@ export default class InterfoodService {
 
       let interfoodImports: InterfoodImport[] = await Promise.all(
         this.sortInterfoodData(multiLine).map(async ({ createdAt, interFoodType, foodName }) => {
+          console.log(
+            createdAt, interFoodType, foodName
+          )
           // multiLine.sort().map(async line => {
           // let [createdAt, interFoodType, foodName] = line.trim().split(";")
 
