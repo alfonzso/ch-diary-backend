@@ -1,6 +1,6 @@
 import cookieParser from "cookie-parser";
 import express from "express";
-import config from "../config";
+import config from "../../config";
 import { RouteNotFound } from "../errors";
 import { errorHandler } from "../middlewares";
 import routes from "../routes";
@@ -14,7 +14,15 @@ export default ({ app }: { app: express.Application }) => {
 
   // Add headers before the routes are defined
   app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    const allowedOrigins = ['http://localhost:3001', 'http://icellnoti.local:8082'];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin!)) {
+         res.setHeader('Access-Control-Allow-Origin', origin!);
+    }
+
+    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    // res.setHeader('Access-Control-Allow-Origin', 'http://icellnoti:8081');
+    // res.setHeader('Access-Control-Allow-Origin', 'http://icellnoti.local:8082');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,set-cookie,cookie,authorization');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -40,9 +48,11 @@ export default ({ app }: { app: express.Application }) => {
   // add our error handler middleware
   app.use(errorHandler);
 
-  const all_routes = require('express-list-endpoints');
-  console.log(all_routes(app)
-    .filter((route: any) => route.path != "*")
-    .map((route: any) => route.path + " --> " + route.methods));
+  if (config.env != "prod") {
+    const all_routes = require('express-list-endpoints');
+    console.log(all_routes(app)
+      .filter((route: any) => route.path != "*")
+      .map((route: any) => route.path + " --> " + route.methods));
+  }
 
 }

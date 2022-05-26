@@ -11,7 +11,7 @@
 import 'reflect-metadata';
 import config from './config';
 import express from 'express';
-import Logger from './loaders/logger';
+import Logger from './src/loaders/logger';
 // import { errorHandler } from './middlewares';
 
 import * as http from 'http';
@@ -26,7 +26,7 @@ async function startServer() {
    * Well, at least in node 10 without babel and at the time of writing
    * So we are using good old require.
    **/
-  await require('./loaders').default({ expressApp: app });
+  await require('./src/loaders').default({ expressApp: app });
 
 
   appServer = app.listen(config.port, () => {
@@ -36,7 +36,7 @@ async function startServer() {
       ################################################
     `);
   }).on('error', err => {
-    Logger.error(' --src/err-- ', err);
+    Logger.error(' --SERVER-- ', err);
     process.exit(1);
   });
 

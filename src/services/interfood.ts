@@ -80,7 +80,7 @@ export default class InterfoodService {
           )
           // multiLine.sort().map(async line => {
           // let [createdAt, interFoodType, foodName] = line.trim().split(";")
-
+          Tabletojson.convert
           let foodPropsFromTable = ((await Tabletojson.convertUrl(
             `https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt.toLocaleDateString('en-CA')}&l=hu`,
             function (tablesAsJson) {

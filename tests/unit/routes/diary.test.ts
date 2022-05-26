@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { app, appServer } from '../../../src';
+import { app, appServer } from '../../../server';
 import request from 'supertest';
 import { addNewEntry } from '../../../src/types';
 
