@@ -9,6 +9,10 @@ import { Prisma, User } from '@prisma/client';
 import { UserRepository } from '../repositorys';
 import { BadRequest } from '../errors';
 
+// import fetch from "node-fetch";
+import fetch from 'cross-fetch';
+import { Tabletojson } from 'tabletojson';
+
 const route = Router();
 
 export default (app: Router) => {
@@ -75,6 +79,39 @@ export default (app: Router) => {
       }
     });
 
+
+
+  route.get('/fetchinterfood', async (req: Request, res: Response, next: NextFunction) => {
+    const logger: Logger = Container.get('logger');
+    try {
+      const resp = await fetch('https://www.interfood.hu/getosszetevok/?k=D7&d=2022-05-27&l=hu') //.then(resp => console.log(resp))
+      const bodyText = await resp.text()
+      // console.log(bodyText)
+      const ress = Tabletojson.convert(
+        bodyText
+      )
+      // Nettó tömeg:.match(/ain.*/);
+      const match = bodyText.matchAll(/>Nettó tömeg: (\d+)/g)
+
+      // console.log(ress, [...match ][0]);
+
+      const url =
+        'https://stackoverflow.com/questions/432493/how-do-you-access-the-matched-groups-in-a-javascript-regular-expression?some=parameter';
+      const regex = /(?<protocol>https?):\/\/(?<hostname>[\w-\.]*)\/(?<pathname>[\w-\./]+)\??(?<querystring>.*?)?$/;
+      // const { groups: segments } = url.match(regex);
+      const { groups: segments } = url.match(regex)!;
+      console.log(segments);
+
+      const { groups: netto } = bodyText.match(/>Nettó tömeg: (?<netto>\d+)/)!;
+      console.log(netto!.netto);
+
+
+      return res.status(200).json({});
+    } catch (e) {
+      logger.error('🔥 error: %o', e);
+      return next(e);
+    }
+  });
 
 
   route.get('/test', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {

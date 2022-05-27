@@ -3,6 +3,8 @@ import { Logger } from "winston";
 import { InterfoodImport } from "../types";
 import { Tabletojson } from 'tabletojson';
 import { Prisma } from "@prisma/client";
+// import * as crossf from 'cross-fetch';
+import 'cross-fetch/polyfill';
 
 @Service()
 export default class InterfoodService {
@@ -48,7 +50,11 @@ export default class InterfoodService {
     }) as interFoodDataAsObject[])
       .sort((a, b) => {
         if (a.date === b.date) {
-          return a.typeNumber - b.typeNumber
+          if (a.typeNumber === b.typeNumber){
+            return a.name.localeCompare(b.name)
+          }else{
+            return a.typeNumber - b.typeNumber
+          }
         } else {
           return a.date.localeCompare(b.date)
         }
@@ -69,24 +75,22 @@ export default class InterfoodService {
 
       let yesterday: Date[] = []
 
-      console.log(
-        multiLine.sort()
-      )
-
       let interfoodImports: InterfoodImport[] = await Promise.all(
         this.sortInterfoodData(multiLine).map(async ({ createdAt, interFoodType, foodName }) => {
-          console.log(
-            createdAt, interFoodType, foodName
-          )
+          // console.log(
+          //   createdAt, interFoodType, foodName
+          // )
           // multiLine.sort().map(async line => {
           // let [createdAt, interFoodType, foodName] = line.trim().split(";")
-          Tabletojson.convert
-          let foodPropsFromTable = ((await Tabletojson.convertUrl(
-            `https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt.toLocaleDateString('en-CA')}&l=hu`,
-            function (tablesAsJson) {
-              return tablesAsJson
-            }
-          )) as foodPropFromInterfood[][])[0]
+
+          const resp = await fetch(`https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt.toLocaleDateString('en-CA')}&l=hu`)
+
+          const bodyText = await resp.text()
+          // const bodyText = await resp.json()
+          console.log("resp: ", bodyText);
+          const { groups } = bodyText.match(/>Nettó tömeg: (?<netto>\d+)/)!;
+
+          let foodPropsFromTable = (Tabletojson.convert(bodyText) as foodPropFromInterfood[][])[0]
 
           let foodProp: Prisma.FoodProperiteCreateInput = {
             gramm: this.stringToNumber(foodPropsFromTable[0][2]),
@@ -109,7 +113,7 @@ export default class InterfoodService {
           // gmt + 2, set to 'noon'
           newDate.setHours(12 + 2, 0, 0)
 
-          return { userId, foodName, foodPortion: 450, createdAt: newDate, interFoodType, foodProp }
+          return { userId, foodName, foodPortion: parseInt(groups!.netto), createdAt: newDate, interFoodType, foodProp }
         }))
 
       return interfoodImports
