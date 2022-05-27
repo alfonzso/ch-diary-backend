@@ -14,10 +14,10 @@ export default ({ app }: { app: express.Application }) => {
 
   // Add headers before the routes are defined
   app.use(function (req, res, next) {
-    const allowedOrigins = ['http://localhost:3001', 'http://icellnoti.local:8082'];
+    const allowedOrigins = ['http://localhost:3001', 'http://icellnoti:8082'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin!)) {
-         res.setHeader('Access-Control-Allow-Origin', origin!);
+      res.setHeader('Access-Control-Allow-Origin', origin!);
     }
 
     // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
