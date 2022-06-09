@@ -61,7 +61,7 @@ export default class InterfoodService {
     }
   }
 
-  async importedDataToInterfoodImport(userId: string, sortedInterfoodData: InterfoodImport[]) {
+  private async importedDataToInterfoodImport(userId: string, sortedInterfoodData: InterfoodImport[]) {
     return await Promise.all(
       sortedInterfoodData.map(async ({ createdAt, interFoodType, foodName }) => {
         const resp = await fetch(`https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt.toLocaleDateString('en-CA')}&l=hu`)
@@ -108,26 +108,25 @@ export default class InterfoodService {
   private sortInterfoodData(multiLine: string[]): InterfoodImport[] {
     type interFoodDataAsObject = {
       date: string;
-      typeLetter: string;
-      typeNumber: number;
+      foodType: string;
       name: string;
     }
     const res: InterfoodImport[] = (multiLine.map(line => {
-      let [date, typeLetter, typeNumber, name] = line.trim().split(";")
-      return { date, typeLetter, typeNumber: parseInt(typeNumber), name }
+      let [date, foodType, name] = line.trim().split(";")
+      return { date, foodType, name }
     }) as interFoodDataAsObject[])
       .sort((a, b) => {
         if (a.date === b.date) {
-          if (a.typeNumber === b.typeNumber) {
+          if (a.foodType === b.foodType) {
             return a.name.localeCompare(b.name)
           } else {
-            return a.typeNumber - b.typeNumber
+            return this.stringToNumber(a.foodType) - this.stringToNumber(b.foodType)
           }
         } else {
           return a.date.localeCompare(b.date)
         }
-      }).map(line => {
-        return { createdAt: new Date(line.date), foodName: line.name, interFoodType: `${line.typeLetter}${line.typeNumber}` }
+      }).map(food => {
+        return { createdAt: new Date(food.date), foodName: food.name, interFoodType: food.foodType }
       })
     return res
   }

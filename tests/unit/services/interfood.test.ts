@@ -26,12 +26,12 @@ describe('User', () => {
 
       const userId = "123456789"
       const multiLine: string[] = [
-        "2022-05-16;D;9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
-        "2022-05-17;D;7;Csirkemell sajtos bundában, zöldséges barnarizs;",
-        "2022-05-18;D;13;Bakonyi sertésszelet, tészta köret;",
-        "2022-05-19;D;6;Thai zöldséges csirkés tészta;",
-        "2022-05-19;D;7;Mátrai borzas csirkemell, rizses zöldség;",
-        "2022-05-20;D;7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-18;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-19;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-19;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-20;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
       ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convert')
@@ -63,12 +63,12 @@ describe('User', () => {
 
       const userId = "123456789"
       const multiLine: string[] = [
-        "2022-05-20;D;7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
-        "2022-05-19;D;7;Mátrai borzas csirkemell, rizses zöldség;",
-        "2022-05-19;D;6;Thai zöldséges csirkés tészta;",
-        "2022-05-18;D;13;Bakonyi sertésszelet, tészta köret;",
-        "2022-05-17;D;7;Csirkemell sajtos bundában, zöldséges barnarizs;",
-        "2022-05-16;D;9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-20;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+        "2022-05-19;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-19;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-18;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
       ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convert')
@@ -105,12 +105,12 @@ describe('User', () => {
 
       const userId = "123456789"
       const multiLine: string[] = [
-        "2022-05-16;D;9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
-        "2022-05-16;D;7;Csirkemell sajtos bundában, zöldséges barnarizs;",
-        "2022-05-16;D;13;Bakonyi sertésszelet, tészta köret;",
-        "2022-05-16;D;6;Thai zöldséges csirkés tészta;",
-        "2022-05-16;D;7;Mátrai borzas csirkemell, rizses zöldség;",
-        "2022-05-16;D;7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-16;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-16;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-16;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-16;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-16;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
       ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convert')
@@ -157,12 +157,12 @@ describe('User', () => {
 
       const userId = "123456789"
       const multiLine: string[] = [
-        "2022-05-16;D;9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
-        "2022-05-17;D;7;Csirkemell sajtos bundában, zöldséges barnarizs;",
-        "2022-05-17;D;13;Bakonyi sertésszelet, tészta köret;",
-        "2022-05-19;D;6;Thai zöldséges csirkés tészta;",
-        "2022-05-20;D;7;Mátrai borzas csirkemell, rizses zöldség;",
-        "2022-05-21;D;7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-17;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-19;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-20;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-21;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
       ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convert')
@@ -193,12 +193,12 @@ describe('User', () => {
 
       const userId = "123456789"
       const multiLine: string[] = [
-        "2022-05-16;D;9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
-        "2022-05-17;D;7;Csirkemell sajtos bundában, zöldséges barnarizs;",
-        "2022-05-19;D;13;Bakonyi sertésszelet, tészta köret;",
-        "2022-05-19;D;6;Thai zöldséges csirkés tészta;",
-        "2022-05-20;D;7;Mátrai borzas csirkemell, rizses zöldség;",
-        "2022-05-21;D;7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
+        "2022-05-16;D9;Csirkemell Holstein módra, zöldségekkel, rizzsel;",
+        "2022-05-17;D7;Csirkemell sajtos bundában, zöldséges barnarizs;",
+        "2022-05-19;D13;Bakonyi sertésszelet, tészta köret;",
+        "2022-05-19;D6;Thai zöldséges csirkés tészta;",
+        "2022-05-20;D7;Mátrai borzas csirkemell, rizses zöldség;",
+        "2022-05-21;D7;Cordon bleu pulykamell, párolt zöldekkel (c.bab, bébi répa, lila hagyma);",
       ]
       const tabelToJsonConvertUrl = jest
         .spyOn(Tabletojson, 'convert')
@@ -234,12 +234,12 @@ describe('User', () => {
 
       const userId = "123456789"
       const multiLine: string[] = [
-        "2022-05-23;D;10;Thai pirított marha csíkok, tojásos barnarizs;",
-        "2022-05-24;D;6;Bangkoki marha (távol-keleti szósz, tészta, marhahús);",
-        "2022-05-24;D;9;Roston csirkemell, négysajtmártás, párolt karotta borsóval, kukoricával;",
-        "2022-05-25;D;10;Vadas marhatokány (light) spagetti;",
-        "2022-05-26;D;9;Brokkolival töltött csirke, zöldségekkel;",
-        "2022-05-27;D;7;Rántott fűszeres csirkecomb, amerikai káposztasaláta;",
+        "2022-05-23;D10;Thai pirított marha csíkok, tojásos barnarizs;",
+        "2022-05-24;D6;Bangkoki marha (távol-keleti szósz, tészta, marhahús);",
+        "2022-05-24;D9;Roston csirkemell, négysajtmártás, párolt karotta borsóval, kukoricával;",
+        "2022-05-25;D10;Vadas marhatokány (light) spagetti;",
+        "2022-05-26;D9;Brokkolival töltött csirke, zöldségekkel;",
+        "2022-05-27;D7;Rántott fűszeres csirkecomb, amerikai káposztasaláta;",
       ]
       const tabelToJsonConvert = jest
         .spyOn(Tabletojson, 'convert')
@@ -265,45 +265,6 @@ describe('User', () => {
       })
 
       expect(interfoodImports).toEqual(fixed);
-
-    });
-    test('Should success, bugged again somehow', async () => {
-
-      dependencyInjectorLoader()
-      const interFood = Container.get(InterfoodService)
-
-      const userId = "123456789"
-      const multiLine: string[] = [
-        "2022-06-07;D;11;Sajtos grillezett sonka brokkolival, főtt burgonyával;",
-        "2022-06-08;D;7;Rántott csirkemell fitt sajtos panírban, sült zöldség;",
-        "2022-06-09;D;6;Pácolt sajtos csirkemell, tortilla tekercsben tejföllel zöldségekkel;",
-        "2022-06-09;D;9;Kemencében sült csirkemell cheddar sajt mártással, párolt zöldségköret;",
-        "2022-06-10;D;12;Vaslapon sült csirkemellfilé, gombás, tojásos rizs;",
-      ]
-      const tabelToJsonConvert = jest
-        .spyOn(Tabletojson, 'convert')
-        .mockImplementation((url: string, callback: any): any => {
-          return [[
-            { '0': 'Átlagos tápérték', '1': '1 adagban', '2': '100g-ban' },
-            { '0': 'Energia', '1': '917 kcal', '2': '203.78 kcal' },
-            { '0': 'Zsír', '1': '23g', '2': '5.11g' },
-            { '0': '- amelyből telített zsírsav', '1': '8.5g', '2': '1.89g' },
-            { '0': 'Szénhidrát', '1': '111.6g', '2': '24.8g' },
-            { '0': '- amelyből cukrok', '1': '11.1g', '2': '2.47g' },
-            { '0': 'Fehérje', '1': '59.2g', '2': '13.16g' },
-            { '0': 'Só', '1': '4.45g', '2': '0.99g' }
-          ]]
-        });
-
-      fetchMock.mockResponse('>Nettó tömeg: 200ggggg')
-
-      const interfoodImports = await interFood.import(userId, multiLine);
-
-      const fixed = expectedSuccessBuggedVal.map(val => {
-        return { ...val, createdAt: new Date(val.createdAt) }
-      })
-
-      expect(interfoodImports).toEqual({});
 
     });
 
