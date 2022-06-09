@@ -267,6 +267,45 @@ describe('User', () => {
       expect(interfoodImports).toEqual(fixed);
 
     });
+    test('Should success, bugged again somehow', async () => {
+
+      dependencyInjectorLoader()
+      const interFood = Container.get(InterfoodService)
+
+      const userId = "123456789"
+      const multiLine: string[] = [
+        "2022-06-07;D;11;Sajtos grillezett sonka brokkolival, főtt burgonyával;",
+        "2022-06-08;D;7;Rántott csirkemell fitt sajtos panírban, sült zöldség;",
+        "2022-06-09;D;6;Pácolt sajtos csirkemell, tortilla tekercsben tejföllel zöldségekkel;",
+        "2022-06-09;D;9;Kemencében sült csirkemell cheddar sajt mártással, párolt zöldségköret;",
+        "2022-06-10;D;12;Vaslapon sült csirkemellfilé, gombás, tojásos rizs;",
+      ]
+      const tabelToJsonConvert = jest
+        .spyOn(Tabletojson, 'convert')
+        .mockImplementation((url: string, callback: any): any => {
+          return [[
+            { '0': 'Átlagos tápérték', '1': '1 adagban', '2': '100g-ban' },
+            { '0': 'Energia', '1': '917 kcal', '2': '203.78 kcal' },
+            { '0': 'Zsír', '1': '23g', '2': '5.11g' },
+            { '0': '- amelyből telített zsírsav', '1': '8.5g', '2': '1.89g' },
+            { '0': 'Szénhidrát', '1': '111.6g', '2': '24.8g' },
+            { '0': '- amelyből cukrok', '1': '11.1g', '2': '2.47g' },
+            { '0': 'Fehérje', '1': '59.2g', '2': '13.16g' },
+            { '0': 'Só', '1': '4.45g', '2': '0.99g' }
+          ]]
+        });
+
+      fetchMock.mockResponse('>Nettó tömeg: 200ggggg')
+
+      const interfoodImports = await interFood.import(userId, multiLine);
+
+      const fixed = expectedSuccessBuggedVal.map(val => {
+        return { ...val, createdAt: new Date(val.createdAt) }
+      })
+
+      expect(interfoodImports).toEqual({});
+
+    });
 
   })
 })
