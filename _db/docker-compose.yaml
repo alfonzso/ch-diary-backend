@@ -3,6 +3,7 @@ services:
   postgres:
     # postgres://alfonzso:@localhost:5432/ch_diary
     image: bitnami/postgresql:11.14.0-debian-10-r24
+    user: "${UID}:${GID}"
     restart: always
     environment:
       - POSTGRES_USER=alfonzso
@@ -11,4 +12,4 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./data:/bitnami/postgresql

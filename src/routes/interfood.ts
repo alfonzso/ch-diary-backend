@@ -37,7 +37,7 @@ export default (app: Router) => {
         const response: InterfoodImport[] = await interFoodTypeInstance.import(req.payload!.userId, req.body.data)
 
         for (const food of response) {
-          diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });
+          await diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });
         }
 
         return res.status(200).json({ ...response, data: req.payload });

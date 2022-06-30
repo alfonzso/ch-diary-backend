@@ -15,7 +15,7 @@ const route = Router();
 export default (app: Router) => {
   app.use('/auth', route);
 
-  interface RegisterRequest<T> extends Express.Request {
+  interface RegisterRequest<T> extends Request {
     body: T
   }
 

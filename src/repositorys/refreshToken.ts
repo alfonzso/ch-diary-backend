@@ -29,8 +29,8 @@ export default class RefreshTokenRepository {
   }
 
   // used to check if the token sent by the client is in the database.
-  public findRefreshTokenById(id: string) {
-    return this.utils.prismaClient.refreshToken.findUnique({
+  public async findRefreshTokenById(id: string) {
+    return await this.utils.prismaClient.refreshToken.findUnique({
       where: {
         id,
       },
@@ -38,10 +38,12 @@ export default class RefreshTokenRepository {
   }
 
   // soft delete tokens after usage.
-  public deleteRefreshToken(id: string) {
-    return this.utils.prismaClient.refreshToken.update({
+  public async deleteRefreshToken(id: string) {
+    const refToken = await this.findRefreshTokenById(id)
+    if (!refToken) return
+    return await this.utils.prismaClient.refreshToken.update({
       where: {
-        id,
+        id: refToken.id,
       },
       data: {
         revoked: true
