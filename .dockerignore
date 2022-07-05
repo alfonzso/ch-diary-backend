@@ -1,8 +1,11 @@
-node_modules
-npm-debug.log
-.tmp
-.vscode
-coverage
-test
-.env*
-Dockerfile
+# Ignore everything
+**
+# Allow files/folders
+!config
+!prisma
+!src
+!babel.config.js
+!.babelrc
+!tsconfig*.json
+!package*.json
+!server.ts
