@@ -24,7 +24,8 @@ async function isDbHealthy(): Promise<any> {
   try {
     await new PrismaClient().$queryRaw`SELECT 1`;
     return true
-  } catch (e: any) {
-    throw new Error("Prisma check failed", e);
+  } catch (e) {
+    console.log(e);
+    throw new Error("Prisma check failed");
   }
 }
