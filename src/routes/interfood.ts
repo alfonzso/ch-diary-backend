@@ -1,13 +1,11 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { NextFunction, Response, Router } from 'express';
 import { isAuthenticated, validateRequest } from '../middlewares';
 import { DiaryService, InterfoodService } from '../services';
 import { Container } from 'typedi';
 import { Logger } from 'winston';
-import { addNewEntry, InterfoodImport, IUser, UserPayload } from '../types';
-import { body, param, query } from 'express-validator';
-import { Prisma, User } from '@prisma/client';
-import { InterFoodTypeRepository, UserRepository } from '../repositorys';
-import { BadRequest } from '../errors';
+import { InterfoodImport, UserPayload } from '../types';
+import { body } from 'express-validator';
+import { UnauthorizedError } from '../errors';
 
 const route = Router();
 

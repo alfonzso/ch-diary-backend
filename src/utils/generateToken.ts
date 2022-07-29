@@ -4,7 +4,11 @@ import jwt from 'jsonwebtoken';
 class TokenManager {
 
   generateAccessToken(user: User) {
-    return jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_ACCESS_SECRET!, {
+    return jwt.sign({
+      userId: user.id,
+      userEmail: user.email,
+      userNickName: user.nickname,
+    }, process.env.JWT_ACCESS_SECRET!, {
       expiresIn: '5m',
       // expiresIn: '5s',
     });
@@ -19,7 +23,7 @@ class TokenManager {
       userId: user.id,
       jti
     }, process.env.JWT_REFRESH_SECRET!, {
-      expiresIn: '8h',
+      expiresIn: '2d',
       // expiresIn: '15s',
     });
   }

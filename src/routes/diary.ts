@@ -3,9 +3,8 @@ import { isAuthenticated, validateRequest } from '../middlewares';
 import { DiaryService } from '../services/';
 import { Container } from 'typedi';
 import { Logger } from 'winston';
-import { addNewEntry, IUser } from '../types';
-import { body, param, query } from 'express-validator';
-import { Prisma, User } from '@prisma/client';
+import { addNewEntry } from '../types';
+import { body, param } from 'express-validator';
 import { UserRepository } from '../repositorys';
 import { BadRequest } from '../errors';
 
