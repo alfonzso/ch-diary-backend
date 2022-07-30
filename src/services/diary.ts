@@ -10,14 +10,6 @@ import { Utils } from "../utils";
 export default class DiaryService {
   constructor(
     @Inject('logger') private logger: Logger,
-    // @Inject('utils') private myUtils: MyUtils,
-    // @Inject('userRepository') private userRepository: UserRepository,
-    // @Inject('refreshToken') private refreshToken: RefreshTokenRepository,
-    // @Inject('interFoodType') private interFoodType: InterFoodTypeRepository,
-    // @Inject('interFood') private interFood: InterFoodRepository,
-    // @Inject('foodProperite') private foodProperite: FoodProperiteRepository,
-    // @Inject('food') private food: FoodRepository,
-    // @Inject('chDiary') private chDiary: ChDiaryRepository,
     private interFoodType: InterFoodTypeRepository,
     private interFood: InterFoodRepository,
     private foodProperite: FoodProperiteRepository,
@@ -75,7 +67,7 @@ export default class DiaryService {
 
       const chDiaryResp: ChDiary = await this.chDiary.add(diaryData)
 
-      return { success: true, message: 'sucsucsuc', db: chDiaryResp }
+      return { success: true, db: chDiaryResp }
     } catch (e) {
       this.logger.error(e);
       throw e;

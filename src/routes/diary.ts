@@ -8,7 +8,6 @@ import { body, param } from 'express-validator';
 import { UserRepository } from '../repositorys';
 import { BadRequest } from '../errors';
 
-// import fetch from "node-fetch";
 import fetch from 'cross-fetch';
 import { Tabletojson } from 'tabletojson';
 
@@ -47,7 +46,6 @@ export default (app: Router) => {
         const diaryServiceInstance = Container.get(DiaryService);
         const user = await Container.get(UserRepository).findUserByNickName(req.params.nickname as string)
         if (!user) throw new BadRequest('Nick not exists')
-        console.log(user)
         const response = await diaryServiceInstance.getEntryByUserId(user)
 
         return res.status(200).json({ ...response });
@@ -79,7 +77,7 @@ export default (app: Router) => {
     });
 
 
-
+  // TEST ONLY FUNCS
   route.get('/fetchinterfood', async (req: Request, res: Response, next: NextFunction) => {
     const logger: Logger = Container.get('logger');
     try {
