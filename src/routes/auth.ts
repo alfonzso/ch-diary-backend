@@ -9,6 +9,7 @@ import { utilsInstance } from '../utils';
 
 import { Container } from 'typedi';
 import { Logger } from 'winston';
+import config from '../../config';
 
 const route = Router();
 
@@ -77,10 +78,29 @@ export default (app: Router) => {
       }
     });
 
+
+  route.post('/logout',
+    async (req: Request, res: Response, next: NextFunction) => {
+      const logger: Logger = Container.get('logger');
+      try {
+
+        res.clearCookie(config.jwtCookieName, {
+          httpOnly: true,
+          sameSite: true,
+          path: '/api/auth',
+        });
+
+        res.status(201).json({ success: true, message: 'User logged out successfully' })
+
+      } catch (e) {
+        logger.error('🔥 error: %o', e);
+        return next(e);
+      }
+    });
+
   route.get(
     '/refreshToken',
-    // body('email').isEmail().withMessage('Please provide a valid email address'),
-    cookie('refresh_token').not().isEmpty().withMessage('Token cannot be empty'),
+    cookie(config.jwtCookieName).not().isEmpty().withMessage('Token cannot be empty'),
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');

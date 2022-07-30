@@ -5,6 +5,7 @@ import { UserService } from '../../../src/services';
 import Container from 'typedi';
 import { UserRepository } from '../../../src/repositorys';
 import dependencyInjectorLoader from '../../../src/loaders/dependencyInjector';
+import config from '../../../config';
 
 type data = {
   accessToken: string,
@@ -39,14 +40,14 @@ describe('register -> refreshToken -> delete ', () => {
     let refreshTokenCookie = response.headers['set-cookie'][0]
       .split(',')
       .map((item: any) => item.split(';')[0])
-      .filter((cookie: string) => cookie.includes("refresh_token="))[0]
+      .filter((cookie: string) => cookie.includes(`${config.jwtCookieName}=`))[0]
     expect(refreshTokenCookie.length).not.toEqual(0)
   })
 
   test('refreshToken API Request', async () => {
     const result = await request(app)
       .get('/api/auth/refreshToken')
-      .set('Cookie', [`refresh_token=${token.refreshToken}`])
+      .set('Cookie', [`${config.jwtCookieName}=${token.refreshToken}`])
     const res = result.body;
     expect(res.accessToken.length).not.toEqual(0)
     expect(res.refreshToken.length).not.toEqual(0)

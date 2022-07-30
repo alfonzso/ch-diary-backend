@@ -42,14 +42,7 @@ describe('api -> diary -> addNewEntry ', () => {
     console.log(
       token
     )
-    // expect(token.accessToken.length).not.toEqual(0)
-    // expect(token.refreshToken.length).not.toEqual(0)
 
-    // let refreshTokenCookie = response.headers['set-cookie'][0]
-    //   .split(',')
-    //   .map((item: any) => item.split(';')[0])
-    //   .filter((cookie: string) => cookie.includes("refresh_token="))[0]
-    // expect(refreshTokenCookie.length).not.toEqual(0)
   })
 
 
