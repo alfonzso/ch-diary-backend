@@ -5,7 +5,7 @@ import { Container } from 'typedi';
 import { Logger } from 'winston';
 import { InterfoodImport, UserPayload } from '../types';
 import { body } from 'express-validator';
-import { UnauthorizedError } from '../errors';
+import { FailToAddNewEntryError } from '../errors/failToAddNewEntry';
 
 const route = Router();
 
@@ -32,13 +32,14 @@ export default (app: Router) => {
       try {
         const interFoodTypeInstance = Container.get(InterfoodService);
         const diaryServiceInstance = Container.get(DiaryService);
-        const response: InterfoodImport[] = await interFoodTypeInstance.import(req.payload!.userId, req.body.data)
+        const importedFoodList: InterfoodImport[] = await interFoodTypeInstance.import(req.payload!.userId, req.body.data)
 
-        for (const food of response) {
-          await diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });
+        for (const food of importedFoodList) {
+          const { success } = await diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });
+          if (!success) throw new FailToAddNewEntryError()
         }
 
-        return res.status(200).json({ ...response, data: req.payload });
+        return res.status(200).json({ importedFoodList });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

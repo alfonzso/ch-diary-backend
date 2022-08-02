@@ -26,6 +26,8 @@ export default {
   jwtSecret: process.env.JWT_SECRET,
   jwtAlgorithm: process.env.JWT_ALGO,
 
+  jwtCookieName: "refresh_token",
+
   /**
    * Used by winston logger
    */

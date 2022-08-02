@@ -4,7 +4,7 @@ import { PasswordManager, passwordManagerInstance } from "./password";
 import { PrismaClient } from "@prisma/client";
 import { TokenManager, tokenManagerInstance } from "./generateToken";
 import { Response } from "express";
-import sendRefreshToken from "./sendRefreshToken";
+import sendRefreshToken from "./setCookie";
 import Container from "typedi";
 import { Logger } from "winston";
 import util from 'util';

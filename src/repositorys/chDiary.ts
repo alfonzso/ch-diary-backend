@@ -56,27 +56,6 @@ export default class ChDiaryRepository {
           }
         }
       }
-      // include: {
-      //   // userId: false,
-      //   // posts: true,
-
-      //   User: {
-      //     select: {
-      //       email: true
-      //     }
-      //   },
-      //   Food: {
-      //     include: {
-      //       FoodProperite: true,
-      //       Interfood: {
-      //         include: {
-      //           InterfoodType: true
-      //         }
-      //       }
-      //     }
-      //   },
-      //   // User: true,
-      // },
     })
   }
   public async getUserFoodByDate(userId: string, createdAt: Date) {
