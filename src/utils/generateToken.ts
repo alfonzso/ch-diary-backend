@@ -1,14 +1,18 @@
 import { User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import { jwtUserPayload } from '../types/jwt';
 
 class TokenManager {
 
-  generateAccessToken(user: User) {
-    return jwt.sign({
-      userId: user.id,
-      userEmail: user.email,
-      userNickName: user.nickname,
-    }, process.env.JWT_ACCESS_SECRET!, {
+  generateAccessToken(usr: User) {
+    const userData: jwtUserPayload = {
+      user: {
+        id: usr.id,
+        email: usr.email,
+        nickname: usr.nickname
+      }
+    }
+    return jwt.sign({user: userData.user}, process.env.JWT_ACCESS_SECRET!, {
       expiresIn: '5m',
       // expiresIn: '5s',
     });
@@ -25,6 +29,7 @@ class TokenManager {
     }, process.env.JWT_REFRESH_SECRET!, {
       expiresIn: '2d',
       // expiresIn: '15s',
+      // expiresIn: '10m',
     });
   }
 

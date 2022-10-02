@@ -40,7 +40,7 @@ export default (app: Router) => {
       const logger: Logger = Container.get('logger');
       try {
         const userServiceInstance = Container.get(UserService);
-        const userData = await userServiceInstance.GetUser((req.payload as UserPayload).email) as Prisma.UserUpdateInput
+        const userData = await userServiceInstance.GetUser((req.user as UserPayload).email) as Prisma.UserUpdateInput
         delete userData.createdAt
         delete userData.updatedAt
         delete userData.password

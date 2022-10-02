@@ -122,7 +122,7 @@ export default (app: Router) => {
     try {
       const authServiceInstance = Container.get(AuthService);
       const [isSucceed,] = await authServiceInstance.AuthUser()
-      return res.status(200).json({ success: isSucceed, data: req.payload });
+      return res.status(200).json({ success: isSucceed, data: req.user });
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);

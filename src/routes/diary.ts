@@ -22,6 +22,7 @@ export default (app: Router) => {
     '/addNewEntry',
     body('userDTO.id').not().isEmpty(),
     validateRequest,
+    isAuthenticated,
     async (req: Request, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
@@ -29,7 +30,7 @@ export default (app: Router) => {
         const newEntry: addNewEntry = req.body
         const response = await diaryServiceInstance.addNewEntry(newEntry)
 
-        return res.status(200).json({ ...response, data: req.payload });
+        return res.status(200).json({ ...response, data: req.user });
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -37,14 +38,17 @@ export default (app: Router) => {
     });
 
   route.get(
-    '/getEntry/nickname/:nickname',
-    param('nickname').not().isEmpty().withMessage('id needed!'),
-    validateRequest,
+    '/getEntry',
+    // param('nickname').not().isEmpty().withMessage('id needed!'),
+    // validateRequest,
+    isAuthenticated,
     async (req: Request, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
+        if (!req.user) throw new BadRequest('User not exists')
+
         const diaryServiceInstance = Container.get(DiaryService);
-        const user = await Container.get(UserRepository).findUserByNickName(req.params.nickname as string)
+        const user = await Container.get(UserRepository).findUserByNickName(req.user.nickname)
         if (!user) throw new BadRequest('Nick not exists')
         const response = await diaryServiceInstance.getEntryByUserId(user)
 
@@ -56,15 +60,18 @@ export default (app: Router) => {
     });
 
   route.get(
-    '/getEntry/nickname/:nickname/date/:date',
-    param('nickname').not().isEmpty().withMessage('id needed!'),
+    '/getEntry/date/:date',
+    // param('nickname').not().isEmpty().withMessage('id needed!'),
     param('date').not().isEmpty().withMessage('date needed!'),
     validateRequest,
+    isAuthenticated,
     async (req: Request, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
+        if (!req.user) throw new BadRequest('User not exists')
+
         const diaryServiceInstance = Container.get(DiaryService);
-        const user = await Container.get(UserRepository).findUserByNickName(req.params.nickname as string)
+        const user = await Container.get(UserRepository).findUserByNickName(req.user.nickname )
         if (!user) throw new BadRequest('Nick not exists')
         const date: Date = new Date(req.params.date as string)
         const response = await diaryServiceInstance.getEntryByUserNickNameAndDate(user, date)
@@ -116,7 +123,7 @@ export default (app: Router) => {
     try {
       const authServiceInstance = Container.get(DiaryService);
       const response = await authServiceInstance.Test()
-      return res.status(200).json({ ...response, data: req.payload });
+      return res.status(200).json({ ...response, data: req.user });
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);
@@ -128,7 +135,7 @@ export default (app: Router) => {
     try {
       const authServiceInstance = Container.get(DiaryService);
       const response = await authServiceInstance.Test1()
-      return res.status(200).json({ ...response, data: req.payload });
+      return res.status(200).json({ ...response, data: req.user });
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);
