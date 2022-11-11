@@ -6,5 +6,6 @@ export default (res: Response, token: string) => {
     httpOnly: true,
     sameSite: true,
     path: '/api/auth',
+    expires: new Date().setFullYear(new Date().getFullYear() + 100)
   });
 }
