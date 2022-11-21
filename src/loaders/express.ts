@@ -7,6 +7,7 @@ import routes from "../routes";
 
 // let's initialize our express app
 export default ({ app }: { app: express.Application }) => {
+  app.set('trust proxy', 1)
   app.use(cookieParser());
 
   // let's parse our incoming request with JSON payload using the express.json() middleware
