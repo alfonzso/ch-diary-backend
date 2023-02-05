@@ -15,7 +15,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # STAGE 2
-FROM node:16-alpine
+FROM node:16-alpine3.15
 RUN apk add --no-cache tzdata && \
     echo "Europe/Budapest" >  /etc/timezone && \
     cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
