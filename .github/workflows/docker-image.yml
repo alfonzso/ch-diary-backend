@@ -1,11 +1,11 @@
 name: ChDiary BE docker build
 
 on:
-  # workflow_dispatch:
-  #   inputs:
-  #     msg:
-  #       required: false
-  #       description: "Test"
+  workflow_dispatch:
+    inputs:
+      msg:
+        required: false
+        description: "Manual release creation"
   #       default: "Manual push ?!"
   #     tag:
   #       required: false
@@ -22,7 +22,9 @@ on:
 jobs:
 
   build:
-    if: "contains(github.event.head_commit.message, 'create-release')"
+    if: |
+      contains(github.event.head_commit.message, 'create-release') ||
+      (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
 
     steps:
