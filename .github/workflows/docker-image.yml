@@ -1,17 +1,17 @@
 name: ChDiary BE docker build
 
 on:
-  workflow_dispatch:
-    inputs:
-      msg:
-        required: false
-        description: "Test"
-        default: "Manual push ?!"
-      tag:
-        required: false
-        description: "Tag of image"
-        default: "release-0.0"
-  # push:
+  # workflow_dispatch:
+  #   inputs:
+  #     msg:
+  #       required: false
+  #       description: "Test"
+  #       default: "Manual push ?!"
+  #     tag:
+  #       required: false
+  #       description: "Tag of image"
+  #       default: "release-0.0"
+  push:
   #   branches: [ master ]
   # pull_request:
   #   branches: [ master ]
@@ -22,7 +22,7 @@ on:
 jobs:
 
   build:
-
+    if: "contains(github.event.head_commit.message, 'create-release')"
     runs-on: ubuntu-latest
 
     steps:
@@ -50,6 +50,7 @@ jobs:
       # id: step_one
       run: |
         echo "GIT_VERSION=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+        echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | tr / - )" >> $GITHUB_ENV
 
     - name: Build and push
       uses: docker/build-push-action@v2
@@ -57,7 +58,8 @@ jobs:
         context: .
         push: true
         # platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
-        tags: alfonzso/chdiary-be:${{ github.event.inputs.tag }}.${{ github.run_number }}
+        # tags: alfonzso/chdiary-be:${{ github.event.inputs.tag }}.${{ github.run_number }}
+        tags: alfonzso/chdiary-be:${{ env.GIT_BRANCH }}.${{ github.run_number }}
         cache-from: type=registry,ref=alfonzso/chdiary-be:buildcache
         cache-to: type=registry,ref=alfonzso/chdiary-be:buildcache,mode=max
         build-args: |

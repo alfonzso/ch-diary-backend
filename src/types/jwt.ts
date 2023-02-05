@@ -1,10 +1,14 @@
 
 type UserPayload = {
-  userId: string;
-  email: string;
+  id: string
+  email: string
+  nickname: string
 };
 
+export interface jwtUserPayload {
+  user: UserPayload
+}
 
-export type{
+export type {
   UserPayload
 }

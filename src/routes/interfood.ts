@@ -6,6 +6,7 @@ import { Logger } from 'winston';
 import { InterfoodImport, UserPayload } from '../types';
 import { body } from 'express-validator';
 import { FailToAddNewEntryError } from '../errors/failToAddNewEntry';
+import { BadRequest } from '../errors';
 
 const route = Router();
 
@@ -14,7 +15,7 @@ export default (app: Router) => {
 
   interface RegisterRequest<T> extends Express.Request {
     body: T
-    payload?: UserPayload
+    user?: UserPayload
   }
 
   route.post(
@@ -30,9 +31,11 @@ export default (app: Router) => {
     async (req: RegisterRequest<{ data: string[], payload: UserPayload }>, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
       try {
+        if (!req.user) throw new BadRequest("User not exists")
+
         const interFoodTypeInstance = Container.get(InterfoodService);
         const diaryServiceInstance = Container.get(DiaryService);
-        const importedFoodList: InterfoodImport[] = await interFoodTypeInstance.import(req.payload!.userId, req.body.data)
+        const importedFoodList: InterfoodImport[] = await interFoodTypeInstance.import(req.user.id, req.body.data)
 
         for (const food of importedFoodList) {
           const { success } = await diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });

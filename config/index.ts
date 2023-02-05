@@ -23,8 +23,11 @@ export default {
   /**
    * Your secret sauce
    */
-  jwtSecret: process.env.JWT_SECRET,
-  jwtAlgorithm: process.env.JWT_ALGO,
+  jwtAccessToken: process.env.JWT_ACCESS_SECRET!,
+  jwtRefreshToken: process.env.JWT_REFRESH_SECRET!,
+
+  jwtAccessTokenExpIn: process.env.JWT_ACCESS_TOKEN_EXP || '5m',
+  jwtRefreshTokenExpIn: process.env.JWT_REFRESH_TOKEN_EXP || '2d',
 
   jwtCookieName: "refresh_token",
 
