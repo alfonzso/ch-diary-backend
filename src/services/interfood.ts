@@ -1,9 +1,9 @@
 import { Service, Inject } from "typedi";
 import { Logger } from "winston";
+import LoggerInstance from "../loaders/logger";
 import { InterfoodImport } from "../types";
 import { Tabletojson } from 'tabletojson';
 import { Prisma } from "@prisma/client";
-// import * as crossf from 'cross-fetch';
 import 'cross-fetch/polyfill';
 
 interface foodPropFromInterfood {
@@ -19,54 +19,45 @@ export default class InterfoodService {
   ) {
   }
 
-  // private withoutTime(dateTime: Date) {
-  //   const padTo2Digits = (num: number) => {
-  //     return num.toString().padStart(2, '0');
-  //   }
-
-  //   const formatDate = (date: Date) => {
-  //     return [
-  //       date.getFullYear(),
-  //       padTo2Digits(date.getMonth() + 1),
-  //       padTo2Digits(date.getDate()),
-  //     ].join('-');
-  //   }
-  //   const year = dateTime.getFullYear()
-  //   const month = dateTime.getMonth()
-  //   const day = dateTime.getDate()
-
-  //   return formatDate(new Date(year, month, day))
-  // }
-
   private stringToNumber(num: string) {
     let regex = /[+-]?\d+(\.\d+)?/g;
-    return (num)!.match(regex)!.map(function (v) { return parseFloat(v); })[0]
+    let matched = num.match(regex)
+    if (matched) {
+      return matched.map(v => parseFloat(v)).find(Boolean) || 0;
+    }
+    return 0
   }
 
   private orderChecker(interfoodImports: InterfoodImport[], sortedInterfoodData: InterfoodImport[]) {
     let errorHappened = false
+
     interfoodImports.sort((a, b) => { return a.createdAt.getTime() - b.createdAt.getTime() })
       .map((foodImports: InterfoodImport, index: number) => {
         if (foodImports.foodName !== sortedInterfoodData[index].foodName) errorHappened = true
       })
 
-    if (errorHappened) console.error("import with wrong order ( not sure ): ", interfoodImports);
+    if (errorHappened) this.logger.error(`import with wrong order ( not sure ): ${interfoodImports}`);
   }
 
   private getNettoWeightFromString(interfoodBodyText: string) {
     try {
       return parseInt(interfoodBodyText.match(/>Nettó tömeg: (?<netto>\d+)/)!.groups!.netto)
     } catch (error) {
-      console.error("getNettoWeightFromString: ", error)
+      this.logger.error(`getNettoWeightFromString: ${error}`)
     }
   }
 
   private async importedDataToInterfoodImport(userId: string, sortedInterfoodData: InterfoodImport[]) {
     return await Promise.all(
       sortedInterfoodData.map(async ({ createdAt, interFoodType, foodName }) => {
-        const resp = await fetch(`https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt.toLocaleDateString('en-CA')}&l=hu`)
+        const interfoodUrl = `https://www.interfood.hu/getosszetevok/?k=${interFoodType}&d=${createdAt.toLocaleDateString('en-CA')}&l=hu`
+        const resp = await fetch(interfoodUrl)
         const bodyText = await resp.text()
         const foodPortion = this.getNettoWeightFromString(bodyText)
+
+        const fid = `${interFoodType.trim()}-${foodName.slice(0, 6).trim()}`
+        this.logger.debug(`${fid}: interfoodUrl: ${interfoodUrl}`)
+        this.logger.debug(`${fid}: foodPortion: ${foodPortion}`)
 
         let foodPropsFromTable = (Tabletojson.convert(bodyText) as foodPropFromInterfood[][])[0]
 
@@ -78,6 +69,7 @@ export default class InterfoodService {
           portein: this.stringToNumber(foodPropsFromTable[6][2]),
         }
 
+        this.logger.debug(`${fid}: foodProp: ${JSON.stringify(foodProp)}`)
         return { userId, foodName, foodPortion, createdAt, interFoodType, foodProp }
 
       }))
@@ -111,10 +103,14 @@ export default class InterfoodService {
       foodType: string;
       name: string;
     }
-    const res: InterfoodImport[] = (multiLine.map(line => {
-      let [date, foodType, name] = line.trim().split(";")
-      return { date, foodType, name }
-    }) as interFoodDataAsObject[])
+    const res: InterfoodImport[] = (
+      multiLine.map(
+        line => {
+          let [date, foodType, name] = line.trim().split(";")
+          this.logger.debug(`date: ${date}, foodType: ${foodType}, name: ${name}`)
+          return { date, foodType, name }
+        }
+      ) as interFoodDataAsObject[])
       .sort((a, b) => {
         if (a.date === b.date) {
           if (a.foodType === b.foodType) {
@@ -133,10 +129,14 @@ export default class InterfoodService {
 
   async import(userId: string, multiLine: string[]): Promise<InterfoodImport[]> {
     try {
+
+      this.logger.debug(`user: ${userId} multiline: ${multiLine}`)
       const sortedInterfoodData: InterfoodImport[] = this.sortInterfoodData(multiLine)
+      this.logger.debug(`user: ${userId} sortedInterfoodData: ${JSON.stringify(sortedInterfoodData)}`)
       let interfoodImports: InterfoodImport[] = await this.importedDataToInterfoodImport(userId, sortedInterfoodData)
       interfoodImports = this.dateFixerSlider(interfoodImports)
       this.orderChecker(interfoodImports, sortedInterfoodData)
+
       return interfoodImports
 
     } catch (e) {

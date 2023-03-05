@@ -1,8 +1,16 @@
 import winston from 'winston';
 import config from '../../config';
 
+const prettyJson = winston.format.printf(info => {
+  if (info.message.constructor === Object) {
+    info.message = JSON.stringify(info.message, null, 4)
+  }
+  return `${info.level}: ${info.message}`
+})
+
+
 const transports = [];
-if(process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV !== 'development') {
   transports.push(
     new winston.transports.Console()
   )
@@ -24,9 +32,11 @@ const LoggerInstance = winston.createLogger({
     winston.format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss'
     }),
-    winston.format.errors({ stack: true }),
+    winston.format.colorize(),
+    winston.format.prettyPrint(),
     winston.format.splat(),
-    winston.format.json()
+    winston.format.simple(),
+    prettyJson,
   ),
   transports
 });

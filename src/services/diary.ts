@@ -1,10 +1,8 @@
 import { ChDiary, Food, FoodProperite, Interfood, InterfoodType, Prisma, User } from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Logger } from "winston";
-import { BadRequest, InvalidRequestParameters } from "../errors";
-import { UserRepository, RefreshTokenRepository, InterFoodTypeRepository, InterFoodRepository, FoodProperiteRepository, FoodRepository, ChDiaryRepository } from "../repositorys";
-import { addNewEntry, IUser } from "../types";
-import { Utils } from "../utils";
+import { InterFoodTypeRepository, InterFoodRepository, FoodProperiteRepository, FoodRepository, ChDiaryRepository } from "../repositorys";
+import { addNewEntry } from "../types";
 
 @Service()
 export default class DiaryService {
@@ -28,8 +26,6 @@ export default class DiaryService {
   }: addNewEntry
   ) {
     try {
-      // InterFoodTypeRepository
-      // if (userDTO === undefined) date =
       if (interFoodType === undefined) interFoodType = "-"
       const interFoodTypeResp: InterfoodType = await this.interFoodType.add(interFoodType)
 
@@ -77,8 +73,6 @@ export default class DiaryService {
 
   async getEntryByUserId({ id }: User) {
     try {
-      // if (nickname === undefined) throw new BadRequest('Id was undefined')
-      // this.getEntryByUserId.
       const chDiaryResp = await this.chDiary.getUserAllFood(id)
       return { success: true, data: chDiaryResp }
     } catch (e) {
