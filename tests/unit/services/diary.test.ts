@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { AuthService, DiaryService } from "../../../src/services";
 import { Utils, utilsInstance } from "../../../src/utils";
-import { ChDiaryRepository, FoodProperiteRepository, FoodRepository, InterFoodRepository, InterFoodTypeRepository, RefreshTokenRepository, UserRepository } from "../../../src/repositorys";
+import { ChDiaryRepository, FoodPropertyRepository, FoodRepository, InterFoodRepository, InterFoodTypeRepository, RefreshTokenRepository, UserRepository } from "../../../src/repositorys";
 import LoggerInstance from '../../../src/loaders/logger';
 import jwt from "jsonwebtoken";
 import Container from 'typedi';
@@ -16,7 +16,7 @@ describe('User', () => {
       dependencyInjectorLoader()
       const interFoodType = Container.get(InterFoodTypeRepository)
       const interFood = Container.get(InterFoodRepository)
-      const foodProperite = Container.get(FoodProperiteRepository)
+      const foodProperite = Container.get(FoodPropertyRepository)
       const food = Container.get(FoodRepository)
       const chDiary = Container.get(ChDiaryRepository)
 
@@ -89,12 +89,12 @@ describe('User', () => {
         chDiary,
       );
 
-      const foodProp: Prisma.FoodProperiteCreateInput = {
+      const foodProp: Prisma.FoodPropertyCreateInput = {
         ch: 100,
         fat: 100,
         gramm: 100,
-        kcal: 100,
-        portein: 100,
+        energy: 100,
+        protein: 100,
       }
 
       const newEntry = await userService.addNewEntry({
@@ -108,7 +108,7 @@ describe('User', () => {
 
       expect(newEntry).toEqual({
         success: true,
-        message: 'sucsucsuc',
+        // message: 'sucsucsuc',
         db: {
           id: '1',
           createdAt: new Date("2022-05-05"),

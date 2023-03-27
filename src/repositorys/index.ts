@@ -1,6 +1,6 @@
 import ChDiaryRepository from "./chDiary";
 import FoodRepository from "./food";
-import FoodProperiteRepository from "./foodProps";
+import FoodPropertyRepository from "./foodProps";
 import InterFoodRepository from "./interFood";
 import InterFoodTypeRepository from "./interFoodType";
 import RefreshTokenRepository from "./refreshToken";
@@ -10,7 +10,7 @@ export {
   InterFoodRepository,
   InterFoodTypeRepository,
   FoodRepository,
-  FoodProperiteRepository,
+  FoodPropertyRepository,
   ChDiaryRepository,
   UserRepository,
   RefreshTokenRepository,

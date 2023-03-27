@@ -35,11 +35,11 @@ export default class ChDiaryRepository {
           select: {
             name: true,
             portion: true,
-            FoodProperite: {
+            FoodProperty: {
               select: {
                 gramm: true,
-                kcal: true,
-                portein: true,
+                energy: true,
+                protein: true,
                 fat: true,
                 ch: true,
               }
@@ -82,11 +82,11 @@ export default class ChDiaryRepository {
           select: {
             name: true,
             portion: true,
-            FoodProperite: {
+            FoodProperty: {
               select: {
                 gramm: true,
-                kcal: true,
-                portein: true,
+                energy: true,
+                protein: true,
                 fat: true,
                 ch: true,
               }

@@ -1,7 +1,7 @@
-import { ChDiary, Food, FoodProperite, Interfood, InterfoodType, Prisma, User } from "@prisma/client";
+import { ChDiary, Food, FoodProperty, Interfood, InterfoodType, Prisma, User } from "@prisma/client";
 import { Service, Inject } from "typedi";
 import { Logger } from "winston";
-import { InterFoodTypeRepository, InterFoodRepository, FoodProperiteRepository, FoodRepository, ChDiaryRepository } from "../repositorys";
+import { InterFoodTypeRepository, InterFoodRepository, FoodPropertyRepository, FoodRepository, ChDiaryRepository } from "../repositorys";
 import { addNewEntry } from "../types";
 
 @Service()
@@ -10,7 +10,7 @@ export default class DiaryService {
     @Inject('logger') private logger: Logger,
     private interFoodType: InterFoodTypeRepository,
     private interFood: InterFoodRepository,
-    private foodProperite: FoodProperiteRepository,
+    private foodProperite: FoodPropertyRepository,
     private food: FoodRepository,
     private chDiary: ChDiaryRepository,
   ) {
@@ -35,7 +35,7 @@ export default class DiaryService {
         }
       })
 
-      const foodProperiteResp: FoodProperite = await this.foodProperite.add(
+      const foodPropertyResp: FoodProperty = await this.foodProperite.add(
         {
           data: {
             ...foodProp
@@ -48,7 +48,7 @@ export default class DiaryService {
           name: foodName,
           portion: foodPortion,
           interfoodId: interFoodResp.id,
-          foodProperiteId: foodProperiteResp.id
+          foodPropertyId: foodPropertyResp.id
         }
       })
 
