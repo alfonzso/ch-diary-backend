@@ -55,7 +55,7 @@ export default class InterfoodPropertyMapper {
       } else {
         return 0
       }
-    }).reduce((p, c) => p + c)
+    })
   }
 
   mappingTables(beforeMapping: mapStrNum) {
@@ -76,7 +76,7 @@ export default class InterfoodPropertyMapper {
     return { foodPortion, table: Tabletojson.convert(bodyText) as table }
   }
 
-  mapProperitesFromTableToFoodProperties(table: table) {
+  mapProperitesFromTableToFoodProperties(table: table, foodPortion: number[]) {
 
     const mappedMyTablet = table.map(v =>
       this.mappingTables(v.map(vv => {
@@ -86,29 +86,45 @@ export default class InterfoodPropertyMapper {
 
     this.logger.debug(`${this.fid}: mappedMyTablet: ${mappedMyTablet}`)
 
-    let summedFoodProperties = mappedMyTablet.reduce((prev, cur, i) => i === 0 ? cur :
-      Object.entries(cur)
-        .reduce(
-          (ac, [key, value]) =>
-            ({ ...ac, [key as keyof foodProperties]: value + prev[key as keyof foodProperties] }), this.empty
-        )
-      , this.empty
-    )
-
-    this.logger.debug(`${this.fid}: summedFoodProperties: ${summedFoodProperties}`)
-
-    return {
-      gramm: mappedMyTablet.map(v => v.avgNutritionInGramm).reduce((p, v) => p + v) / mappedMyTablet.length,
-      energy: summedFoodProperties.energy,
-      fat: summedFoodProperties.fat,
-      ch: summedFoodProperties.ch,
-      protein: summedFoodProperties.protein,
+    if (foodPortion.length != mappedMyTablet.length) {
+      throw new Error(`ERROR: foodPortion.length != mappedMyTablet.length => ${foodPortion.length} != ${mappedMyTablet.length}`);
     }
+
+    let summedFoodPortion = foodPortion.reduce((p, v) => p + v)
+    let summedavgNutrition = mappedMyTablet.map(v => v.avgNutritionInGramm).reduce((p, v) => p + v) / mappedMyTablet.length
+
+    let summingFoodProperties = mappedMyTablet.map((v, idx) => {
+      let currentMultiplier = foodPortion[idx] / v.avgNutritionInGramm
+      return {
+        energy: currentMultiplier * v.energy,
+        fat: currentMultiplier * v.fat,
+        ch: currentMultiplier * v.ch,
+        protein: currentMultiplier * v.protein,
+        // salt: currentMultiplier * v.salt,
+      }
+    }).reduce((pv, cv) => {
+      return {
+        energy: pv.energy + cv.energy,
+        fat: pv.fat + cv.fat,
+        ch: pv.ch + cv.ch,
+        protein: pv.protein + cv.protein,
+        // salt: pv.salt + cv.salt,
+      }
+    })
+
+    let divBy100 = Object.entries(summingFoodProperties)
+      .reduce(
+        (ac, [key, value]) => ({ ...ac, [key]: Number((value / (summedFoodPortion / 100)).toFixed(2)) }),
+        { energy: 0, fat: 0, ch: 0, protein: 0 }
+      )
+
+    return { foodProp: { ...divBy100, gramm: summedavgNutrition }, foodPortion: summedFoodPortion }
+
   }
 
   public async interfoodMapper(interFoodType: string, createdAt: Date) {
     let { foodPortion, table } = await this.getPropertiesFromInterfood(interFoodType, createdAt)
-    return { foodPortion, foodProp: this.mapProperitesFromTableToFoodProperties(table) }
+    return this.mapProperitesFromTableToFoodProperties(table, foodPortion)
   }
 
 }

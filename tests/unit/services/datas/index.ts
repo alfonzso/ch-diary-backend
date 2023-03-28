@@ -239,9 +239,97 @@ const expectedSuccessBuggedVal = [
   }
 ]
 
+const expectedSoupWithSecondCourse = [
+  {
+    "createdAt": "2023-03-27T12:00:00.000Z",
+    "foodName": "Tavaszi zöldborsóleves, Sokmagvas rántott pulykamell, párolt burgonyával, zöldségekkel",
+    "foodPortion": 600,
+    "foodProp": {
+      "ch": 7.65,
+      "energy": 97,
+      "fat": 4.1,
+      "gramm": 100,
+      "protein": 6.45
+    },
+    "interFoodType": "DKM",
+    "userId": "123456789"
+  },
+  {
+    "createdAt": "2023-03-28T12:00:00.000Z",
+    "foodName": "Póréhagymás sárgarépás gombaleves, Roston csirkemell, négysajtmártás, párolt karotta borsóval, kukoricával",
+    "foodPortion": 600,
+    "foodProp": {
+      "ch": 7.65,
+      "energy": 97,
+      "fat": 4.1,
+      "gramm": 100,
+      "protein": 6.45
+    },
+    "interFoodType": "DKM",
+    "userId": "123456789"
+  },
+  {
+    "createdAt": "2023-03-29T12:00:00.000Z",
+    "foodName": "Májgaluska leves gazdagon zöldségekkel, Rántott gomba, burgonyapüré (light)",
+    "foodPortion": 600,
+    "foodProp": {
+      "ch": 7.65,
+      "energy": 97,
+      "fat": 4.1,
+      "gramm": 100,
+      "protein": 6.45
+    },
+    "interFoodType": "DKM",
+    "userId": "123456789"
+  },
+  {
+    "createdAt": "2023-03-30T12:00:00.000Z",
+    "foodName": "Újházy tyúkhúsleves, Bácskai csirkés bulgur",
+    "foodPortion": 600,
+    "foodProp": {
+      "ch": 7.65,
+      "energy": 97,
+      "fat": 4.1,
+      "gramm": 100,
+      "protein": 6.45
+    },
+    "interFoodType": "DKM",
+    "userId": "123456789"
+  },
+  {
+    "createdAt": "2023-03-31T12:00:00.000Z",
+    "foodName": "Tejszínes feketeszeder leves, Borjúpaprikás bulgurral",
+    "foodPortion": 600,
+    "foodProp": {
+      "ch": 7.65,
+      "energy": 97,
+      "fat": 4.1,
+      "gramm": 100,
+      "protein": 6.45
+    },
+    "interFoodType": "DKM",
+    "userId": "123456789"
+  },
+  {
+    "createdAt": "2023-04-01T12:00:00.000Z",
+    "foodName": "Rántott fűszeres csirkecomb, amerikai káposztasaláta",
+    "foodPortion": 600,
+    "foodProp": {
+      "ch": 7.65,
+      "energy": 97,
+      "fat": 4.1,
+      "gramm": 100,
+      "protein": 6.45
+    },
+    "interFoodType": "D7",
+    "userId": "123456789"
+  }
+]
+
 export {
   expectedSuccessBuggedVal,
   expectedSuccessInterFoodImports,
   expectedSuccessInterFoodImportsSameDay,
-  expectedSuccessInterFoodImportsFoodMissingInMiddleWeek
+  expectedSuccessInterFoodImportsFoodMissingInMiddleWeek,
+  expectedSoupWithSecondCourse
 }

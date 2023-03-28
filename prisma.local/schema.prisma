@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String         @id @unique @default(uuid())
+  nickname      String         @unique
+  email         String         @unique
+  password      String
+  refreshTokens RefreshToken[]
+  ChDiary       ChDiary[]
+  // ChDiary       ChDiary?       @relation(fields: [chDiaryId], references: [id])
+  // chDiaryId     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  // ChDiary       ChDiary?       @relation(fields: [chDiaryId], references: [id])
+  // chDiaryId     String?
+}
+
+model RefreshToken {
+  id          String   @id @unique @default(uuid())
+  hashedToken String
+  userId      String
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+////////////////
+//  Food stuff
+////////////////
+
+model InterfoodType {
+  id        String      @id @unique @default(uuid())
+  name      String      @unique @default("-")
+  // foodId   String
+  // Food     Food   @relation(fields: [foodId], references: [id])
+  Interfood Interfood[]
+}
+
+model Interfood {
+  id              String        @id @unique @default(uuid())
+  // foodTypeId      String
+  // foodId     String
+  // Food       Food   @relation(fields: [foodId], references: [id])
+  // Food       Food[]
+  interfoodTypeId String
+  InterfoodType   InterfoodType @relation(fields: [interfoodTypeId], references: [id])
+  Food            Food[]
+}
+
+model FoodProperty {
+  id      String @id @unique @default(uuid())
+  gramm   Float
+  energy  Float
+  protein Float
+  fat     Float
+  ch      Float
+  Food    Food[]
+}
+
+model Food {
+  id             String       @id @unique @default(uuid())
+  name           String
+  portion        Float
+  // Interfood     Interfood[]
+  // FoodProperite FoodProperite[]
+  // chDiaryId     String
+  // ChDiary       ChDiary         @relation(fields: [chDiaryId], references: [id])
+  ChDiary        ChDiary[]
+  foodPropertyId String
+  FoodProperty   FoodProperty @relation(fields: [foodPropertyId], references: [id], onDelete: Cascade)
+  interfoodId    String
+  Interfood      Interfood    @relation(fields: [interfoodId], references: [id])
+  // Interfood     Interfood[]
+  // FoodProperite FoodProperite[]
+}
+
+model ChDiary {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  // User User[]
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Food   Food[]
+  foodId    String
+  Food      Food     @relation(fields: [foodId], references: [id])
+}

@@ -11,7 +11,7 @@ RUN npm config set unsafe-perm true
 RUN npm install
 
 COPY --chown=node:node . .
-RUN npx prisma generate
+RUN npx prisma generate --schema prisma.cloud/schema.prisma
 RUN npm run build
 
 # STAGE 2
