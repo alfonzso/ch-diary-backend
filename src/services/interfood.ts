@@ -37,6 +37,12 @@ export default class InterfoodService {
       }))
   }
 
+  private setToNoonWithGmt(date: Date): Date {
+    const newDate = new Date(date.getTime())
+    newDate.setHours(12 + Math.abs((date.getTimezoneOffset() / 60)), 0, 0)
+    return newDate;
+  }
+
   private dateFixerSlider(interfoodImports: InterfoodImport[]): InterfoodImport[] {
     let yesterday: Date[] = []
 
@@ -49,36 +55,7 @@ export default class InterfoodService {
       } else {
         yesterday.push(createdAtAsDate)
       }
-
-      // const newDate = new Date(createdAtAsDate.getTime())
-      // process.env.TZ = 'Europe/Budapest'
-
-      console.log(
-        "-------> ",
-        process.env.TZ,
-        "-------> ",
-        createdAtAsDate
-      )
-
-      const newDate = new Date(createdAtAsDate.getTime())
-      // gmt + 2, set to 'noon'
-      newDate.setHours(12 + Math.abs((createdAtAsDate.getTimezoneOffset() / 60)), 0, 0)
-
-      foodImports.createdAt = newDate
-
-      // // const newDate = new Date(createdAtAsDate)
-      // // // gmt + 2, set to 'noon'
-      // // newDate.setHours(12 + 2, 0, 0)
-      // // var yourDate = new Date();
-      // var yourDate = createdAtAsDate;
-      // const offset = yourDate.getTimezoneOffset();
-      // yourDate = new Date(yourDate.getTime() - (offset * 60 * 1000 - 36000000));
-      // // yourDate.setHours(12, 0, 0)
-      // yourDate.toISOString();
-      // yourDate.setMinutes(0)
-      // yourDate.getTimezoneOffset() / 60
-
-      // foodImports.createdAt = yourDate
+      foodImports.createdAt = this.setToNoonWithGmt(createdAtAsDate)
     }
     return interfoodImports
   }
