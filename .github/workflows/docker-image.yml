@@ -35,15 +35,21 @@ jobs:
 
     - name: Run jest test
       run: |
+        set -ex
         # npm config set unsafe-perm true
-        echo "
+        # echo "
+        # JWT_ACCESS_SECRET=123fafa321keke
+        # JWT_REFRESH_SECRET=123fafa321keke
+        # LOG_LEVEL=info
+        # " > .env
+        cat <<EOF > .env
         JWT_ACCESS_SECRET=123fafa321keke
         JWT_REFRESH_SECRET=123fafa321keke
-        LOG_LEVEL=debug
-        " > .env
+        LOG_LEVEL=info
+        EOF
         cat .env
         npm install
-        npm test
+        npm test -- "--silent"
 
   build:
     if: |
