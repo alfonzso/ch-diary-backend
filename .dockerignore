@@ -2,7 +2,7 @@
 **
 # Allow files/folders
 !config
-!prisma
+!prisma.cloud
 !src
 !babel.config.js
 !.babelrc

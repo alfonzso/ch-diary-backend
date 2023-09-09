@@ -12,5 +12,5 @@ export interface addNewEntry {
   foodPortion: number,
   createdAt?: Date,
   interFoodType?: string,
-  foodProp: Prisma.FoodProperiteCreateInput
+  foodProp: Prisma.FoodPropertyCreateInput
 }

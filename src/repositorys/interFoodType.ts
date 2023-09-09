@@ -11,9 +11,11 @@ export default class InterFoodTypeRepository {
   ) { }
 
   public async add(name: string): Promise<InterfoodType> {
-    const checkType = await this.getByType(name)
-    if (checkType?.id && checkType?.id.length > 0) return checkType
-    console.log("checkType :", checkType, "name: ", name)
+    const getExistingType = await this.getByType(name)
+    if (getExistingType && getExistingType.id.length > 0) {
+      return getExistingType
+    }
+    console.log("checkType :", getExistingType, "name: ", name)
     return await this.utils.prismaClient.interfoodType.create({
       data: {
         name

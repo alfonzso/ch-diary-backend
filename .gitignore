@@ -6,3 +6,5 @@ dist
 coverage
 .env.prod
 _db
+prisma.local/
+prisma.cloud/
