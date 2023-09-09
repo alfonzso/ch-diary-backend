@@ -35,7 +35,7 @@ jobs:
 
     - name: Run jest test
       run: |
-        npm config set unsafe-perm true
+        # npm config set unsafe-perm true
         npm install
         npm test
 
