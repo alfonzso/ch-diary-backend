@@ -16,9 +16,7 @@ RUN npm run build
 
 # STAGE 2
 FROM node:16-alpine3.16
-RUN apk add --no-cache tzdata && \
-    echo "Europe/Budapest" >  /etc/timezone && \
-    cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+RUN apk add --no-cache tzdata
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 USER node
