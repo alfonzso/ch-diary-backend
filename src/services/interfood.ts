@@ -50,11 +50,35 @@ export default class InterfoodService {
         yesterday.push(createdAtAsDate)
       }
 
+      // const newDate = new Date(createdAtAsDate.getTime())
+      // process.env.TZ = 'Europe/Budapest'
+
+      console.log(
+        "-------> ",
+        process.env.TZ,
+        "-------> ",
+        createdAtAsDate
+      )
+
       const newDate = new Date(createdAtAsDate.getTime())
       // gmt + 2, set to 'noon'
-      newDate.setHours(12 + 2, 0, 0)
+      newDate.setHours(12 + Math.abs((createdAtAsDate.getTimezoneOffset() / 60)), 0, 0)
 
       foodImports.createdAt = newDate
+
+      // // const newDate = new Date(createdAtAsDate)
+      // // // gmt + 2, set to 'noon'
+      // // newDate.setHours(12 + 2, 0, 0)
+      // // var yourDate = new Date();
+      // var yourDate = createdAtAsDate;
+      // const offset = yourDate.getTimezoneOffset();
+      // yourDate = new Date(yourDate.getTime() - (offset * 60 * 1000 - 36000000));
+      // // yourDate.setHours(12, 0, 0)
+      // yourDate.toISOString();
+      // yourDate.setMinutes(0)
+      // yourDate.getTimezoneOffset() / 60
+
+      // foodImports.createdAt = yourDate
     }
     return interfoodImports
   }

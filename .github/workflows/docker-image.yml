@@ -46,6 +46,7 @@ jobs:
         JWT_ACCESS_SECRET=123fafa321keke
         JWT_REFRESH_SECRET=123fafa321keke
         LOG_LEVEL=info
+        TZ=Europe/Budapest
         EOF
         cat .env
         npm install
