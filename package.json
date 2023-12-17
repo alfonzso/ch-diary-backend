@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "node_modules/.bin/prisma migrate dev --schema prisma.cloud/schema.prisma && nodemon server.ts --exec \"ts-node\" server.ts -e ts",
+    "cloud": "node_modules/.bin/prisma migrate dev --schema prisma.cloud/schema.prisma && nodemon server.ts --exec \"ts-node\" server.ts -e ts",
+    "dev": "node_modules/.bin/prisma migrate dev --schema prisma.local/schema.prisma && nodemon server.ts --exec \"ts-node\" server.ts -e ts",
     "build": "tsc -p .",
     "test": "node_modules/.bin/prisma migrate dev --schema prisma.local/schema.prisma && jest"
   },
