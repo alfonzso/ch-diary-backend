@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "prisma": {
+    "seed": "ts-node prisma.local/seed.ts"
+  },
   "scripts": {
-    "cloud": "node_modules/.bin/prisma migrate dev --schema prisma.cloud/schema.prisma && nodemon server.ts --exec \"ts-node\" server.ts -e ts",
-    "dev": "node_modules/.bin/prisma migrate dev --schema prisma.local/schema.prisma && nodemon server.ts --exec \"ts-node\" server.ts -e ts",
+    "cloud": "bash scripts/devOrProd.sh cloud",
+    "dev": "bash ./scripts/devOrProd.sh",
     "build": "tsc -p .",
-    "test": "node_modules/.bin/prisma migrate dev --schema prisma.local/schema.prisma && jest"
+    "test": "npx prisma migrate dev --schema prisma.local/schema.prisma && jest"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -25,8 +28,11 @@
     "@babel/preset-typescript": "^7.16.7",
     "@babel/runtime": "^7.17.9",
     "@types/cookie-parser": "^1.4.3",
+    "@types/express-ejs-layouts": "^2.5.4",
     "@types/jest": "^27.5.0",
     "@types/node": "^16.11.10",
+    "@types/pbkdf2": "^3.1.2",
+    "@types/pug": "^2.0.10",
     "@types/supertest": "^2.0.12",
     "express-list-endpoints": "^6.0.0",
     "jest": "^28.1.0",
@@ -38,18 +44,22 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
-    "cross-fetch": "^3.1.5",
     "@prisma/client": "^3.5.0",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "cookie-parser": "^1.4.6",
     "core-js": "^3.22.5",
+    "cross-fetch": "^3.1.5",
     "dotenv": "^16.0.0",
+    "ejs": "^3.1.9",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
+    "express-ejs-layouts": "^2.5.1",
     "express-validator": "^6.13.0",
     "jsonwebtoken": "^8.5.1",
+    "pbkdf2": "^3.1.2",
+    "pug": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "^0.13.9",
     "tabletojson": "^2.0.7",

@@ -31,7 +31,7 @@ export default class UserRepository {
       },
     });
   }
-
+ 
   async createUserByEmailAndPassword(user: User) {
     user.password = await this.utils.passwordManager.toHash(user.password);
 

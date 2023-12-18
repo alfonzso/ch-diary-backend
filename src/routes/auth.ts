@@ -56,13 +56,10 @@ export default (app: Router) => {
       }
     });
 
-  // signin route
-  // router.post('/login', logIn);
   route.post('/login',
-    body('email').isEmail().withMessage('Please provide a valid email address'),
-    body('password')
-      .not().isEmpty()
-      .withMessage('Password cannot be empty'),
+    // body('email').isEmail().withMessage('Please provide a valid email address'),
+    body('nickname').not().isEmpty().withMessage('Please provide a valid nickname'),
+    body('password').not().isEmpty().withMessage('Password cannot be empty'),
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
       const logger: Logger = Container.get('logger');
@@ -71,7 +68,11 @@ export default (app: Router) => {
         const authServiceInstance = Container.get(AuthService);
         const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
         utilsInstance.sendRefreshToken(res, refreshToken);
-        res.json({ accessToken, refreshToken });
+        // response["HX-Redirect"] = "http://example.com/page_to_redirect_to"
+        // res["HX-Redirect"] = "http://example.com/page_to_redirect_to"
+        res.setHeader("HX-Redirect", "/")
+        // res.json({ accessToken, refreshToken });
+        res.end()
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

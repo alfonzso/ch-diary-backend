@@ -13,6 +13,15 @@ import { Tabletojson } from 'tabletojson';
 
 const route = Router();
 
+
+// export const getEntry = async (nickname: string) => {
+export const getEntry = async (nickname: string) => {
+  const diaryServiceInstance = Container.get(DiaryService);
+  const user = await Container.get(UserRepository).findUserByNickName(nickname)
+  if (!user) throw new BadRequest('Nick not exists')
+  return await diaryServiceInstance.getEntryByUserId(user)
+}
+
 export default (app: Router) => {
   app.use('/diary', route);
 
@@ -47,10 +56,12 @@ export default (app: Router) => {
       try {
         if (!req.user) throw new BadRequest('User not exists')
 
-        const diaryServiceInstance = Container.get(DiaryService);
-        const user = await Container.get(UserRepository).findUserByNickName(req.user.nickname)
-        if (!user) throw new BadRequest('Nick not exists')
-        const response = await diaryServiceInstance.getEntryByUserId(user)
+        // const diaryServiceInstance = Container.get(DiaryService);
+        // const user = await Container.get(UserRepository).findUserByNickName(req.user.nickname)
+        // if (!user) throw new BadRequest('Nick not exists')
+        // const response = await diaryServiceInstance.getEntryByUserId(user)
+
+        const response = await getEntry(req.user.nickname)
 
         return res.status(200).json({ ...response });
       } catch (e) {
@@ -71,7 +82,7 @@ export default (app: Router) => {
         if (!req.user) throw new BadRequest('User not exists')
 
         const diaryServiceInstance = Container.get(DiaryService);
-        const user = await Container.get(UserRepository).findUserByNickName(req.user.nickname )
+        const user = await Container.get(UserRepository).findUserByNickName(req.user.nickname)
         if (!user) throw new BadRequest('Nick not exists')
         const date: Date = new Date(req.params.date as string)
         const response = await diaryServiceInstance.getEntryByUserNickNameAndDate(user, date)

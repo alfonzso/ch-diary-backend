@@ -1,0 +1,60 @@
+//- #login.container
+//-   .row
+//-     .row.col.s4
+//-       h3 Login
+//-     form.col.s12(hx-post='/api/auth/login/' hx-swap='innerHTML' hx-target='#login' method='post')
+//-       .row
+//-         .input-field.col.s12
+//-           input#nickname.validate(type='text' name='nickname' required='')
+//-           label(for='nickname') Nickname
+//-           span.helper-text(data-error='Please enter a valid nickname.' data-success='')
+//-       .row
+//-         .input-field.col.s12
+//-           input#password.validate(name='password' type='password' required='')
+//-           label(for='password') Password
+//-       .row.col.s4
+//-         button.btn.waves-effect.indigo.darken-2.waves-light(type='submit' name='action')
+//-           | Submit
+//-           i.material-icons.right send
+//-     .row.col.s4
+//-       p
+//-         | Don&apos;t have an account?
+//-         a(href='/api/auth/register/') Register here.
+//-     script.
+//-       //- console.log(#{accessToken}, accessTokenV2);
+//-       console.log("#{accessToken}");
+//-       accessTokenV2 = "#{accessToken}"
+//-     //- script
+//-     //-   include includes/js/global.js
+
+section.pb-4
+  .border.rounded-5
+    section.w-100.p-4.d-flex.justify-content-center.pb-4
+      form(style='width: 22rem;' hx-post='/api/auth/login/' hx-swap='innerHTML' hx-target='#login' method='post')
+
+        .form-outline.mb-4
+          input#nickname.form-control(name='nickname', type='text', required='')
+          label.form-label(for='nickname') Nickname
+
+        .form-outline.mb-4
+          input#password.form-control(name='password', type='password', required='')
+          label.form-label(for='password') Password
+
+        .row.mb-4
+          .col.d-flex.justify-content-center
+            // Checkbox
+            .form-check
+              input#remember_me.form-check-input(type='checkbox' value='' checked='')
+              label.form-check-label(for='remember_me')  Remember me
+          .col
+
+            a(href='/api/auth/forgot') Forgot password?
+
+        button.btn.btn-primary.btn-block.mb-4(type='submit' name='action') Sign in
+
+        .text-center
+          p
+            | Not a member?
+            a(href='/api/auth/register') Register
+  #login.container
+    P FAF

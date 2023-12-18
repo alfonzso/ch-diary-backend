@@ -8,7 +8,7 @@ export default (res: Response, token: string) => {
   res.cookie(config.jwtCookieName, token, {
     httpOnly: true,
     sameSite: true,
-    path: '/api/auth',
+    // path: '/api/auth',
     expires: date
   });
 }

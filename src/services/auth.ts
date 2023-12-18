@@ -8,6 +8,7 @@ import { Logger } from "winston";
 import { Utils, uuidv4 } from "../utils";
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { tokenManagerInstance } from "../utils/generateToken";
+import { getEntry } from "../routes/diary";
 
 @Service()
 export default class AuthService {
@@ -22,7 +23,7 @@ export default class AuthService {
   public async LogIn(userDTO: User): Promise<[string, string]> {
     try {
       // this.myUtils.logger('Login -> userDTO: ', userDTO)
-      const User = await this.userRepository.findUserByEmail(userDTO.email);
+      const User = await this.userRepository.findUserByNickName(userDTO.nickname);
 
       if (!User) {
         throw new BadRequest('Invalid login credentials.');
@@ -64,7 +65,9 @@ export default class AuthService {
     }
   }
 
-  public async RefreshToken(refreshToken: string): Promise<string> {
+  public async RefreshToken(refreshToken: string): Promise<
+    { accessToken: string; refreshToken: string; user: User; refreshExp: number | undefined }
+  > {
     try {
       let payload: jwt.JwtPayload = {}
 
@@ -94,8 +97,7 @@ export default class AuthService {
       const jti = uuidv4();
       const { accessToken, } = tokenManagerInstance.generateTokens(user, jti);
 
-      return accessToken
-
+      return { accessToken, refreshToken, user, refreshExp: payload.exp }
     } catch (e) {
       this.logger.error(e);
       throw e;
