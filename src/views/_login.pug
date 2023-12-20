@@ -26,17 +26,25 @@
 //-       accessTokenV2 = "#{accessToken}"
 //-     //- script
 //-     //-   include includes/js/global.js
+//- extends base.pug
 
-section.pb-4
+//- block content
+  //- section.pb-4
+#login.pb-4
+  //- .col
   .border.rounded-5
-    section.w-100.p-4.d-flex.justify-content-center.pb-4
-      form(style='width: 22rem;' hx-post='/api/auth/login/' hx-swap='innerHTML' hx-target='#login' method='post')
+    //- #loginInner.w-100.p-4.d-flex.justify-content-center.pb-4.row
+    #loginInner.w-100.p-4.d-flex.flex-column.align-items-center
+      //- form(style='width: 22rem;' hx-post='/api/auth/login/' hx-swap='innerHTML' hx-target='#login' method='post')
+      if error
+        #loginError.alert.alert-warning.w-auto(role="alert") #{error}
+      form.text-center(style='width: 22rem;' hx-post='/login' hx-swap='innerHTML' hx-target='#home' method='post')
 
-        .form-outline.mb-4
+        .form-outline.mb-4.text-start
           input#nickname.form-control(name='nickname', type='text', required='')
           label.form-label(for='nickname') Nickname
 
-        .form-outline.mb-4
+        .form-outline.mb-4.text-start
           input#password.form-control(name='password', type='password', required='')
           label.form-label(for='password') Password
 
@@ -50,11 +58,11 @@ section.pb-4
 
             a(href='/api/auth/forgot') Forgot password?
 
-        button.btn.btn-primary.btn-block.mb-4(type='submit' name='action') Sign in
+        button.btn.btn-primary.btn-block.mb-4.w-75(type='submit' name='action') Sign in
 
         .text-center
           p
             | Not a member?
             a(href='/api/auth/register') Register
-  #login.container
-    P FAF
+//- #login.container
+//-   P FAF

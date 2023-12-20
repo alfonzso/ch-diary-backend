@@ -9,9 +9,12 @@ import { errorHandler } from "../middlewares";
 import routes from "../routes";
 import renders from "../routes/renders";
 import path from "path";
+import { checkUsers } from "../middlewares/checkUser";
 
 // let's initialize our express app
 export default ({ app }: { app: express.Application }) => {
+  app.use(checkUsers);
+
   app.use(express.static('./src/views'))
 
   // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -66,7 +69,7 @@ export default ({ app }: { app: express.Application }) => {
 
   // add our error handler middleware
   app.use(errorHandler);
-  // app.use(checkUsers);
+
 
   if (config.env != "prod") {
     const all_routes = require('express-list-endpoints');

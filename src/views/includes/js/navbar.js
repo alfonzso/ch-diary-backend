@@ -19,7 +19,7 @@ function runClock(exp){
     return
   }
 
-  setInterval(() => {
+  return setInterval(() => {
     let startDate = new Date(new Date().toLocaleString('en', {timeZone:'Europe/Budapest'}))
     let endDate = new Date(new Date(exp* 1000).toLocaleString('en', {timeZone:'Europe/Budapest'}));
     let seconds = ( endDate.getTime() - startDate.getTime() ) / 1000;
@@ -29,5 +29,6 @@ function runClock(exp){
     } else {
       htmx.find("#untilTokenExpired").innerHTML = prettyDate(seconds)
     }
-  }, 5000);
+  }, 1000);
+  // }, 5000);
 }

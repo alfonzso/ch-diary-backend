@@ -65,7 +65,7 @@ export default class AuthService {
     }
   }
 
-  public async RefreshToken(refreshToken: string): Promise<
+  public async RenewToken(refreshToken: string): Promise<
     { accessToken: string; refreshToken: string; user: User; refreshExp: number | undefined }
   > {
     try {

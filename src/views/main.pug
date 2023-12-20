@@ -1,12 +1,6 @@
-//- #main.container.col
-//-   if isLoggedIn
-//-     include main.pug
-//-   else
-//-     include _login
-extends index.pug
+extends base.pug
 
 block content
-  #home.container.col
-    .row.justify-content-md-center
-      .col-md-auto
-        H3 Hello at ChDiary main page
+  #home.col.d-flex.justify-content-center.align-items-center
+    #mainpage(hx-get="/main" hx-swap='innerHTML' hx-trigger="load")
+

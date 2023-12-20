@@ -43,20 +43,23 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
 
 export const refreshToAccess = async (req: Request, res: Response, next: NextFunction) => {
   const refreshToken: string = req.cookies.refresh_token;
-  if (refreshToken !== undefined && refreshToken.length > 0) {
-    try {
-      let data = await Container.get(AuthService).RefreshToken(refreshToken)
-      req.decoded = {
-        ...data
-      }
-    } catch (err) {
-      if (err instanceof UnauthorizedError) {
-        console.log(err.message);
-        console.log(err.reason);
-      }
-      res.clearCookie("refresh_token");
-      res.setHeader("HX-Redirect", "/")
-    }
+
+  if (refreshToken === undefined || refreshToken.length < 0) {
+    console.log("no token");
+    return next();
   }
+
+  try {
+    let data = await Container.get(AuthService).RenewToken(refreshToken)
+    req.decoded = { ...data }
+  } catch (err) {
+    if (err instanceof UnauthorizedError) {
+      console.log(err.message);
+      console.log(err.reason);
+    }
+    res.clearCookie("refresh_token");
+    res.setHeader("HX-Redirect", "/")
+  }
+
   return next();
 };

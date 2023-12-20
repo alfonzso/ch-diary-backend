@@ -1,33 +1,26 @@
-//- include index
-extends index.pug
+extends base.pug
 
 block content
-  #home.container.col
-    #diary.container.d-flex.flex-column
-      //- P Diarys
+  style.
+    #diary{
+      width: 50%;
+    }
+    .diarydata_name {
+      flex: 3
+    }
+    .diarydata_type {
+      flex: 2
+    }
+    .diarydata_date {
+      flex: 2
+    }
+  //- #home.col.d-flex.flex-column.align-items-center
+  #home.col.d-flex
+    #mainpage.d-flex.flex-column.align-items-center.col
+      //- hx-target='#home'
+      #diary(
+        hx-get="/diary_data"
+        hx-swap='innerHTML'
+        hx-trigger="load"
+      )
 
-      if diaries
-        #diary-headers.d-flex.flex-row
-          each diary, value in diaryDataKeys
-            #diary-header.col= diary
-        //- each val in diaries
-        each diary, value in diaries
-          #diary-data.d-flex.flex-row
-            each d  in diary
-              #diary-data.col= d
-
-            //- li= key + ": " + value
-          //- each value, key in diary
-          //-   li= key + ": " + value
-          //-   //- if value == Object
-          //-   if Array.isArray(value)
-          //-     each v, k in value
-          //-       li= k + ": " + v
-          //- each val in diaries
-          //-   li= val.createdAt
-          //-   li= val.Food.name
-          //-   li= val.Food.portion
-          //-   //- li= val.Food.FoodProperty
-          //-   each key, value in val.Food.FoodProperty
-          //-     li= value + ': ' + key
-          //-   li= val.Food.Interfood.InterfoodType.name

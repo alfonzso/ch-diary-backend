@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import ms from 'ms';
+
 import { NextFunction, Request, Response, Router } from 'express';
 import { body, cookie } from 'express-validator';
 import { User } from '@prisma/client';
@@ -12,6 +14,20 @@ import { Logger } from 'winston';
 import config from '../../config';
 
 const route = Router();
+
+export const _login = async (req: Request, res: Response) => {
+  const userDTO: User = req.body;
+  const authServiceInstance = Container.get(AuthService);
+  const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
+  // utilsInstance.sendRefreshToken(res, refreshToken);
+  res.cookie(config.jwtCookieName, refreshToken, {
+    httpOnly: true,
+    sameSite: true,
+    // sameSite: "strict",
+    // path: '/api/auth',
+    expires: new Date(new Date().getTime() + ms(config.jwtRefreshTokenExpIn))
+  });
+}
 
 export default (app: Router) => {
   app.use('/auth', route);
@@ -68,11 +84,11 @@ export default (app: Router) => {
         const authServiceInstance = Container.get(AuthService);
         const [accessToken, refreshToken] = await authServiceInstance.LogIn(userDTO)
         utilsInstance.sendRefreshToken(res, refreshToken);
+        res.json({ accessToken, refreshToken });
         // response["HX-Redirect"] = "http://example.com/page_to_redirect_to"
         // res["HX-Redirect"] = "http://example.com/page_to_redirect_to"
-        res.setHeader("HX-Redirect", "/")
-        // res.json({ accessToken, refreshToken });
-        res.end()
+        // res.setHeader("HX-Redirect", "/")
+        // res.end()
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
@@ -108,7 +124,7 @@ export default (app: Router) => {
       try {
         const refreshToken: string = req.cookies.refresh_token;
         const authServiceInstance = Container.get(AuthService);
-        const accessToken = await authServiceInstance.RefreshToken(refreshToken)
+        const accessToken = await authServiceInstance.RenewToken(refreshToken)
 
         res.json({ accessToken, refreshToken });
       } catch (e) {
