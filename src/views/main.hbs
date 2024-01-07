@@ -1,0 +1,36 @@
+<div id="root" class="container-fluid h-100 d-flex flex-column">
+  {{> navbar }}
+
+  {{> (dynamicPage) }}
+
+  <script>
+    window.onload = function(){
+      console.log(".......runClock....... ", getCookie("refTokenExp"), window.runClockId)
+      window.runClockId = runClock(getCookie("refTokenExp"))
+    }
+    document.body.addEventListener('htmx:afterOnLoad', function(e) {
+      console.log(".......htmx runClock....... ", getCookie("refTokenExp"), window.runClockId)
+      if (window.runClockId === undefined){
+        window.runClockId = runClock(getCookie("refTokenExp"))
+      }
+    });
+    document.body.addEventListener('htmx:configRequest', function(evt) {
+        evt.detail.headers['access_token'] = accessToken;
+    });
+    document.body.addEventListener('loginSuccess', function(e) {
+        accessToken = e.detail.accesToken;
+        // refTokenExp = e.detail.refTokenExp;
+        // console.log(".......runClock....... ", e.detail.refTokenExp)
+        // window.runClockId = runClock(e.detail.refTokenExp)
+    });
+    document.body.addEventListener('logoutSuccess', function(e) {
+        window.clearInterval(window.runClockId)
+        htmx.find("#untilTokenExpired").innerHTML = ""
+    });
+    document.addEventListener('htmx:afterRequest', function (evt) {
+      // console.log("------->after --> ", evt.detail)
+      // console.log(evt.detail.target.id, evt.detail.pathInfo.requestPath)
+    });
+  </script>
+  {{> footer }}
+</div>

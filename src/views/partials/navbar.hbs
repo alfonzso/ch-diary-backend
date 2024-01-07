@@ -1,0 +1,69 @@
+<div
+  id="navDiary"
+  hx-get="/navbar"
+  hx-swap="innerHTML"
+  hx-trigger="loginSuccess from:body"
+>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" hx-boost="true">
+    <a class="navbar-brand" href="#">
+      Chdiary
+    </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/" hx-target="#home" hx-swap="outerHTML">
+            Home
+          </a>
+        </li>
+        {{#if isLoggedIn}}
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/diary"
+              hx-target="#home"
+              hx-swap="outerHTML"
+            >
+              All Diaries
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="/daily_curse"
+              hx-target="#home"
+              hx-swap="outerHTML"
+            >
+              Daily courses
+            </a>
+          </li>
+        {{/if}}
+        <li class="nav-item">
+          <a class="nav-link" href="/about">
+            About
+          </a>
+        </li>
+      </ul>
+      <div class="d-flex flex-row me-2 gap-1" id="userInfo">
+        <div id="untilTokenExpired"></div>
+        {{#if user}}
+          <div id="anonym">
+            Hello {{user.nickname}}
+          </div>
+        {{else}}
+          <div id="anonym">
+            Hello Anonymus !
+          </div>
+        {{/if}}
+      </div>
+      {{#if isLoggedIn}}
+        <a class="nav-link" href="/logout" hx-target="#home" hx-replace-url="/">
+          Logout
+        </a>
+      {{else}}
+        <a class="nav-link" href="/login" hx-target="#home">
+          Login
+        </a>
+      {{/if}}
+    </div>
+  </nav>
+</div>

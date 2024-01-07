@@ -29,7 +29,7 @@ export default {
   jwtAccessTokenExpIn: process.env.JWT_ACCESS_TOKEN_EXP || '5m',
   jwtRefreshTokenExpIn: process.env.JWT_REFRESH_TOKEN_EXP || '2d',
 
-  jwtCookieName: "refresh_token",
+  jwtCookieName: "refreshToken",
 
   /**
    * Used by winston logger

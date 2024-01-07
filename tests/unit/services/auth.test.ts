@@ -69,7 +69,7 @@ describe('User', () => {
         });
 
       const userService = new AuthService(LoggerInstance, new Utils(), userRep, refTok);
-      const userRecord = await userService.RenewToken("faf");
+      const userRecord = await userService.RenewAccessFromRefresh("faf");
 
       expect(refreshTokenRepositoryMock).toHaveBeenCalledTimes(1);
       expect(refreshTokenRepositoryMock).toReturnWith(mockedRefToken)

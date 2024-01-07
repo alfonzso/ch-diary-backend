@@ -1,0 +1,22 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+/* 
+li {
+  font-size: 2rem;
+  width: 300px;
+  margin: 4px;
+  padding: 4px;
+  list-style: none
+} */
+
+.midlaner {
+  background-color: #eeeeee
+}
+
+.toplaner {
+  background-color: #ffea00
+}

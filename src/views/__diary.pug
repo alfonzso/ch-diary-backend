@@ -1,9 +1,0 @@
-if diaries
-  #diary-headers.d-flex.flex-row
-    each diary, value in diaryDataKeys
-      #diary-header.col(class="diarydata_"+diary)= diary
-
-  each diary, value in diaries
-    #diary-data.d-flex.flex-row
-      each d, name in diary
-        #diary-data.col(class="diarydata_"+name)= d

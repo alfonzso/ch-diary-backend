@@ -6,18 +6,28 @@ import express from "express";
 import config from "../../config";
 import { RouteNotFound } from "../errors";
 import { errorHandler } from "../middlewares";
-import routes from "../routes";
-import renders from "../routes/renders";
-import path from "path";
-import { checkUsers } from "../middlewares/checkUser";
+// import routes from "../routes";
+// import renders from "../routes/renders";
+// import path from "path";
+import { handleAuth } from "../middlewares/handleAuth";
+// import handlebars from "handlebars";
+import { engine, create } from 'express-handlebars';
+import html from "../routes/html";
 
 // let's initialize our express app
+type PathParams = string | RegExp | Array<string | RegExp>;
+
+type FafaType = {
+  // Path: PathParams,
+  // Path: string,
+  Path: PathParams,
+  // handlers: () => any
+  handlers: any
+  // Handler: () => any
+}
 export default ({ app }: { app: express.Application }) => {
-  app.use(checkUsers);
 
   app.use(express.static('./src/views'))
-
-  // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 
   app.set('trust proxy', 1)
   app.use(cookieParser());
@@ -26,15 +36,28 @@ export default ({ app }: { app: express.Application }) => {
   app.use(bodyParser.urlencoded());
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  // app.use(expressLayouts);
+  app.use(handleAuth);
+
   app.set('views', './src/views');
-  // app.set('views', path.join(__dirname, '/src/views'));
-  // app.engine('html', require('ejs').renderFile);
-  // app.set('view engine', 'ejs');
 
-  // const pug = require("pug");
+  const kk = {
+    extname: '.hbs',
+    defaultLayout: false,
+    helpers: {
+      dynamicPage() { return 'wellcome'; }
+    }
+  }
+  app.engine('.hbs', engine({
+    extname: '.hbs',
+    defaultLayout: false,
+    helpers: {
+      dynamicPage() { return 'wellcome'; }
+    },
+  }));
+  app.set('view engine', '.hbs');
+  // app.set('view engine', 'handlebars');
 
-  app.set("view engine", "pug");
+  console.log("-------------> tt ", kk.helpers)
 
   // let's parse our incoming request with JSON payload using the express.json() middleware
   app.use(express.json());
@@ -57,13 +80,16 @@ export default ({ app }: { app: express.Application }) => {
   });
 
   // add our routes
-  app.use('/', renders())
+  // const faf: FafaType = { Path: '/', handlers: html() }
+  // app.use(faf)
+  app.use('/', html())
 
   // add our routes
-  app.use(config.api.prefix, routes())
+  // app.use(config.api.prefix, routes())
 
   // catch all route
   app.all('*', (req, res) => {
+    console.log("path not found", req.method, req.url)
     throw new RouteNotFound();
   });
 

@@ -1,0 +1,87 @@
+<div id="home" class="col d-flex justify-content-center align-items-center">
+
+  <div id="login" class="pb-4">
+    <div class="border rounded-5">
+      <div
+        id="loginInner"
+        class="w-100 p-4 d-flex flex-column align-items-center"
+      >
+        {{#if error}}
+          <div id="loginError" role="alert" class="alert alert-warning w-auto">
+            {{error}}
+          </div>
+        {{/if}}
+        <form
+          style="width: 22rem;"
+          hx-post="/login"
+          hx-swap="innerHTML"
+          hx-target="#home"
+          hx-replace-url="/"
+          method="post"
+          class="text-center"
+        >
+          <div class="form-outline mb-4 text-start">
+            <input
+              id="nickname"
+              name="nickname"
+              type="text"
+              required="{{""}}"
+              class="form-control"
+            />
+            <label for="nickname" class="form-label">
+              Nickname
+            </label>
+          </div>
+          <div class="form-outline mb-4 text-start">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required="{{""}}"
+              class="form-control"
+            />
+            <label for="password" class="form-label">
+              Password
+            </label>
+          </div>
+          <div class="row mb-4">
+            <div class="col d-flex justify-content-center">
+              <div class="form-check">
+                <input
+                  id="remember_me"
+                  type="checkbox"
+                  value="{{""}}"
+                  checked="{{""}}"
+                  class="form-check-input"
+                />
+                <label for="remember_me" class="form-check-label">
+                  Remember me
+                </label>
+              </div>
+            </div>
+            <div class="col">
+              <a href="/api/auth/forgot">
+                Forgot password?
+              </a>
+            </div>
+          </div>
+          <button
+            type="submit"
+            name="action"
+            class="btn btn-primary btn-block mb-4 w-75"
+          >
+            Sign in
+          </button>
+          <div class="text-center">
+            <p>
+              Not a member?
+              <a href="/api/auth/register">
+                Register
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

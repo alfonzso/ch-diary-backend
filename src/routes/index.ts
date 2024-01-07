@@ -1,17 +1,16 @@
 
-import { Router } from 'express';
-import { userInfo } from 'os';
-import auth from './auth';
-import diary from './diary';
-import interfood from './interfood';
-import user from './user';
+// import { Router } from 'express';
+// import login from './login';
+import html from './html';
+// import diary from './diary';
+// import logout from './logout';
 
-// guaranteed to get dependencies
 export default () => {
-  const app = Router();
-  auth(app);
-  diary(app);
-  user(app);
-  interfood(app);
-  return app
+  // const app = Router();
+  html();
+  // diary(app);
+  // login(app);
+  // logout(app);
+  // return app
+  return [html()]
 }
