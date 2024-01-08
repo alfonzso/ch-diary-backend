@@ -9,7 +9,7 @@ import { errorHandler } from "../middlewares";
 // import routes from "../routes";
 // import renders from "../routes/renders";
 // import path from "path";
-import { handleAuth } from "../middlewares/handleAuth";
+import { handleAuth, handleGlobals } from "../middlewares/handleAuth";
 // import handlebars from "handlebars";
 import { engine, create } from 'express-handlebars';
 import html from "../routes/html";
@@ -37,6 +37,7 @@ export default ({ app }: { app: express.Application }) => {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use(handleAuth);
+  app.use(handleGlobals);
 
   app.set('views', './src/views');
 

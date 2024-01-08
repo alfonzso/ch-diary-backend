@@ -2,7 +2,14 @@
   <div
     id="daily_curse_data"
     class="col d-flex justify-content-center flex-column"
+    style="font-size: 75%"
   >
+    <h5 class="text-center">
+      Sum Ch: {{sumCh}}
+    </h5>
+    <h5 class="text-center">
+      Left Ch: {{maxCh}}
+    </h5>
     {{#each entriesByDate as |entry|}}
       <div
         id="{{entry.id}}"
@@ -50,16 +57,25 @@
           </div>
         </div>
 
-        <div id="foodRow" class="entry d-flex justify-content-between">
-          <h5>
-            {{entry.FoodType}}
-          </h5>
-          <h5>
-            | {{entry.FoodPortion}} g |
-          </h5>
-          <h5>
-            {{entry.FoodName}}
-          </h5>
+        <div id="foodRow">
+          {{! justify-content-center }}
+          <b class="entry d-flex align-items-center justify-content-center flex-row">
+            <div>
+              <p class="p-2  m-2 card text-nowrap">
+                {{entry.FoodType}}
+              </p>
+            </div>
+            <div>
+              <p class="p-2  m-2 card text-nowrap">
+                {{entry.FoodPortion}} g
+              </p>
+            </div>
+            <div>
+              <p class="p-2  m-2 card text-wrap">
+                {{entry.FoodName}}
+              </p>
+            </div>
+          </b>
         </div>
       </div>
     {{/each}}

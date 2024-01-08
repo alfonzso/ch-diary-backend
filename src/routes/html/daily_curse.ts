@@ -8,6 +8,7 @@ import { validateRequest } from "../../middlewares";
 import { range } from "../../utils/common";
 
 const INSULIN_RATIO = 4
+const MAX_CH_PER_DAY = 180
 const configedRange = range(INSULIN_RATIO - 1, INSULIN_RATIO + 2)
 
 const fullDiaryRender = {
@@ -58,15 +59,14 @@ export default (app: Router) => {
     "/daily_curse_data/date/:date",
     param('date').not().isEmpty().withMessage('date needed!'),
     validateRequest,
-    // isAuthenticated,
     async (req, res) => {
-      console.log("at /diary_data");
+      console.log("get render /daily_curse_data");
+
       let render = {
         file: './partials/wellcome.hbs', ops: {
         }
       }
       try {
-        // let diary = pug.compileFile('src/views/__diary.pug');
         if (!req.isLoggedIn || req.user === undefined) {
           res.send(render.file)
           return
@@ -81,23 +81,22 @@ export default (app: Router) => {
 
         render.file = "./partials/daily_curse_data.hbs"
 
+        const sumCh = (entriesByDate?.data || []).map((v) => {
+          return v.Food.FoodProperty.ch
+        }).reduce((prev, curr) => {
+          return prev + curr
+        })
+
         const mappedEntry = (entriesByDate?.data || []).map((v) => {
           return {
             id: v.id,
             FoodName: v.Food.name,
             FoodPortion: v.Food.portion,
             FoodType: v.Food.Interfood.InterfoodType.name,
-            // FoodProp: v.Food.FoodProperty,
-            FoodProp: Object.entries(v.Food.FoodProperty).map(([k, v]) => {
-              return [k, v]
-            }),
+            FoodProp: Object.entries(v.Food.FoodProperty).map(([k, v]) => { return [k, v] }),
             ChRatio: {
               ch: v.Food.FoodProperty.ch,
               insulinRation: INSULIN_RATIO,
-              // ratios: Array(INSULIN_RATIO).fill(0).map((_, i) => {
-              //   const currentRatio = i + INSULIN_RATIO
-              //   return [currentRatio, (v.Food.FoodProperty.ch / currentRatio).toPrecision(2)]
-              // }),
               ratiosss: configedRange.map(num => {
                 return [num, (v.Food.FoodProperty.ch / num).toPrecision(2)]
               })
@@ -107,6 +106,8 @@ export default (app: Router) => {
 
         render.ops = {
           ...render.ops, ...{
+            sumCh,
+            maxCh: MAX_CH_PER_DAY,
             entriesByDate: mappedEntry,
             helpers: {
               dynamicPage() { return 'daily_curse_data'; }
@@ -138,7 +139,8 @@ export default (app: Router) => {
         render = fullDiaryRender
       }
 
-      res.render(render.file, render.ops)
+      res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
+
     } catch (error) {
       console.error("Error fetching data:", error);
       res.status(500).json({ error: "An error occurred while fetching data." });

@@ -2,6 +2,11 @@ function range(start: number, end: number) {
   return [...Array(1 + end - start).keys()].map(v => start + v)
 }
 
+const datePlusXDay = (x: number) => {
+  const gmtDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Budapest" })
+  return new Date(new Date(gmtDate).setDate(new Date().getDate() + x))
+}
+
 const fixedDate = (date: Date) => {
   const offset = date.getTimezoneOffset()
   date = new Date(date.getTime() - (offset * 60 * 1000))
@@ -41,6 +46,7 @@ const translateKeyToEng = (name: string) => {
 export {
   range,
   fixedDate,
+  datePlusXDay,
   stringToNumber,
   translateKeyToEng
 }

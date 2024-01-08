@@ -23,13 +23,12 @@ const getEntry = async (nickname: string) => {
 export default (app: Router) => {
 
   app.get("/diary_data", async (req, res) => {
-    console.log("at /diary_data");
+    console.log("get render /diary_data");
     let render = {
       file: './partials/wellcome.hbs', ops: {
       }
     }
     try {
-      // let diary = pug.compileFile('src/views/__diary.pug');
       if (!req.isLoggedIn || req.user === undefined) {
         res.send(render.file)
         return
@@ -42,8 +41,6 @@ export default (app: Router) => {
         console.log("----------> meh")
       }
 
-      console.log("------------------> ", req.user.nickname, diaries)
-
       let diaryData = (diaries?.data ?? []).map(v => {
         return {
           date: v.createdAt.toISOString().split('T')[0],
@@ -54,18 +51,17 @@ export default (app: Router) => {
         }
       })
 
-      render.file = "./partials/diary_data.hbs"
-      render.ops = {
-        ...render.ops, ...{
-          diaryHeaders: Object.keys(diaryData[0]),
-          diaries: diaryData,
-          helpers: {
-            dynamicPage() { return 'diary'; }
-          }
+      const diaryDatas = {
+        diaryHeaders: Object.keys(diaryData[0]),
+        diaries: diaryData,
+        helpers: {
+          dynamicPage() { return 'diary'; }
         }
       }
 
-      res.render(render.file, render.ops)
+      res.render("./partials/diary_data.hbs",
+        { ...render.ops, ...diaryDatas }
+      )
     } catch (error) {
       console.error("Error fetching data:", error);
       res.status(500).json({ error: "An error occurred while fetching data." });
@@ -73,7 +69,7 @@ export default (app: Router) => {
   });
 
   app.get("/diary", async (req, res) => {
-    console.log("at /diary");
+    console.log("get render /diary");
     let render = { file: '', ops: {} }
     try {
 
@@ -89,7 +85,10 @@ export default (app: Router) => {
         render = fullDiaryRender
       }
 
-      res.render(render.file, render.ops)
+      res.render(
+        render.file,
+        { ...render.ops, ...req.GlobalTemplates }
+      )
     } catch (error) {
       console.error("Error fetching data:", error);
       res.status(500).json({ error: "An error occurred while fetching data." });

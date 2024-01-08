@@ -1,7 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { AuthService } from '../services';
-import { JWTUserPayload } from '../types/jwt';
+import { JWTUserPayload, UserPayload } from '../types/jwt';
+
+declare global {
+  namespace Express {
+    interface Request {
+      GlobalTemplates: any;
+      isHtmx: boolean;
+      isLoggedIn: boolean;
+      user?: UserPayload;
+      jwt: { access?: string, refresh?: string, refreshExp?: number | undefined }
+    }
+  }
+}
+
+export const handleGlobals = async (req: Request, res: Response, next: NextFunction) => {
+  req.GlobalTemplates = {
+    isLoggedIn: req.isLoggedIn,
+    user: req.user,
+    exp: (req.jwt || {}).refreshExp,
+  }
+  next()
+}
 
 export const handleAuth = async (req: Request, res: Response, next: NextFunction) => {
   const accessToken = req.headers.access_token === "undefined" ? undefined : req.headers.access_token;
@@ -32,7 +53,8 @@ export const handleAuth = async (req: Request, res: Response, next: NextFunction
         req.isLoggedIn = false
         req.user = undefined
         res.setHeader("HX-Redirect", "/login")
-      }).finally(() => {
+      })
+      .finally(() => {
         return next();
       })
   }
@@ -50,7 +72,8 @@ export const handleAuth = async (req: Request, res: Response, next: NextFunction
         req.isLoggedIn = false
         req.user = undefined
         console.log("accessToken error: ", err)
-      }).finally(() => {
+      })
+      .finally(() => {
         return next();
       })
   }
