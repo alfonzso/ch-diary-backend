@@ -1,5 +1,24 @@
 <div id="ChRatio" class="d-flex p-1">
-  {{!-- <div id="spacer" class="col-4"></div> --}}
-  {{> _daily_course/ChRatio.ratios entry=entry }}
-  {{!-- <div id="spacer" class="col-2"></div> --}}
+  <div id="RatiosWhInsulin" class="d-flex flex-column col-12">
+    <div id="ratio" class="row">
+      <div class="col">
+        Ratio
+      </div>
+      {{#each entry.ChRatio.ratiosWhInsulin.ratio as |ratio|}}
+        <div class="col">
+          {{ratio}}
+        </div>
+      {{/each}}
+    </div>
+    <div id="insulin" class="row">
+      <div class="col">
+        Insulin
+      </div>
+      {{#each entry.ChRatio.ratiosWhInsulin.insulin as |insulin|}}
+        <div class="col">
+          {{insulin}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
 </div>

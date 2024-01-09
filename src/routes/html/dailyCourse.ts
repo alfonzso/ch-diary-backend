@@ -15,7 +15,7 @@ const fullDiaryRender = {
   file: 'main',
   ops: {
     layout: 'index', helpers: {
-      dynamicPage() { return 'daily_course_page'; }
+      dynamicPage() { return '_daily_course/_index'; }
     }
   }
 }
@@ -60,7 +60,7 @@ export default (app: Router) => {
     param('date').not().isEmpty().withMessage('date needed!'),
     validateRequest,
     async (req, res) => {
-      console.log("get render /daily-course_data");
+      console.log("get render /daily-course");
 
       let render = {
         file: './partials/wellcome.hbs', ops: {
@@ -79,7 +79,8 @@ export default (app: Router) => {
           console.log("----------> meh")
         }
 
-        render.file = "./partials/daily_course.hbs"
+        // render.file = "./partials/_daily_course.hbs"
+        render.file = "./partials/_daily_course/_daily_course.hbs"
 
         const sumCh = (entriesByDate?.data || []).map((v) => {
           return v.Food.FoodProperty.ch
@@ -98,22 +99,15 @@ export default (app: Router) => {
               names: Object.keys(v.Food.FoodProperty),
               values: Object.values(v.Food.FoodProperty),
             },
-            // FoodProp: Object.entries(v.Food.FoodProperty).map(([k, v]) => { return [k, v] }),
             ChRatio: {
               ch: v.Food.FoodProperty.ch,
               insulinRation: INSULIN_RATIO,
-              // FoodPropTable:{
-
-              // }
               ratiosWhInsulin: {
                 ratio: configedRange,
                 insulin: configedRange.map(num => {
                   return (v.Food.FoodProperty.ch / num).toPrecision(2)
                 })
               },
-              // ratios: configedRange.map(num => {
-              //   return [num, (v.Food.FoodProperty.ch / num).toPrecision(2)]
-              // })
             }
           }
         })
@@ -134,7 +128,7 @@ export default (app: Router) => {
             pager,
             entriesByDate: mappedEntry,
             helpers: {
-              dynamicPage() { return 'daily_course'; }
+              dynamicPage() { return '_daily_course/_daily_course'; }
             }
           }
         }
@@ -146,8 +140,9 @@ export default (app: Router) => {
       }
     });
 
-  app.get("/daily-course-page", async (req, res) => {
-    console.log("get render /daily-course-page");
+  // app.get("/daily-course-page", async (req, res) => {
+  app.get("/daily-course", async (req, res) => {
+    console.log("get render /daily-course");
     let render = { file: '', ops: {} }
     try {
 
@@ -158,7 +153,8 @@ export default (app: Router) => {
       }
 
       if (req.isHtmx) {
-        render.file = './partials/daily_course_page.hbs'
+        // render.file = './partials/daily_course_page.hbs'
+        render.file = './partials/_daily_course/_index.hbs'
       } else {
         render = fullDiaryRender
       }

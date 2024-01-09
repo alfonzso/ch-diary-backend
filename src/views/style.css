@@ -4,14 +4,6 @@ html, body {
   padding: 0;
   margin: 0;
 }
-/* 
-li {
-  font-size: 2rem;
-  width: 300px;
-  margin: 4px;
-  padding: 4px;
-  list-style: none
-} */
 
 .midlaner {
   background-color: #eeeeee
@@ -19,4 +11,8 @@ li {
 
 .toplaner {
   background-color: #ffea00
+}
+
+.chd-shadow {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }

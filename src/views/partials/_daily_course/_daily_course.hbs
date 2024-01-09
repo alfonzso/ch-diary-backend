@@ -1,6 +1,6 @@
 <div
     id="DailyCourseContainer"
-    class="d-flex  flex-column"
+    class="d-flex flex-column pt-4"
     style="font-size: 75%; flex: 1.25"
   >
     {{> _daily_course/Header}}
@@ -10,7 +10,7 @@
       {{#each entriesByDate as |entry|}}
         <div
           id="{{entry.id}}"
-          class="card d-flex justify-content-between flex-column p-2 m-2"
+          class="card d-flex justify-content-between flex-column p-2 m-2 chd-shadow"
         >
           {{> _daily_course/FoodInfo entry=entry }}
           <div id="FoodWrapper" class="d-flex justify-content-around flex-row ">
