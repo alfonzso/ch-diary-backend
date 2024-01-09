@@ -4,29 +4,38 @@
   {{> (dynamicPage) }}
 
   <script>
+
     window.onload = function(){
       console.log(".......runClock....... ", getCookie("refTokenExp"), window.runClockId)
       window.runClockId = runClock(getCookie("refTokenExp"))
     }
+
     document.body.addEventListener('htmx:afterOnLoad', function(e) {
       console.log(".......htmx runClock....... ", getCookie("refTokenExp"), window.runClockId)
       if (window.runClockId === undefined){
         window.runClockId = runClock(getCookie("refTokenExp"))
       }
     });
+
     document.body.addEventListener('htmx:configRequest', function(evt) {
         evt.detail.headers['access_token'] = accessToken;
+        // console.log("--> evt --> ", evt.detail)
+        if (evt.detail.path === "/daily_curse_data/date" ){
+          // evt.detail.parameters['date'] = accessToken;
+          // console.log("aaaaaa ", YYYYMMDD())
+          evt.detail.path += "/" + YYYYMMDD()
+        }
     });
+
     document.body.addEventListener('loginSuccess', function(e) {
         accessToken = e.detail.accesToken;
-        // refTokenExp = e.detail.refTokenExp;
-        // console.log(".......runClock....... ", e.detail.refTokenExp)
-        // window.runClockId = runClock(e.detail.refTokenExp)
     });
+
     document.body.addEventListener('logoutSuccess', function(e) {
         window.clearInterval(window.runClockId)
         htmx.find("#untilTokenExpired").innerHTML = ""
     });
+
     document.addEventListener('htmx:afterRequest', function (evt) {
       // console.log("------->after --> ", evt.detail)
       // console.log(evt.detail.target.id, evt.detail.pathInfo.requestPath)

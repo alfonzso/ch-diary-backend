@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { clearAllCookies } from "../../utils/common";
 // import { refreshToAccess } from '../../middlewares/jwtHandler';
 // import pug from "pug";
 
@@ -12,9 +13,7 @@ export default (app: Router) => {
         }
       }
 
-      Object.keys(req.cookies).map((cookie) => {
-        res.clearCookie(cookie);
-      })
+      clearAllCookies(req, res)
 
       res.setHeader("HX-Trigger", "logoutSuccess")
       res.setHeader("HX-Redirect", "/")

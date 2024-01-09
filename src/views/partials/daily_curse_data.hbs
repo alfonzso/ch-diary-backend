@@ -1,65 +1,21 @@
 {{#if entriesByDate}}
   <div
-    id="daily_curse_data"
+    id="dailyCurseDatas"
     class="col d-flex justify-content-center flex-column"
     style="font-size: 75%"
   >
-    <h5 class="text-center">
-      Sum Ch: {{sumCh}}
-    </h5>
-    <h5 class="text-center">
-      Left Ch: {{maxCh}}
-    </h5>
+    {{> _daily_curse/dailyCurseDataHeader}}
+
     {{#each entriesByDate as |entry|}}
       <div
         id="{{entry.id}}"
         class="card d-flex justify-content-between flex-column p-2 m-2"
       >
-        <div id="FoodTable" class="d-flex justify-content-around flex-row p-2">
-          <div id="FoodProp" class="d-flex justify-content-center flex-column">
-            {{#each entry.FoodProp as |FoodProp|}}
-              <div class="entry d-flex justify-content-between flex-row gap-4">
-                {{#each FoodProp as |typeAndValue|}}
-                  <div>
-                    {{typeAndValue}}
-                  </div>
-                {{/each}}
-              </div>
-            {{/each}}
-          </div>
-          <div id="ChRatio">
-            <div id="chRatioCh" class="d-flex justify-content-around">
-              Ch: {{entry.ChRatio.ch}}
-            </div>
-            <div id="chRatioInsulin" class="d-flex justify-content-around">
-              Insulin ratio: {{entry.ChRatio.insulinRation}}
-            </div>
-            <div
-              id="ratioHeader"
-              class="d-flex justify-content-around flex-row"
-            >
-              <div>
-                Ratio
-              </div>
-              <div>
-                Insulin Needed
-              </div>
-            </div>
-            {{#each entry.ChRatio.ratiosss as |ratios|}}
-              <div class="entry d-flex justify-content-around flex-row">
-                {{#each ratios as |ratioAndInsulin|}}
-                  <div>
-                    {{ratioAndInsulin}}
-                  </div>
-                {{/each}}
-              </div>
-            {{/each}}
-          </div>
-        </div>
 
         <div id="foodRow">
-          {{! justify-content-center }}
-          <b class="entry d-flex align-items-center justify-content-center flex-row">
+          <b
+            class="entry d-flex align-items-center justify-content-center flex-row"
+          >
             <div>
               <p class="p-2  m-2 card text-nowrap">
                 {{entry.FoodType}}
@@ -76,6 +32,11 @@
               </p>
             </div>
           </b>
+        </div>
+
+        <div id="FoodTable" class="d-flex justify-content-around flex-row p-2">
+          {{> _daily_curse/FoodProp entry=entry }}
+          {{> _daily_curse/ChRatio entry=entry }}
         </div>
       </div>
     {{/each}}

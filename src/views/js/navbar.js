@@ -1,22 +1,4 @@
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
 
-function padTime (time ) {
-  return time.toString().padStart(2, '0')
-}
-
-function prettyDate (seconds ) {
-  let days = Math.floor(seconds / (3600 * 24));
-  seconds -= days * 3600 * 24;
-  let hours = Math.floor(seconds / 3600);
-  seconds -= hours * 3600;
-  let minutes = Math.floor(seconds / 60);
-  seconds -= minutes * 60;
-  return `${days}d - ${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`
-}
 
 function runClock(exp){
 
@@ -24,7 +6,6 @@ function runClock(exp){
     return
   }
 
-  console.log("keeeeeeeeeeeeeeeeeeeeeeeee")
   return setInterval(() => {
     let startDate = new Date(new Date().toLocaleString('en', {timeZone:'Europe/Budapest'}))
     let endDate = new Date(new Date(exp* 1000).toLocaleString('en', {timeZone:'Europe/Budapest'}));

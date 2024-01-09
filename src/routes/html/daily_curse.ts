@@ -5,7 +5,7 @@ import { UserRepository } from "../../repositorys";
 import { DiaryService } from "../../services";
 import { param } from "express-validator";
 import { validateRequest } from "../../middlewares";
-import { range } from "../../utils/common";
+import { toYYYYMMDD, datePlusXDay, range, tzDate } from "../../utils/common";
 
 const INSULIN_RATIO = 4
 const MAX_CH_PER_DAY = 180
@@ -97,17 +97,26 @@ export default (app: Router) => {
             ChRatio: {
               ch: v.Food.FoodProperty.ch,
               insulinRation: INSULIN_RATIO,
-              ratiosss: configedRange.map(num => {
+              ratios: configedRange.map(num => {
                 return [num, (v.Food.FoodProperty.ch / num).toPrecision(2)]
               })
             }
           }
         })
 
+        const pager = {
+          yesterDay: toYYYYMMDD(datePlusXDay(-1, req.params.date)),
+          todayFromParams: req.params.date,
+          now: toYYYYMMDD(tzDate()),
+          nextDay: toYYYYMMDD(datePlusXDay(1, req.params.date)),
+        }
+        // console.log("pager----> ", pager)
+
         render.ops = {
           ...render.ops, ...{
             sumCh,
             maxCh: MAX_CH_PER_DAY,
+            pager,
             entriesByDate: mappedEntry,
             helpers: {
               dynamicPage() { return 'daily_curse_data'; }

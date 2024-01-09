@@ -1,10 +1,32 @@
+import { Request, Response } from "express";
+
 function range(start: number, end: number) {
   return [...Array(1 + end - start).keys()].map(v => start + v)
 }
 
-const datePlusXDay = (x: number) => {
-  const gmtDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Budapest" })
-  return new Date(new Date(gmtDate).setDate(new Date().getDate() + x))
+const clearAllCookies = (req: Request, res: Response) => {
+  Object.keys(req.cookies).map((cookie) => {
+    res.clearCookie(cookie);
+  })
+}
+
+const tzDate = (_initDate: null | string | Date = null) => {
+  let initDate = null
+  if (_initDate === null) {
+    initDate = new Date()
+  } else {
+    initDate = new Date(_initDate)
+  }
+  return new Date(initDate.toLocaleString("en-US", { timeZone: "Europe/Budapest" }))
+}
+
+const datePlusXDay = (x: number, _initDate: null | string | Date = null) => {
+  const _tzDate = tzDate(_initDate)
+  return new Date(_tzDate.setDate(_tzDate.getDate() + x))
+}
+
+const toYYYYMMDD = (date: Date) => {
+  return date.toISOString().split('T')[0]
 }
 
 const fixedDate = (date: Date) => {
@@ -45,6 +67,9 @@ const translateKeyToEng = (name: string) => {
 
 export {
   range,
+  clearAllCookies,
+  tzDate,
+  toYYYYMMDD,
   fixedDate,
   datePlusXDay,
   stringToNumber,

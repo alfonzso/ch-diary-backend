@@ -1,0 +1,20 @@
+<div id="ChRatio" class="w-25">
+  <div id="chRatio.Ch" class="text-center">
+    Ch: {{entry.ChRatio.ch}}
+  </div>
+  <div id="chRatio.Insulin" class="text-center">
+    Insulin ratio: {{entry.ChRatio.insulinRation}}
+  </div>
+  <div
+    id="ratioHeader"
+    class="d-flex justify-content-around flex-row"
+  >
+    <div>
+      Ratio
+    </div>
+    <div>
+      Insulin Needed
+    </div>
+  </div>
+{{> _daily_curse/ChRatio.ratios entry=entry }}
+</div>

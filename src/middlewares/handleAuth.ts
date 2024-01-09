@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { AuthService } from '../services';
 import { JWTUserPayload, UserPayload } from '../types/jwt';
+import myLogger from '../utils/myLogger';
+import { clearAllCookies } from '../utils/common';
 
 declare global {
   namespace Express {
@@ -32,6 +34,8 @@ export const handleAuth = async (req: Request, res: Response, next: NextFunction
 
   if (accessToken === undefined) {
     if (refreshToken === undefined || refreshToken.length < 0) {
+      myLogger("accessToken & refreshToken is undefined ")
+      clearAllCookies(req, res)
       req.isLoggedIn = false
       return next();
     }
@@ -47,9 +51,9 @@ export const handleAuth = async (req: Request, res: Response, next: NextFunction
         }
       })
       .catch(async (err) => {
-        console.log("[RenewAccessFromRefresh] ERR ", err.reason)
+        myLogger("[ RenewAccessFromRefresh ] ERR ", err.reason)
         Container.get(AuthService).CleanUpRefreshToken(refreshToken)
-        res.clearCookie("refreshToken");
+        clearAllCookies(req, res)
         req.isLoggedIn = false
         req.user = undefined
         res.setHeader("HX-Redirect", "/login")
@@ -64,14 +68,13 @@ export const handleAuth = async (req: Request, res: Response, next: NextFunction
       .then(async (payload) => {
         req.isLoggedIn = true
         req.user = (payload as JWTUserPayload).user
-        req.jwt = {
-          access: accessToken,
-        }
+        req.jwt = { access: accessToken }
       })
       .catch((err) => {
+        myLogger("[ AccessToken Verify ] ERR ", err.reason)
+        clearAllCookies(req, res)
         req.isLoggedIn = false
         req.user = undefined
-        console.log("accessToken error: ", err)
       })
       .finally(() => {
         return next();

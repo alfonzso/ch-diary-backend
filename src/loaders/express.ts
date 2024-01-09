@@ -1,30 +1,14 @@
 import cookieParser from "cookie-parser";
-// import expressLayouts from "express-ejs-layouts";
 import bodyParser from 'body-parser';
-
 import express from "express";
 import config from "../../config";
 import { RouteNotFound } from "../errors";
 import { errorHandler } from "../middlewares";
-// import routes from "../routes";
-// import renders from "../routes/renders";
-// import path from "path";
 import { handleAuth, handleGlobals } from "../middlewares/handleAuth";
-// import handlebars from "handlebars";
-import { engine, create } from 'express-handlebars';
+import { engine } from 'express-handlebars';
 import html from "../routes/html";
 
-// let's initialize our express app
-type PathParams = string | RegExp | Array<string | RegExp>;
 
-type FafaType = {
-  // Path: PathParams,
-  // Path: string,
-  Path: PathParams,
-  // handlers: () => any
-  handlers: any
-  // Handler: () => any
-}
 export default ({ app }: { app: express.Application }) => {
 
   app.use(express.static('./src/views'))
@@ -41,13 +25,6 @@ export default ({ app }: { app: express.Application }) => {
 
   app.set('views', './src/views');
 
-  const kk = {
-    extname: '.hbs',
-    defaultLayout: false,
-    helpers: {
-      dynamicPage() { return 'wellcome'; }
-    }
-  }
   app.engine('.hbs', engine({
     extname: '.hbs',
     defaultLayout: false,
@@ -56,9 +33,6 @@ export default ({ app }: { app: express.Application }) => {
     },
   }));
   app.set('view engine', '.hbs');
-  // app.set('view engine', 'handlebars');
-
-  console.log("-------------> tt ", kk.helpers)
 
   // let's parse our incoming request with JSON payload using the express.json() middleware
   app.use(express.json());
@@ -80,13 +54,7 @@ export default ({ app }: { app: express.Application }) => {
     res.status(200).end();
   });
 
-  // add our routes
-  // const faf: FafaType = { Path: '/', handlers: html() }
-  // app.use(faf)
   app.use('/', html())
-
-  // add our routes
-  // app.use(config.api.prefix, routes())
 
   // catch all route
   app.all('*', (req, res) => {
@@ -96,7 +64,6 @@ export default ({ app }: { app: express.Application }) => {
 
   // add our error handler middleware
   app.use(errorHandler);
-
 
   if (config.env != "prod") {
     const all_routes = require('express-list-endpoints');

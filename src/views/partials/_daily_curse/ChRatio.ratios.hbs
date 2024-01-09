@@ -1,0 +1,9 @@
+{{#each entry.ChRatio.ratios as |ratios|}}
+  <div class="entry d-flex justify-content-around flex-row">
+    {{#each ratios as |ratioAndInsulin|}}
+      <div>
+        {{ratioAndInsulin}}
+      </div>
+    {{/each}}
+  </div>
+{{/each}}

@@ -1,0 +1,11 @@
+<div id="FoodProp" class="d-flex justify-content-center flex-column w-25">
+  {{#each entry.FoodProp as |FoodProp|}}
+    <div class="entry d-flex justify-content-around">
+      {{#each FoodProp as |typeAndValue|}}
+        <div>
+          {{typeAndValue}}
+        </div>
+      {{/each}}
+    </div>
+  {{/each}}
+</div>
