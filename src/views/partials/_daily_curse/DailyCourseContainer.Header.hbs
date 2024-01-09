@@ -1,34 +1,34 @@
-<div id="dailyCurseDataHeader">
+<div id="DailyCourseContainerHeader">
   <h5 class="text-center">
     Sum Ch: {{sumCh}}
   </h5>
   <h5 class="text-center">
-    Left Ch: {{maxCh}}
+    Left Ch: {{leftCh}}
   </h5>
   <div id="dateChanger" class="d-flex gap-5 justify-content-center">
     <div id="previousDay">
       <button
-        hx-get="/daily_curse_data/date/{{pager.yesterDay}}"
+        hx-get="/daily_course_data/date/{{pager.yesterDay}}"
         hx-swap="outerHTML"
-        hx-target="#dailyCurseDatas"
+        hx-target="#DailyCourseContainer"
       >
         &lt;
       </button>
     </div>
     <div id="todayDay">
       <button
-        hx-get="/daily_curse_data/date/{{pager.now}}"
+        hx-get="/daily_course_data/date/{{pager.now}}"
         hx-swap="outerHTML"
-        hx-target="#dailyCurseDatas"
+        hx-target="#DailyCourseContainer"
       >
         {{pager.todayFromParams}}
       </button>
     </div>
     <div id="nextDay">
       <button
-        hx-get="/daily_curse_data/date/{{pager.nextDay}}"
+        hx-get="/daily_course_data/date/{{pager.nextDay}}"
         hx-swap="outerHTML"
-        hx-target="#dailyCurseDatas"
+        hx-target="#DailyCourseContainer"
       >
         &gt;
       </button>

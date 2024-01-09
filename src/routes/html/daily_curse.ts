@@ -15,7 +15,7 @@ const fullDiaryRender = {
   file: 'main',
   ops: {
     layout: 'index', helpers: {
-      dynamicPage() { return 'daily_curse'; }
+      dynamicPage() { return 'daily_course'; }
     }
   }
 }
@@ -56,11 +56,11 @@ const getEntriesByDate = async (nickname: string, date: Date): Promise<EntryByDa
 export default (app: Router) => {
 
   app.get(
-    "/daily_curse_data/date/:date",
+    "/daily_course_data/date/:date",
     param('date').not().isEmpty().withMessage('date needed!'),
     validateRequest,
     async (req, res) => {
-      console.log("get render /daily_curse_data");
+      console.log("get render /daily_course_data");
 
       let render = {
         file: './partials/wellcome.hbs', ops: {
@@ -79,7 +79,7 @@ export default (app: Router) => {
           console.log("----------> meh")
         }
 
-        render.file = "./partials/daily_curse_data.hbs"
+        render.file = "./partials/daily_course_data.hbs"
 
         const sumCh = (entriesByDate?.data || []).map((v) => {
           return v.Food.FoodProperty.ch
@@ -115,11 +115,11 @@ export default (app: Router) => {
         render.ops = {
           ...render.ops, ...{
             sumCh,
-            maxCh: MAX_CH_PER_DAY,
+            leftCh: MAX_CH_PER_DAY - sumCh,
             pager,
             entriesByDate: mappedEntry,
             helpers: {
-              dynamicPage() { return 'daily_curse_data'; }
+              dynamicPage() { return 'daily_course_data'; }
             }
           }
         }
@@ -131,8 +131,8 @@ export default (app: Router) => {
       }
     });
 
-  app.get("/daily_curse", async (req, res) => {
-    console.log("get render /daily_curse");
+  app.get("/daily_course", async (req, res) => {
+    console.log("get render /daily_course");
     let render = { file: '', ops: {} }
     try {
 
@@ -143,7 +143,7 @@ export default (app: Router) => {
       }
 
       if (req.isHtmx) {
-        render.file = './partials/daily_curse.hbs'
+        render.file = './partials/daily_course.hbs'
       } else {
         render = fullDiaryRender
       }

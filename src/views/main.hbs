@@ -20,7 +20,7 @@
     document.body.addEventListener('htmx:configRequest', function(evt) {
         evt.detail.headers['access_token'] = accessToken;
         // console.log("--> evt --> ", evt.detail)
-        if (evt.detail.path === "/daily_curse_data/date" ){
+        if (evt.detail.path === "/daily_course_data/date" ){
           // evt.detail.parameters['date'] = accessToken;
           // console.log("aaaaaa ", YYYYMMDD())
           evt.detail.path += "/" + YYYYMMDD()
