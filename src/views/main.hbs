@@ -6,12 +6,14 @@
   <script>
 
     window.onload = function(){
-      console.log(".......runClock....... ", getCookie("refTokenExp"), window.runClockId)
+      console.log(".......window.onload....... ")
+      // console.log(".......runClock....... ", getCookie("refTokenExp"), window.runClockId)
       window.runClockId = runClock(getCookie("refTokenExp"))
     }
 
     document.body.addEventListener('htmx:afterOnLoad', function(e) {
-      console.log(".......htmx runClock....... ", getCookie("refTokenExp"), window.runClockId)
+      console.log(".......htmx:afterOnLoad....... ")
+      //console.log(".......htmx runClock....... ", getCookie("refTokenExp"), window.runClockId)
       if (window.runClockId === undefined){
         window.runClockId = runClock(getCookie("refTokenExp"))
       }
@@ -20,7 +22,7 @@
     document.body.addEventListener('htmx:configRequest', function(evt) {
         evt.detail.headers['access_token'] = accessToken;
         // console.log("--> evt --> ", evt.detail)
-        if (evt.detail.path === "/daily_course_data/date" ){
+        if (evt.detail.path === "/daily-course/date" ){
           // evt.detail.parameters['date'] = accessToken;
           // console.log("aaaaaa ", YYYYMMDD())
           evt.detail.path += "/" + YYYYMMDD()

@@ -15,7 +15,7 @@ const fullDiaryRender = {
   file: 'main',
   ops: {
     layout: 'index', helpers: {
-      dynamicPage() { return 'daily_course'; }
+      dynamicPage() { return 'daily_course_page'; }
     }
   }
 }
@@ -56,11 +56,11 @@ const getEntriesByDate = async (nickname: string, date: Date): Promise<EntryByDa
 export default (app: Router) => {
 
   app.get(
-    "/daily_course_data/date/:date",
+    "/daily-course/date/:date",
     param('date').not().isEmpty().withMessage('date needed!'),
     validateRequest,
     async (req, res) => {
-      console.log("get render /daily_course_data");
+      console.log("get render /daily-course_data");
 
       let render = {
         file: './partials/wellcome.hbs', ops: {
@@ -79,7 +79,7 @@ export default (app: Router) => {
           console.log("----------> meh")
         }
 
-        render.file = "./partials/daily_course_data.hbs"
+        render.file = "./partials/daily_course.hbs"
 
         const sumCh = (entriesByDate?.data || []).map((v) => {
           return v.Food.FoodProperty.ch
@@ -119,7 +119,7 @@ export default (app: Router) => {
             pager,
             entriesByDate: mappedEntry,
             helpers: {
-              dynamicPage() { return 'daily_course_data'; }
+              dynamicPage() { return 'daily_course'; }
             }
           }
         }
@@ -131,8 +131,8 @@ export default (app: Router) => {
       }
     });
 
-  app.get("/daily_course", async (req, res) => {
-    console.log("get render /daily_course");
+  app.get("/daily-course-page", async (req, res) => {
+    console.log("get render /daily-course-page");
     let render = { file: '', ops: {} }
     try {
 
@@ -143,7 +143,7 @@ export default (app: Router) => {
       }
 
       if (req.isHtmx) {
-        render.file = './partials/daily_course.hbs'
+        render.file = './partials/daily_course_page.hbs'
       } else {
         render = fullDiaryRender
       }

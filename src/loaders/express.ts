@@ -59,7 +59,18 @@ export default ({ app }: { app: express.Application }) => {
   // catch all route
   app.all('*', (req, res) => {
     console.log("path not found", req.method, req.url)
-    throw new RouteNotFound();
+    // throw new RouteNotFound();
+    let render = {
+      file: 'main', ops: {
+        layout: 'index', helpers: {
+          dynamicPage() { return 'errors/404'; }
+        },
+      }
+    }
+
+    // res.render(render.file, render.ops)
+    res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
+
   });
 
   // add our error handler middleware

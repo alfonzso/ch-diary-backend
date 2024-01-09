@@ -4,7 +4,7 @@ import login from './login';
 import root from './root';
 import logout from './logout';
 import diary from './diary';
-import daily_course from './daily_course';
+import dailyCourse from './dailyCourse';
 
 export default () => {
   const app = Router();
@@ -12,6 +12,6 @@ export default () => {
   login(app);
   logout(app);
   diary(app);
-  daily_course(app)
+  dailyCourse(app)
   return app
 }

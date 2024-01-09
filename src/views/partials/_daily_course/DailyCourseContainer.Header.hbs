@@ -8,7 +8,7 @@
   <div id="dateChanger" class="d-flex gap-5 justify-content-center">
     <div id="previousDay">
       <button
-        hx-get="/daily_course_data/date/{{pager.yesterDay}}"
+        hx-get="/daily-course/date/{{pager.yesterDay}}"
         hx-swap="outerHTML"
         hx-target="#DailyCourseContainer"
       >
@@ -17,7 +17,7 @@
     </div>
     <div id="todayDay">
       <button
-        hx-get="/daily_course_data/date/{{pager.now}}"
+        hx-get="/daily-course/date/{{pager.now}}"
         hx-swap="outerHTML"
         hx-target="#DailyCourseContainer"
       >
@@ -26,7 +26,7 @@
     </div>
     <div id="nextDay">
       <button
-        hx-get="/daily_course_data/date/{{pager.nextDay}}"
+        hx-get="/daily-course/date/{{pager.nextDay}}"
         hx-swap="outerHTML"
         hx-target="#DailyCourseContainer"
       >
