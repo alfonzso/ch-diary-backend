@@ -20,6 +20,11 @@ const tzDate = (_initDate: null | string | Date = null) => {
   return new Date(initDate.toLocaleString("en-US", { timeZone: "Europe/Budapest" }))
 }
 
+function getDayName(date: Date) {
+  // var date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", { weekday: 'long' });
+}
+
 const datePlusXDay = (x: number, _initDate: null | string | Date = null) => {
   const _tzDate = tzDate(_initDate)
   return new Date(_tzDate.setDate(_tzDate.getDate() + x))
@@ -68,6 +73,7 @@ const translateKeyToEng = (name: string) => {
 export {
   range,
   clearAllCookies,
+  getDayName,
   tzDate,
   toYYYYMMDD,
   fixedDate,

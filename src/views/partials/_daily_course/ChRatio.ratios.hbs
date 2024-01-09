@@ -1,9 +1,22 @@
-{{#each entry.ChRatio.ratios as |ratios|}}
-  <div class="entry d-flex justify-content-around flex-row">
-    {{#each ratios as |ratioAndInsulin|}}
-      <div>
-        {{ratioAndInsulin}}
+<div id="RatiosWhInsulin" class="d-flex flex-column col-12">
+  <div id="ratio" class="row">
+    <div class="col">
+      Ratio
+    </div>
+    {{#each entry.ChRatio.ratiosWhInsulin.ratio as |ratio|}}
+      <div class="col">
+        {{ratio}}
       </div>
     {{/each}}
   </div>
-{{/each}}
+  <div id="insulin" class="row">
+    <div class="col">
+      Insulin
+    </div>
+    {{#each entry.ChRatio.ratiosWhInsulin.insulin as |insulin|}}
+      <div class="col">
+        {{insulin}}
+      </div>
+    {{/each}}
+  </div>
+</div>

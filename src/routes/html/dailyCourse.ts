@@ -5,11 +5,11 @@ import { UserRepository } from "../../repositorys";
 import { DiaryService } from "../../services";
 import { param } from "express-validator";
 import { validateRequest } from "../../middlewares";
-import { toYYYYMMDD, datePlusXDay, range, tzDate } from "../../utils/common";
+import { toYYYYMMDD, datePlusXDay, range, tzDate, getDayName } from "../../utils/common";
 
 const INSULIN_RATIO = 4
 const MAX_CH_PER_DAY = 180
-const configedRange = range(INSULIN_RATIO - 1, INSULIN_RATIO + 2)
+const configedRange = range(INSULIN_RATIO - 2, INSULIN_RATIO + 1)
 
 const fullDiaryRender = {
   file: 'main',
@@ -85,7 +85,8 @@ export default (app: Router) => {
           return v.Food.FoodProperty.ch
         }).reduce((prev, curr) => {
           return prev + curr
-        })
+        }, 0)
+
 
         const mappedEntry = (entriesByDate?.data || []).map((v) => {
           return {
@@ -93,13 +94,26 @@ export default (app: Router) => {
             FoodName: v.Food.name,
             FoodPortion: v.Food.portion,
             FoodType: v.Food.Interfood.InterfoodType.name,
-            FoodProp: Object.entries(v.Food.FoodProperty).map(([k, v]) => { return [k, v] }),
+            FoodProp: {
+              names: Object.keys(v.Food.FoodProperty),
+              values: Object.values(v.Food.FoodProperty),
+            },
+            // FoodProp: Object.entries(v.Food.FoodProperty).map(([k, v]) => { return [k, v] }),
             ChRatio: {
               ch: v.Food.FoodProperty.ch,
               insulinRation: INSULIN_RATIO,
-              ratios: configedRange.map(num => {
-                return [num, (v.Food.FoodProperty.ch / num).toPrecision(2)]
-              })
+              // FoodPropTable:{
+
+              // }
+              ratiosWhInsulin: {
+                ratio: configedRange,
+                insulin: configedRange.map(num => {
+                  return (v.Food.FoodProperty.ch / num).toPrecision(2)
+                })
+              },
+              // ratios: configedRange.map(num => {
+              //   return [num, (v.Food.FoodProperty.ch / num).toPrecision(2)]
+              // })
             }
           }
         })
@@ -107,6 +121,7 @@ export default (app: Router) => {
         const pager = {
           yesterDay: toYYYYMMDD(datePlusXDay(-1, req.params.date)),
           todayFromParams: req.params.date,
+          todayName: getDayName(new Date(req.params.date)),
           now: toYYYYMMDD(tzDate()),
           nextDay: toYYYYMMDD(datePlusXDay(1, req.params.date)),
         }
