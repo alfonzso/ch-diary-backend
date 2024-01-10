@@ -23,30 +23,7 @@
     // document.addEventListener('htmx:afterRequest', function (evt) {});
   </script>
 
+  {{> _import_interfood/modal }}
+  {{> components/toasts }}
   {{> rootComponents/footer }}
-
-  <div
-    id="modal"
-    class="modal modal-blur fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex="-1"
-  >
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content"></div>
-    </div>
-  </div>
-
-  </div>
-  <div class="position-fixed top-0 end-0 pe-3 pt-5">
-    <div
-      id="toast"
-      class="toast align-items-center text-white bg-success border-0 w-auto "
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
-      <div id="toast-body" class="toast-body"></div>
-    </div>
-  </div>
 </div>

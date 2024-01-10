@@ -43,9 +43,9 @@
             <a
               class="nav-link"
               hx-get="/import"
-              hx-target="#modal"
+              hx-target="#interfoodModal"
               data-bs-toggle="modal"
-              data-bs-target="#modal"
+              data-bs-target="#interfoodModal"
               hx-trigger="click"
             >
               Import Interfood
@@ -70,15 +70,25 @@
           </div>
         {{/if}}
       </div>
-      {{#if isLoggedIn}}
-        <a class="nav-link" href="/logout" hx-target="#home" hx-replace-url="/">
-          Logout
-        </a>
-      {{else}}
-        <a class="nav-link" href="/login" hx-target="#home">
-          Login
-        </a>
-      {{/if}}
+      <div id="authContainer" class="d-flex gap-4">
+        {{#if isLoggedIn}}
+          <a
+            class="nav-link"
+            href="/logout"
+            hx-target="#home"
+            hx-replace-url="/"
+          >
+            Logout
+          </a>
+        {{else}}
+          <a class="nav-link" href="/login" hx-target="#home">
+            Login
+          </a>
+          <a class="nav-link" href="/register" hx-target="#home">
+            Register
+          </a>
+        {{/if}}
+      </div>
     </div>
   </nav>
 </div>

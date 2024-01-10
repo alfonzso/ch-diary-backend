@@ -127,28 +127,26 @@ export default (app: Router) => {
         console.log("-----------> ", trimmedImpData)
 
         if (trimmedImpData === undefined || trimmedImpData.length === 0) {
-          res.setHeader('HX-Trigger', JSON.stringify({ "showMessage": "Data was empty, skiping" }))
+          res.setHeader('HX-Trigger', JSON.stringify({ "showErrorMessage": "Data was empty, skiping" }))
           res.status(400).send()
           return
         }
 
-        for (const data  in trimmedImpData) {
+        for (const data in trimmedImpData) {
           if ((trimmedImpData[data].split(";").length - 1) < 2) {
-            res.setHeader('HX-Trigger', JSON.stringify({ "showMessage": "Data was invalid, need more than semicolon in data" }))
+            res.setHeader('HX-Trigger', JSON.stringify({ "showErrorMessage": "Data was invalid, need more than semicolon in data" }))
             res.status(400).send()
             return
           }
         }
 
-        const success = await _importInterfood(req.user?.id, trimmedImpData)
-
-        if (!success) {
-          res.setHeader('HX-Trigger', JSON.stringify({ "showMessage": "Data import from Interfood failed... " }))
+        if (!await _importInterfood(req.user?.id, trimmedImpData)) {
+          res.setHeader('HX-Trigger', JSON.stringify({ "showErrorMessage": "Data import from Interfood failed... " }))
           res.status(400).send()
           return
         }
 
-        res.setHeader('HX-Trigger', JSON.stringify({ "showMessage": "Import Big Succcesss" }))
+        res.setHeader('HX-Trigger', JSON.stringify({ "showSuccessMessage": "Import Big Succcesss" }))
         res.status(201).send()
       } catch (error) {
         console.error("Error fetching data:", error);
