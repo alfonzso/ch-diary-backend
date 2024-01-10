@@ -51,6 +51,9 @@ export default (app: Router) => {
         }
       })
 
+      // diaryData.sort((a, b) => a.date - b.date)
+      diaryData.sort((a, b) => a.date.localeCompare(b.date))
+
       const diaryDatas = {
         diaryHeaders: Object.keys(diaryData[0]),
         diaries: diaryData.map((v) => { return Object.entries(v).map(([k, v]) => [k, v]) }),
