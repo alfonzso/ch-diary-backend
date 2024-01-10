@@ -8,7 +8,7 @@ const fullDiaryRender = {
   file: 'main',
   ops: {
     layout: 'index', helpers: {
-      dynamicPage() { return 'diary'; }
+      dynamicPage() { return '_all_diary/_index'; }
     }
   }
 }
@@ -22,8 +22,8 @@ const getEntry = async (nickname: string) => {
 
 export default (app: Router) => {
 
-  app.get("/diary_data", async (req, res) => {
-    console.log("get render /diary_data");
+  app.get("/all-diary", async (req, res) => {
+    console.log("get render /all-diary");
     let render = {
       file: './partials/wellcome.hbs', ops: {
       }
@@ -53,13 +53,13 @@ export default (app: Router) => {
 
       const diaryDatas = {
         diaryHeaders: Object.keys(diaryData[0]),
-        diaries: diaryData,
+        diaries: diaryData.map((v) => { return Object.entries(v).map(([k, v]) => [k, v]) }),
         helpers: {
-          dynamicPage() { return 'diary'; }
+          dynamicPage() { return './partials/_all_diary/_index.hbs'; }
         }
       }
 
-      res.render("./partials/diary_data.hbs",
+      res.render("./partials/_all_diary/diary.hbs",
         { ...render.ops, ...diaryDatas }
       )
     } catch (error) {
@@ -80,7 +80,7 @@ export default (app: Router) => {
       }
 
       if (req.isHtmx) {
-        render.file = './partials/diary.hbs'
+        render.file = './partials/_all_diary/_index.hbs'
       } else {
         render = fullDiaryRender
       }

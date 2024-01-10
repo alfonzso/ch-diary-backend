@@ -16,3 +16,26 @@ html, body {
 .chd-shadow {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
+
+.diarydata_name{
+   margin-right: 40px;
+}
+
+.diarydata_name.overflow {
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.diarydata_name.overflow:hover {
+  overflow: visible;
+}
+
+.diarydata_name.overflow:hover span {
+  position: relative;
+  background-color: white;
+
+  box-shadow: 0 0 4px 0 black;
+  border-radius: 1px;
+}

@@ -47,9 +47,6 @@
               data-bs-toggle="modal"
               data-bs-target="#modal"
               hx-trigger="click"
-              {{! href="/daily-course"
-              hx-target="#home"
-              hx-swap="outerHTML" }}
             >
               Import Interfood
             </a>
@@ -61,8 +58,8 @@
           </a>
         </li>
       </ul>
-      <div class="d-flex flex-row me-2 gap-1" id="userInfo">
-        <div id="untilTokenExpired"></div>
+      <div class="d-flex flex-row me-4 gap-1" id="userInfo">
+        <div id="untilTokenExpired" style="font-size: 10px"></div>
         {{#if user}}
           <div id="anonym">
             Hello {{user.nickname}}
