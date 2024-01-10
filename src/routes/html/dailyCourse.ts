@@ -119,12 +119,11 @@ export default (app: Router) => {
           now: toYYYYMMDD(tzDate()),
           nextDay: toYYYYMMDD(datePlusXDay(1, req.params.date)),
         }
-        // console.log("pager----> ", pager)
 
         render.ops = {
           ...render.ops, ...{
-            sumCh,
-            leftCh: MAX_CH_PER_DAY - sumCh,
+            sumCh: Math.floor(sumCh),
+            leftCh: Math.floor(MAX_CH_PER_DAY - sumCh),
             pager,
             entriesByDate: mappedEntry,
             helpers: {

@@ -4,7 +4,10 @@
   hx-swap="innerHTML"
   hx-trigger="loginSuccess from:body"
 >
-  <nav class="navbar navbar-expand-lg navbar-light bg-light chd-shadow rounded pe-2 ps-2" hx-boost="true">
+  <nav
+    class="navbar navbar-expand-lg navbar-light bg-light chd-shadow rounded pe-2 ps-2"
+    hx-boost="true"
+  >
     <a class="navbar-brand" href="#">
       Chdiary
     </a>
@@ -34,6 +37,21 @@
               hx-swap="outerHTML"
             >
               Daily courses
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              hx-get="/import"
+              hx-target="#modal"
+              data-bs-toggle="modal"
+              data-bs-target="#modal"
+              hx-trigger="click"
+              {{! href="/daily-course"
+              hx-target="#home"
+              hx-swap="outerHTML" }}
+            >
+              Import Interfood
             </a>
           </li>
         {{/if}}

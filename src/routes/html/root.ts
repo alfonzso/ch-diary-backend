@@ -30,19 +30,14 @@ export default (app: Router) => {
       let render = {
         file: './partials/navbar.hbs', ops: {}
       }
-      render.ops = {
-        ...render.ops, ...{
-          isLoggedIn: req.isLoggedIn,
-          user: req.user,
-          exp: req.jwt.refreshExp,
-        }
-      }
 
-      res.render(render.file, render.ops)
+      res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
     } catch (error) {
       console.error("Error fetching data:", error);
       res.status(500).json({ error: "An error occurred while fetching data." });
     }
   });
+
+  
 
 }

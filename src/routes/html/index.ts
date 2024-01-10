@@ -5,6 +5,7 @@ import root from './root';
 import logout from './logout';
 import diary from './diary';
 import dailyCourse from './dailyCourse';
+import interfoodImport from './interfoodImport';
 
 export default () => {
   const app = Router();
@@ -13,5 +14,6 @@ export default () => {
   logout(app);
   diary(app);
   dailyCourse(app)
+  interfoodImport(app)
   return app
 }
