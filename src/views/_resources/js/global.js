@@ -1,3 +1,31 @@
+window.onload = function(){
+
+  const toastElement = document.getElementById("toast")
+  const toastBody = document.getElementById("toast-body")
+  const toast = new bootstrap.Toast(toastElement, { delay: 5000 })
+  // let windowsIsActive = null
+
+  window.runClockId = runClock(getCookie("refTokenExp"))
+
+  htmx.on("showMessage", (e) => {
+    toastBody.innerText = e.detail.value
+    toast.show()
+  })
+
+  // htmx.on("visibilitychange", () => {
+  document.addEventListener("visibilitychange", () => {
+    windowsIsActive = !document.hidden
+  });
+}
+
+// document.addEventListener("visibilitychange", () => {
+//   if (document.hidden) {
+//     audio.pause();
+//   } else {
+//     audio.play();
+//   }
+// });
+
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);

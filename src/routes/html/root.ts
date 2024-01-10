@@ -28,7 +28,7 @@ export default (app: Router) => {
     try {
 
       let render = {
-        file: './partials/navbar.hbs', ops: {}
+        file: 'partials/rootComponents/navbar', ops: {}
       }
 
       res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
@@ -38,6 +38,6 @@ export default (app: Router) => {
     }
   });
 
-  
+
 
 }

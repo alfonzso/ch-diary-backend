@@ -1,38 +1,14 @@
 <div id="root" class="h-100 d-flex flex-column">
-  {{> navbar }}
+  {{> rootComponents/navbar }}
 
   {{> (dynamicPage) }}
 
   <script>
-    window.onload = function(){
-      console.log(".......window.onload....... ")
-      // console.log(".......runClock....... ", getCookie("refTokenExp"), window.runClockId)
-      window.runClockId = runClock(getCookie("refTokenExp"))
-      const toastElement = document.getElementById("toast")
-      const toastBody = document.getElementById("toast-body")
-      const toast = new bootstrap.Toast(toastElement, { delay: 5000 })
-      htmx.on("showMessage", (e) => {
-        toastBody.innerText = e.detail.value
-        toast.show()
-      })
-    }
 
     document.body.addEventListener('htmx:afterOnLoad', function(e) {
-      console.log(".......htmx:afterOnLoad....... ")
-      //console.log(".......htmx runClock....... ", getCookie("refTokenExp"), window.runClockId)
       if (window.runClockId === undefined){
         window.runClockId = runClock(getCookie("refTokenExp"))
       }
-    });
-
-    document.body.addEventListener('htmx:configRequest', function(evt) {
-        evt.detail.headers['access_token'] = accessToken;
-        // console.log("--> evt --> ", evt.detail)
-        if (evt.detail.path === "/daily-course/date" ){
-          // evt.detail.parameters['date'] = accessToken;
-          // console.log("aaaaaa ", YYYYMMDD())
-          evt.detail.path += "/" + YYYYMMDD()
-        }
     });
 
     document.body.addEventListener('loginSuccess', function(e) {
@@ -44,13 +20,10 @@
         htmx.find("#untilTokenExpired").innerHTML = ""
     });
 
-    document.addEventListener('htmx:afterRequest', function (evt) {
-      // console.log("------->after --> ", evt.detail)
-      // console.log(evt.detail.target.id, evt.detail.pathInfo.requestPath)
-    });
+    // document.addEventListener('htmx:afterRequest', function (evt) {});
   </script>
 
-  {{> footer }}
+  {{> rootComponents/footer }}
 
   <div
     id="modal"

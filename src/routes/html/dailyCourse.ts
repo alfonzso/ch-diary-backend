@@ -152,13 +152,15 @@ export default (app: Router) => {
       }
 
       if (req.isHtmx) {
-        // render.file = './partials/daily_course_page.hbs'
         render.file = './partials/_daily_course/_index.hbs'
       } else {
         render = fullDiaryRender
       }
 
-      res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
+      res.render(render.file, {
+        ...render.ops, ...req.GlobalTemplates,
+        today: toYYYYMMDD(tzDate())
+      })
 
     } catch (error) {
       console.error("Error fetching data:", error);

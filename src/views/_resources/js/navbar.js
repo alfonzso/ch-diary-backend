@@ -7,6 +7,7 @@ function runClock(exp){
   }
 
   return setInterval(() => {
+    if (!windowsIsActive) return
     let startDate = new Date(new Date().toLocaleString('en', {timeZone:'Europe/Budapest'}))
     let endDate = new Date(new Date(exp* 1000).toLocaleString('en', {timeZone:'Europe/Budapest'}));
     let seconds = ( endDate.getTime() - startDate.getTime() ) / 1000;
