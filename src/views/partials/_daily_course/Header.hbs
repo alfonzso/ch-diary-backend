@@ -10,7 +10,7 @@
     <ul class="pagination justify-content-center gap-3">
       <li class="page-item w-25 text-center">
         <a
-          class="page-link align-items-center d-flex h-100 justify-content-center chd-shadow"
+          class="page-link align-items-center d-flex h-100 justify-content-center chd-button-toast-shadow"
           aria-label="Previous"
           hx-get="/daily-course/date/{{pager.yesterDay}}"
           hx-swap="outerHTML"
@@ -23,7 +23,7 @@
       </li>
       <li class="page-item">
         <a
-          class="page-link d-flex flex-column text-center chd-shadow rounded"
+          class="page-link d-flex flex-column text-center chd-button-toast-shadow rounded"
           hx-get="/daily-course/date/{{pager.now}}"
           hx-swap="outerHTML"
           hx-target="#DailyCourseContainer"
@@ -38,7 +38,7 @@
       </li>
       <li class="page-item w-25 text-center">
         <a
-          class="page-link align-items-center d-flex h-100 justify-content-center chd-shadow"
+          class="page-link align-items-center d-flex h-100 justify-content-center chd-button-toast-shadow"
           aria-label="Next"
           hx-get="/daily-course/date/{{pager.nextDay}}"
           hx-swap="outerHTML"

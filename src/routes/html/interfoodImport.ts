@@ -124,8 +124,6 @@ export default (app: Router) => {
 
         let trimmedImpData = (req.body.data as string).replace('\r\n', '\n').trim().split('\n').map(row => { return row.trim() })
 
-        console.log("-----------> ", trimmedImpData)
-
         if (trimmedImpData === undefined || trimmedImpData.length === 0) {
           res.setHeader('HX-Trigger', JSON.stringify({ "showErrorMessage": "Data was empty, skiping" }))
           res.status(400).send()
