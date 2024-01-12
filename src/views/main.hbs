@@ -1,10 +1,9 @@
-<div id="root" class="h-100 d-flex flex-column">
-  {{> rootComponents/navbar }}
+{{!-- <div id="root" class="h-100 d-flex flex-column"> --}}
+<main role="main" class="container-fluid">
 
   {{> (dynamicPage) }}
 
   <script>
-
     document.body.addEventListener('htmx:afterOnLoad', function(e) {
       if (window.runClockId === undefined){
         window.runClockId = runClock(getCookie("refTokenExp"))
@@ -25,5 +24,5 @@
 
   {{> _import_interfood/modal }}
   {{> components/toasts }}
-  {{> rootComponents/footer }}
-</div>
+{{!-- </div> --}}
+</main>

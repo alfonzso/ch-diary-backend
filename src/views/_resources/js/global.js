@@ -1,3 +1,13 @@
+const appendAttribute = (elem, attr, srcAttr) => {
+  _elem = elem.getAttribute(attr) + " " + srcAttr
+  elem.setAttribute(attr, _elem)
+}
+
+const removeAttribute = (elem, attr, srcAttr) => {
+  _elem = elem.getAttribute(attr).replace(srcAttr, "")
+  elem.setAttribute(attr, _elem)
+}
+
 function fromHTML(html, trim = true) {
   // Process the HTML string.
   html = trim ? html : html.trim();
@@ -38,10 +48,25 @@ window.onload = function () {
 
   setupToast("showErrorMessage", "alert-danger")
   setupToast("showSuccessMessage", "alert-success")
+  setupToast("showWarnMessage", "alert-warning")
 
   document.addEventListener("visibilitychange", () => {
     windowsIsActive = !document.hidden
   });
+
+  // htmx.on('#navbarToggler', 'show.bs.collapse', (e) => {
+  //   // alert('opened');
+  //   // e.setAttribute()
+  //   // console.log(e, e.target)
+  //   appendAttribute(e.target, "class", "customNavbarToggler")
+  //   removeAttribute(htmx.find("#userList"), "class", "ms-auto")
+  // })
+
+  // htmx.on('#navbarToggler', 'hidden.bs.collapse', (e) => {
+  //   appendAttribute(htmx.find("#userList"), "class", "ms-auto")
+  //   removeAttribute(e.target, "class", "customNavbarToggler")
+  //   // alert('closed')
+  // })
 }
 
 function getCookie(name) {

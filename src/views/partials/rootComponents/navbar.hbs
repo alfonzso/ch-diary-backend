@@ -1,65 +1,18 @@
-<div
-  id="navDiary"
-  hx-get="/navbar"
-  hx-swap="innerHTML"
-  hx-trigger="loginSuccess from:body"
->
+<header>
   <nav
-    class="navbar navbar-expand-lg navbar-light bg-light chd-shadow rounded pe-2 ps-2"
+    class="navbar navbar-expand-lg bg-light"
     hx-boost="true"
+    id="navDiary"
+    hx-get="/navbar"
+    hx-swap="innerHTML"
+    hx-trigger="loginSuccess from:body"
+    {{! class="navbar navbar-expand-lg bg-light" }}
   >
-    <a class="navbar-brand" href="#">
-      Chdiary
-    </a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="/" hx-target="#home" hx-swap="outerHTML">
-            Home
-          </a>
-        </li>
-        {{#if isLoggedIn}}
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="/diary"
-              hx-target="#home"
-              hx-swap="outerHTML"
-            >
-              All Diaries
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="/daily-course"
-              hx-target="#home"
-              hx-swap="outerHTML"
-            >
-              Daily courses
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              hx-get="/import"
-              hx-target="#interfoodModal"
-              data-bs-toggle="modal"
-              data-bs-target="#interfoodModal"
-              hx-trigger="click"
-            >
-              Import Interfood
-            </a>
-          </li>
-        {{/if}}
-        <li class="nav-item">
-          <a class="nav-link" href="/about">
-            About
-          </a>
-        </li>
-      </ul>
-      <div class="d-flex flex-row me-4 gap-1" id="userInfo">
-        <div id="untilTokenExpired" style="font-size: 10px"></div>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        Chdiary
+      </a>
+      <div class="nav-link" style="/*position: relative;*/" id="userInfo">
         {{#if user}}
           <div id="anonym">
             Hello {{user.nickname}}
@@ -69,26 +22,90 @@
             Hello Anonymus !
           </div>
         {{/if}}
+        <div id="untilTokenExpired"></div>
       </div>
-      <div id="authContainer" class="d-flex gap-4">
-        {{#if isLoggedIn}}
-          <a
-            class="nav-link"
-            href="/logout"
-            hx-target="#home"
-            hx-replace-url="/"
-          >
-            Logout
-          </a>
-        {{else}}
-          <a class="nav-link" href="/login" hx-target="#home">
-            Login
-          </a>
-          <a class="nav-link" href="/register" hx-target="#home">
-            Register
-          </a>
-        {{/if}}
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-target="#navbarToggler"
+        aria-controls="navbarToggler"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        data-bs-toggle="collapse"
+        {{! data-bs-toggle="offcanvas" }}
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/" hx-target="#home" hx-swap="outerHTML">
+              Home
+            </a>
+          </li>
+          {{#if isLoggedIn}}
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="/diary"
+                hx-target="#home"
+                hx-swap="outerHTML"
+              >
+                All Diaries
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="/daily-course"
+                hx-target="#home"
+                hx-swap="outerHTML"
+              >
+                Daily courses
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                hx-get="/import"
+                hx-target="#interfoodModal"
+                data-bs-toggle="modal"
+                data-bs-target="#interfoodModal"
+                hx-trigger="click"
+              >
+                Import Interfood
+              </a>
+            </li>
+          {{/if}}
+          <li class="nav-item">
+            <a class="nav-link" href="/about">
+              About
+            </a>
+          </li>
+          <li class="nav-item">
+            <div id="authContainer" class="d-flex gap-4">
+              {{#if isLoggedIn}}
+                <a
+                  class="nav-link"
+                  href="/logout"
+                  hx-target="#home"
+                  hx-replace-url="/"
+                >
+                  Logout
+                </a>
+              {{else}}
+                <a class="nav-link" href="/login" hx-target="#home">
+                  Login
+                </a>
+                <a class="nav-link" href="/register" hx-target="#home">
+                  Register
+                </a>
+              {{/if}}
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
-</div>
+</header>

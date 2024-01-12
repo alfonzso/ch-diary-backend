@@ -5,7 +5,7 @@ import { UserRepository } from "../../repositorys";
 import { DiaryService, InterfoodService } from "../../services";
 import { body, param } from "express-validator";
 import { validateRequest } from "../../middlewares";
-import { toYYYYMMDD, datePlusXDay, range, tzDate, getDayName } from "../../utils/common";
+import { toYYYYMMDD, datePlusXDay, range, tzDate, getDayName, errorMsg, successMsg, warnMsg } from "../../utils/common";
 import { FailToAddNewEntryError } from "../../errors/failToAddNewEntry";
 import { InterfoodImport } from "../../types";
 
@@ -118,34 +118,30 @@ export default (app: Router) => {
       }
       try {
         if (!req.isLoggedIn || req.user === undefined) {
-          res.send(render.file)
+          warnMsg(res, { msg: "User logged out", content: render.file })
           return
         }
 
         let trimmedImpData = (req.body.data as string).replace('\r\n', '\n').trim().split('\n').map(row => { return row.trim() })
 
         if (trimmedImpData === undefined || trimmedImpData.length === 0) {
-          res.setHeader('HX-Trigger', JSON.stringify({ "showErrorMessage": "Data was empty, skiping" }))
-          res.status(400).send()
+          errorMsg(res, { msg: "Data was empty, skiping" })
           return
         }
 
         for (const data in trimmedImpData) {
           if ((trimmedImpData[data].split(";").length - 1) < 2) {
-            res.setHeader('HX-Trigger', JSON.stringify({ "showErrorMessage": "Data was invalid, need more than semicolon in data" }))
-            res.status(400).send()
+            errorMsg(res, { msg: "Data was invalid, need more than semicolon in data" })
             return
           }
         }
 
         if (!await _importInterfood(req.user?.id, trimmedImpData)) {
-          res.setHeader('HX-Trigger', JSON.stringify({ "showErrorMessage": "Data import from Interfood failed... " }))
-          res.status(400).send()
+          errorMsg(res, { msg: "Data import from Interfood failed... " })
           return
         }
 
-        res.setHeader('HX-Trigger', JSON.stringify({ "showSuccessMessage": "Import Big Succcesss" }))
-        res.status(201).send()
+        successMsg(res, { msg: "Import Big Succcesss" })
       } catch (error) {
         console.error("Error fetching data:", error);
         res.status(500).json({ error: "An error occurred while fetching data." });

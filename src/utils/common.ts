@@ -1,5 +1,32 @@
 import { Request, Response } from "express";
 
+export type MsgType = {
+  msg?: string
+  code?: number,
+  content?: string | null
+}
+
+const msgTemplate = (res: Response, msgType: string, { msg, code = 0, content = null }: MsgType) => {
+  res.setHeader('HX-Trigger', JSON.stringify({ [msgType]: msg }))
+  if (content !== null) {
+    res.render(content)
+  } else {
+    res.status(code).send()
+  }
+}
+
+const successMsg = (res: Response, { msg, code = 200, content }: MsgType) => {
+  return msgTemplate(res, "showSuccessMessage", { msg, code, content })
+}
+
+const errorMsg = (res: Response, { msg, code = 400, content }: MsgType) => {
+  return msgTemplate(res, "showErrorMessage", { msg, code, content })
+}
+
+const warnMsg = (res: Response, { msg, code = 199, content }: MsgType) => {
+  return msgTemplate(res, "showWarnMessage", { msg, code, content })
+}
+
 function range(start: number, end: number) {
   return [...Array(1 + end - start).keys()].map(v => start + v)
 }
@@ -72,6 +99,9 @@ const translateKeyToEng = (name: string) => {
 
 export {
   range,
+  errorMsg,
+  successMsg,
+  warnMsg,
   clearAllCookies,
   getDayName,
   tzDate,
