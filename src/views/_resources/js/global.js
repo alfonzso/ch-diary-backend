@@ -40,6 +40,9 @@ const setupToast = (event, type) => {
 
     let myToast = bootstrap.Toast.getOrCreateInstance(newToast, { delay: 4000 })
     myToast.show()
+    setTimeout(() => {
+      myToast._element.remove()
+    }, 6000);
   })
 }
 
@@ -54,19 +57,6 @@ window.onload = function () {
     windowsIsActive = !document.hidden
   });
 
-  // htmx.on('#navbarToggler', 'show.bs.collapse', (e) => {
-  //   // alert('opened');
-  //   // e.setAttribute()
-  //   // console.log(e, e.target)
-  //   appendAttribute(e.target, "class", "customNavbarToggler")
-  //   removeAttribute(htmx.find("#userList"), "class", "ms-auto")
-  // })
-
-  // htmx.on('#navbarToggler', 'hidden.bs.collapse', (e) => {
-  //   appendAttribute(htmx.find("#userList"), "class", "ms-auto")
-  //   removeAttribute(e.target, "class", "customNavbarToggler")
-  //   // alert('closed')
-  // })
 }
 
 function getCookie(name) {

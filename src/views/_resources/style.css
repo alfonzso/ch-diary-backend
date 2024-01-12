@@ -149,7 +149,7 @@ code {
 
 #DailyCourseContainer{
   font-size: 75%;
-  flex: 1.25
+  flex: 1;
 }
 
 #allDiary {
@@ -157,7 +157,7 @@ code {
    height: 75vh;
 }
 #dcSpacer {
-  flex: 1;
+  flex: 1.5;
 }
 /* div {
   background: black;
