@@ -19,13 +19,14 @@ declare global {
   }
 }
 
-const protocolWithHost = (req: Request) => {
-  return req.protocol + "://" + (req.get('host') || "") + "/"
-}
+// const protocolWithHost = (req: Request) => {
+//   console.log("ffffffffffff ", req.protocol + "://" + (req.get('host') || "") + "/")
+//   return req.protocol + "://" + (req.get('host') || "") + "/"
+// }
 
 export const handleGlobals = async (req: Request, res: Response, next: NextFunction) => {
   let render = { file: "", ops: {} }
-  req.currentUrl = req.get("hx-current-url")?.replace(protocolWithHost(req), "") || req.originalUrl
+  req.currentUrl = req.get("hx-current-url") || req.originalUrl
   req.GlobalTemplates = {
     isLoggedIn: req.isLoggedIn,
     user: req.user,
@@ -54,7 +55,7 @@ export const handleGlobals = async (req: Request, res: Response, next: NextFunct
     return
   }
 
-  if (!req.isLoggedIn && urlsNotInOriginalUrl(["nav", "login", "about"])) {
+  if (!req.isLoggedIn && urlsNotInOriginalUrl(["home", "nav", "login", "about"])) {
     console.log("Not logged in ...", req.currentUrl, req.originalUrl)
     render.file = htmxFolderConfigMap.main
     res.render(render.file, { ...render.ops, ...req.GlobalTemplates })

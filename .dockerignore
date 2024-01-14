@@ -3,9 +3,11 @@
 # Allow files/folders
 !config
 !prisma.cloud
+!prisma.local
 !src
 !babel.config.js
 !.babelrc
 !tsconfig*.json
 !package*.json
 !server.ts
+!nginx.conf

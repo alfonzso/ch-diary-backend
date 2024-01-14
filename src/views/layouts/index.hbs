@@ -16,14 +16,19 @@
     let accessToken = undefined
     let refTokenExp = undefined
     let windowsIsActive = true
+    let toastTemplate = undefined
+    let setupToast = undefined
+    // let chGlob = undefined
   </script>
 
 </head>
 
 <body>
-  <header hx-boost="true" hx-get="/navbar" hx-swap="innerHTML" hx-trigger="load, loginSuccess from:body"></header>
+  <header hx-boost="true" hx-get="/navbar" hx-swap="innerHTML" hx-trigger="load, loginSuccess from:body">
+  </header>
 
-  <main role="main" class="container-fluid" hx-get="/main" hx-swap="innerHTML" hx-trigger="load"></main>
+  <main role="main" class="container-fluid" hx-get="/main" hx-swap="innerHTML" hx-trigger="load">
+  </main>
 
   <footer class="footer chd-shadow">
     <div class="container">

@@ -22,28 +22,13 @@ export default (app: Router) => {
   app.get("/main", async (req, res) => {
     console.log("partial render /main ")
     let render = { file: htmxFolderConfigMap.main, ops: {} }
-    let tmpRender: typeof render
     try {
-      switch (req.currentUrl) {
-        case 'daily-course':
-          // tmpRender = getDailyCurses()
+      switch (true) {
+        case req.currentUrl.includes('daily-course'):
           render.ops = renderFullPage(getDailyCurses())
-          // render.ops = {
-          //   ...tmpRender.ops,
-          //   helpers: {
-          //     dynamicPage() { return tmpRender.file.replace("./partials/", "") }
-          //   },
-          // }
           break;
-        case 'diary':
+        case req.currentUrl.includes('diary'):
           render.ops = renderFullPage(getAllDiary())
-          // tmpRender = getAllDiary()
-          // render.ops = {
-          //   ...tmpRender.ops,
-          //   helpers: {
-          //     dynamicPage() { return tmpRender.file.replace("./partials/", "") }
-          //   },
-          // }
           break;
       }
 

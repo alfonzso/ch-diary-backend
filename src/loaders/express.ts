@@ -8,6 +8,7 @@ import { handleAuth, handleGlobals } from "../middlewares/handleAuth";
 import { engine } from 'express-handlebars';
 import html from "../routes/html";
 import { htmxFolderConfigMap } from "../../config/htmxFolderConfigMap";
+import path from "path";
 
 
 export default ({ app }: { app: express.Application }) => {
@@ -24,7 +25,9 @@ export default ({ app }: { app: express.Application }) => {
   app.use(handleAuth);
   app.use(handleGlobals);
 
-  app.set('views', './src/views');
+  // app.set('views', './src/views');
+  app.set('views', path.join(__dirname, '..', 'views'));
+
 
   app.engine('.hbs', engine({
     extname: '.hbs',
