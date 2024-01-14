@@ -7,6 +7,7 @@ import { errorHandler } from "../middlewares";
 import { handleAuth, handleGlobals } from "../middlewares/handleAuth";
 import { engine } from 'express-handlebars';
 import html from "../routes/html";
+import { htmxFolderConfigMap } from "../../config/htmxFolderConfigMap";
 
 
 export default ({ app }: { app: express.Application }) => {
@@ -29,7 +30,7 @@ export default ({ app }: { app: express.Application }) => {
     extname: '.hbs',
     defaultLayout: false,
     helpers: {
-      dynamicPage() { return 'wellcome'; }
+      dynamicPage() { return htmxFolderConfigMap.components.wellcome.replace("./partials/", ""); }
     },
   }));
   app.set('view engine', '.hbs');
@@ -61,7 +62,7 @@ export default ({ app }: { app: express.Application }) => {
     console.log("path not found", req.method, req.url)
     // throw new RouteNotFound();
     let render = {
-      file: 'main', ops: {
+      file: './partials/main', ops: {
         layout: 'index', helpers: {
           dynamicPage() { return 'errors/404'; }
         },

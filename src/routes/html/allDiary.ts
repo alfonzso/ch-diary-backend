@@ -3,15 +3,7 @@ import Container from "typedi";
 import { BadRequest } from "../../errors";
 import { UserRepository } from "../../repositorys";
 import { DiaryService } from "../../services";
-
-const fullDiaryRender = {
-  file: 'main',
-  ops: {
-    layout: 'index', helpers: {
-      dynamicPage() { return '_all_diary/_index'; }
-    }
-  }
-}
+import { htmxFolderConfigMap } from "../../../config/htmxFolderConfigMap";
 
 const getEntry = async (nickname: string) => {
   const diaryServiceInstance = Container.get(DiaryService);
@@ -20,7 +12,27 @@ const getEntry = async (nickname: string) => {
   return await diaryServiceInstance.getEntryByUserId(user)
 }
 
+export const getAllDiary = () => {
+  let render = { file: '', ops: {} }
+  render.file = htmxFolderConfigMap.all_diary.index
+  render.ops = {}
+  return render
+}
+
 export default (app: Router) => {
+
+  app.get("/diary", async (req, res) => {
+    console.log("get partial /diary");
+    try {
+      const render = getAllDiary()
+      res.render(render.file,
+        { ...render.ops, ...req.GlobalTemplates }
+      )
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+  });
 
   app.get("/all-diary", async (req, res) => {
     console.log("get render /all-diary");
@@ -51,7 +63,6 @@ export default (app: Router) => {
         }
       })
 
-      // diaryData.sort((a, b) => a.date - b.date)
       diaryData.sort((a, b) => a.date.localeCompare(b.date))
 
       const diaryDatas = {
@@ -64,33 +75,6 @@ export default (app: Router) => {
 
       res.render("./partials/_all_diary/diary.hbs",
         { ...render.ops, ...diaryDatas }
-      )
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).json({ error: "An error occurred while fetching data." });
-    }
-  });
-
-  app.get("/diary", async (req, res) => {
-    console.log("get render /diary");
-    let render = { file: '', ops: {} }
-    try {
-
-      if (!req.isLoggedIn) {
-        return res.render('main', {
-          layout: 'index',
-        });
-      }
-
-      if (req.isHtmx) {
-        render.file = './partials/_all_diary/_index.hbs'
-      } else {
-        render = fullDiaryRender
-      }
-
-      res.render(
-        render.file,
-        { ...render.ops, ...req.GlobalTemplates }
       )
     } catch (error) {
       console.error("Error fetching data:", error);

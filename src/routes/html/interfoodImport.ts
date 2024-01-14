@@ -1,86 +1,11 @@
 import { Router } from "express";
 import Container from "typedi";
-import { BadRequest } from "../../errors";
-import { UserRepository } from "../../repositorys";
 import { DiaryService, InterfoodService } from "../../services";
-import { body, param } from "express-validator";
+import { body } from "express-validator";
 import { validateRequest } from "../../middlewares";
-import { toYYYYMMDD, datePlusXDay, range, tzDate, getDayName, errorMsg, successMsg, warnMsg } from "../../utils/common";
-import { FailToAddNewEntryError } from "../../errors/failToAddNewEntry";
+import { errorMsg, successMsg, warnMsg } from "../../utils/common";
 import { InterfoodImport } from "../../types";
-
-// const INSULIN_RATIO = 4
-// const MAX_CH_PER_DAY = 180
-// const configedRange = range(INSULIN_RATIO - 2, INSULIN_RATIO + 1)
-
-// const fullDiaryRender = {
-//   file: 'main',
-//   ops: {
-//     layout: 'index', helpers: {
-//       dynamicPage() { return '_daily_course/_index'; }
-//     }
-//   }
-// }
-
-
-// import { NextFunction, Response, Router } from 'express';
-// import { isAuthenticated, validateRequest } from '../middlewares';
-// import { DiaryService, InterfoodService } from '../services';
-// import { Container } from 'typedi';
-// import { Logger } from 'winston';
-// import { InterfoodImport, UserPayload } from '../types';
-// import { body } from 'express-validator';
-// import { FailToAddNewEntryError } from '../errors/failToAddNewEntry';
-// import { BadRequest } from '../errors';
-
-// const route = Router();
-
-// export default (app: Router) => {
-//   app.use('/interfood', route);
-
-//   interface RegisterRequest<T> extends Express.Request {
-//     body: T
-//     user?: UserPayload
-//   }
-
-//   route.post(
-//     '/import',
-//     body('data')
-//       .exists()
-//       .withMessage("Please add some data to import !").bail()
-//       .isArray({ min: 0 })
-//       .withMessage('Data must be an array with at least one element !')
-//     ,
-//     validateRequest,
-//     isAuthenticated,
-//     async (req: RegisterRequest<{ data: string[], payload: UserPayload }>, res: Response, next: NextFunction) => {
-//       const logger: Logger = Container.get('logger');
-//       try {
-//         if (!req.user) throw new BadRequest("User not exists")
-
-//         const interFoodTypeInstance = Container.get(InterfoodService);
-//         const diaryServiceInstance = Container.get(DiaryService);
-//         const importedFoodList: InterfoodImport[] = await interFoodTypeInstance.import(req.user.id, req.body.data)
-
-//         for (const food of importedFoodList) {
-//           const { success } = await diaryServiceInstance.addNewEntry({ userDTO: { id: food.userId! }, foodPortion: food.foodPortion!, foodProp: food.foodProp!, ...food });
-//           if (!success) throw new FailToAddNewEntryError()
-//         }
-
-//         return res.status(200).json({ importedFoodList });
-//       } catch (e) {
-//         logger.error('🔥 error: %o', e);
-//         return next(e);
-//       }
-//     });
-
-// }
-
-// const getEntriesByDate = async (nickname: string, date: Date): Promise<EntryByDateType> => {
-//   const user = await Container.get(UserRepository).findUserByNickName(nickname)
-//   if (!user) throw new BadRequest('Nick not exists')
-//   return await Container.get(DiaryService).getEntryByUserNickNameAndDate(user, date)
-// }
+import { htmxFolderConfigMap } from "../../../config/htmxFolderConfigMap";
 
 const _importInterfood = async (userId: string, data: string[]) => {
   const importedFoodList: InterfoodImport[] = await Container.get(InterfoodService)
@@ -101,12 +26,22 @@ const _importInterfood = async (userId: string, data: string[]) => {
 
 export default (app: Router) => {
 
+  app.get("/import", async (req, res) => {
+    console.log("partial render /import")
+    try {
+      res.render(htmxFolderConfigMap.importInterfood.index,
+        { ...req.GlobalTemplates }
+      )
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+  });
+
   app.post('/import',
     body('data')
       .exists()
       .withMessage("Please add some data to import !").bail()
-    // .isArray({ min: 0 })
-    // .withMessage('Data must be an array with at least one element !')
     ,
     validateRequest,
     async (req, res) => {
@@ -117,7 +52,7 @@ export default (app: Router) => {
         }
       }
       try {
-        if (!req.isLoggedIn || req.user === undefined) {
+        if (req.user === undefined) {
           warnMsg(res, { msg: "User logged out", content: render.file })
           return
         }
@@ -147,29 +82,5 @@ export default (app: Router) => {
         res.status(500).json({ error: "An error occurred while fetching data." });
       }
     });
-
-  app.get("/import", async (req, res) => {
-    console.log("get render /import")
-
-    let render = {
-      file: './partials/wellcome.hbs', ops: {}
-    }
-    try {
-
-      if (!req.isLoggedIn || req.user === undefined) {
-        res.send(render.file)
-        return
-      }
-
-      render = {
-        file: './partials/_import_interfood/_index.hbs', ops: {}
-      }
-
-      res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).json({ error: "An error occurred while fetching data." });
-    }
-  });
 
 }

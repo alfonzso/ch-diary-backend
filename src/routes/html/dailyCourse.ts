@@ -6,18 +6,19 @@ import { DiaryService } from "../../services";
 import { param } from "express-validator";
 import { validateRequest } from "../../middlewares";
 import { toYYYYMMDD, datePlusXDay, range, tzDate, getDayName } from "../../utils/common";
+import { htmxFolderConfigMap } from "../../../config/htmxFolderConfigMap";
 
 const INSULIN_RATIO = 4
 const MAX_CH_PER_DAY = 180
 const configedRange = range(INSULIN_RATIO - 2, INSULIN_RATIO + 1)
 
-const fullDiaryRender = {
-  file: 'main',
-  ops: {
-    layout: 'index', helpers: {
-      dynamicPage() { return '_daily_course/_index'; }
-    }
+export const getDailyCurses = () => {
+  let render = { file: '', ops: {} }
+  render.file = htmxFolderConfigMap.dailyCourse.index
+  render.ops = {
+    today: toYYYYMMDD(tzDate())
   }
+  return render
 }
 
 type EntryByDateType = {
@@ -55,6 +56,19 @@ const getEntriesByDate = async (nickname: string, date: Date): Promise<EntryByDa
 
 export default (app: Router) => {
 
+  app.get("/daily-course", async (req, res) => {
+    console.log("partial render /daily-course");
+    try {
+      const render = getDailyCurses()
+      res.render(render.file, {
+        ...render.ops, ...req.GlobalTemplates
+      })
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ error: "An error occurred while fetching data." });
+    }
+  });
+
   app.get(
     "/daily-course/date/:date",
     param('date').not().isEmpty().withMessage('date needed!'),
@@ -67,7 +81,7 @@ export default (app: Router) => {
         }
       }
       try {
-        if (!req.isLoggedIn || req.user === undefined) {
+        if (req.user === undefined) {
           res.send(render.file)
           return
         }
@@ -79,7 +93,6 @@ export default (app: Router) => {
           console.log("----------> meh")
         }
 
-        // render.file = "./partials/_daily_course.hbs"
         render.file = "./partials/_daily_course/_daily_course.hbs"
 
         const sumCh = (entriesByDate?.data || []).map((v) => {
@@ -126,9 +139,6 @@ export default (app: Router) => {
             leftCh: Math.floor(MAX_CH_PER_DAY - sumCh),
             pager,
             entriesByDate: mappedEntry,
-            helpers: {
-              dynamicPage() { return '_daily_course/_daily_course'; }
-            }
           }
         }
 
@@ -138,34 +148,5 @@ export default (app: Router) => {
         res.status(500).json({ error: "An error occurred while fetching data." });
       }
     });
-
-  // app.get("/daily-course-page", async (req, res) => {
-  app.get("/daily-course", async (req, res) => {
-    console.log("get render /daily-course");
-    let render = { file: '', ops: {} }
-    try {
-
-      if (!req.isLoggedIn) {
-        return res.render('main', {
-          layout: 'index',
-        });
-      }
-
-      if (req.isHtmx) {
-        render.file = './partials/_daily_course/_index.hbs'
-      } else {
-        render = fullDiaryRender
-      }
-
-      res.render(render.file, {
-        ...render.ops, ...req.GlobalTemplates,
-        today: toYYYYMMDD(tzDate())
-      })
-
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).json({ error: "An error occurred while fetching data." });
-    }
-  });
 
 }

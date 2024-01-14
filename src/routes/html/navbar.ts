@@ -1,16 +1,15 @@
 import { Router } from "express";
+import { checkAccessToken } from "../../middlewares/jwtHandler";
 import { htmxFolderConfigMap } from "../../../config/htmxFolderConfigMap";
 
 export default (app: Router) => {
 
-  app.get("/", async (req, res) => {
-    let render = { file: "", ops: {} }
-    console.log("get render /")
-    console.log(" isLoggedIn --> ", req.isLoggedIn)
-
+  app.get("/navbar", checkAccessToken, async (req, res) => {
+    console.log("partial render /navbar")
     try {
-      render.file = htmxFolderConfigMap.components.wellcome
-      res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
+      res.render(htmxFolderConfigMap.components.navbar,
+        { ...req.GlobalTemplates }
+      )
     } catch (error) {
       console.error("Error fetching data:", error);
       res.status(500).json({ error: "An error occurred while fetching data." });

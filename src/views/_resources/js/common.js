@@ -31,7 +31,9 @@ const toastTemplate = fromHTML(`
 `);
 
 const setupToast = (event, type) => {
+  // console.log("setuped")
   htmx.on(event, (e) => {
+    // console.log("fired[", event, "]")
     let newToast = toastTemplate.cloneNode(true)
     toastClass = newToast.getAttribute("class")
     newToast.setAttribute("class", toastClass + " " + type)
@@ -44,19 +46,6 @@ const setupToast = (event, type) => {
       myToast._element.remove()
     }, 6000);
   })
-}
-
-window.onload = function () {
-  window.runClockId = runClock(getCookie("refTokenExp"))
-
-  setupToast("showErrorMessage", "alert-danger")
-  setupToast("showSuccessMessage", "alert-success")
-  setupToast("showWarnMessage", "alert-warning")
-
-  document.addEventListener("visibilitychange", () => {
-    windowsIsActive = !document.hidden
-  });
-
 }
 
 function getCookie(name) {
@@ -85,4 +74,25 @@ function prettyDate(seconds) {
   let minutes = Math.floor(seconds / 60);
   seconds -= minutes * 60;
   return `${days}d - ${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`
+}
+
+function runClock(exp) {
+
+  if (Number.isNaN(parseInt(exp, 10))) {
+    return
+  }
+
+  return setInterval(() => {
+    if (!windowsIsActive) return
+    let startDate = new Date(new Date().toLocaleString('en', { timeZone: 'Europe/Budapest' }))
+    let endDate = new Date(new Date(exp * 1000).toLocaleString('en', { timeZone: 'Europe/Budapest' }));
+    let seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+
+    if (seconds <= 0) {
+      location.reload();
+    } else {
+      htmx.find("#untilTokenExpired").innerHTML = prettyDate(seconds)
+    }
+    // }, 1000);
+  }, 5000);
 }
