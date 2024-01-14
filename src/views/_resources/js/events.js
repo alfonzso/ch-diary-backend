@@ -1,6 +1,6 @@
 document.body.addEventListener('htmx:afterOnLoad', function (e) {
   if (window.runClockId === undefined) {
-    window.runClockId = common.runClock(common.getCookie("refTokenExp"))
+    window.runClockId = runClock(getCookie("refTokenExp"))
   }
 });
 
@@ -14,11 +14,11 @@ document.body.addEventListener('logoutSuccess', function (e) {
 });
 
 window.onload = function () {
-  window.runClockId = common.runClock(common.getCookie("refTokenExp"))
+  window.runClockId = runClock(getCookie("refTokenExp"))
 
-  common.setupToast("showErrorMessage", "alert-danger")
-  common.setupToast("showSuccessMessage", "alert-success")
-  common.setupToast("showWarnMessage", "alert-warning")
+  setupToast("showErrorMessage", "alert-danger")
+  setupToast("showSuccessMessage", "alert-success")
+  setupToast("showWarnMessage", "alert-warning")
 
   document.addEventListener("visibilitychange", () => {
     windowsIsActive = !document.hidden

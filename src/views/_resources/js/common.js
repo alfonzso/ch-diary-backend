@@ -1,16 +1,4 @@
-var common = common || {};
-
-common.appendAttribute = (elem, attr, srcAttr) => {
-  _elem = elem.getAttribute(attr) + " " + srcAttr
-  elem.setAttribute(attr, _elem)
-}
-
-common.removeAttribute = (elem, attr, srcAttr) => {
-  _elem = elem.getAttribute(attr).replace(srcAttr, "")
-  elem.setAttribute(attr, _elem)
-}
-
-common.fromHTML = (html, trim = true) => {
+fromHTML = (html, trim = true) => {
   // Process the HTML string.
   html = trim ? html : html.trim();
   if (!html) return null;
@@ -26,16 +14,16 @@ common.fromHTML = (html, trim = true) => {
   return result;
 }
 
-common.toastTemplate = common.fromHTML(`
-  <div id="tst" class="alert chd-button-toast-shadow" role="alert" aria-live="assertive" aria-atomic="true">
-    <div id="tst-bdy" class="toast-body"></div>
-  </div>
+toastTemplate = fromHTML(`
+    <div id="tst" class="alert chd-button-toast-shadow" role="alert" aria-live="assertive" aria-atomic="true">
+      <div id="tst-bdy" class="toast-body"></div>
+    </div>
 `);
 
-common.setupToast = (event, type) => {
+setupToast = (event, type) => {
   htmx.on(event, (e) => {
-    let newToast = common.toastTemplate.cloneNode(true)
-    common.appendAttribute(newToast, "class", type)
+    let newToast = toastTemplate.cloneNode(true)
+    appendAttribute(newToast, "class", type)
     htmx.find(newToast, "#tst-bdy").innerText = e.detail.value
     htmx.find('#toast-container').prepend(newToast)
 
@@ -47,31 +35,45 @@ common.setupToast = (event, type) => {
   })
 }
 
-common.getCookie = (name) => {
+appendAttribute = (elem, attr, srcAttr) => {
+  _elem = elem.getAttribute(attr) + " " + srcAttr
+  elem.setAttribute(attr, _elem)
+}
+
+removeAttribute = (elem, attr, srcAttr) => {
+  _elem = elem.getAttribute(attr).replace(srcAttr, "")
+  elem.setAttribute(attr, _elem)
+}
+
+getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-common.tzDate = () => {
+tzDate = () => {
   return new Date().toLocaleString("en-US", { timeZone: "Europe/Budapest" })
 }
-common.YYYYMMDD = () => {
-  return new Date(common.tzDate()).toISOString().split('T')[0]
+
+YYYYMMDD = () => {
+  return new Date(tzDate()).toISOString().split('T')[0]
 }
-common.padTime = (time) => {
+
+padTime = (time) => {
   return time.toString().padStart(2, '0')
 }
-common.prettyDate = (seconds) => {
+
+prettyDate = (seconds) => {
   let days = Math.floor(seconds / (3600 * 24));
   seconds -= days * 3600 * 24;
   let hours = Math.floor(seconds / 3600);
   seconds -= hours * 3600;
   let minutes = Math.floor(seconds / 60);
   seconds -= minutes * 60;
-  return `${days}d - ${common.padTime(hours)}:${common.padTime(minutes)}:${common.padTime(seconds)}`
+  return `${days}d - ${padTime(hours)}:${padTime(minutes)}:${padTime(seconds)}`
 }
-common.runClock = (exp) => {
+
+runClock = (exp) => {
   if (Number.isNaN(parseInt(exp, 10))) {
     return
   }
@@ -84,7 +86,7 @@ common.runClock = (exp) => {
     if (seconds <= 0) {
       location.reload();
     } else {
-      htmx.find("#untilTokenExpired").innerHTML = common.prettyDate(seconds)
+      htmx.find("#untilTokenExpired").innerHTML = prettyDate(seconds)
     }
   }, 1000);
   // }, 5000);
