@@ -10,8 +10,9 @@ declare global {
   namespace Express {
     interface Request {
       GlobalTemplates: any;
+      pageReloadRedirUrl: string,
       currentUrl: string,
-      isHtmx: boolean;
+      isPartialHtmx: boolean;
       isLoggedIn: boolean;
       user?: UserPayload;
       jwt: { access?: string, refresh?: string, refreshExp?: number | undefined }
@@ -34,7 +35,7 @@ export const handleGlobals = async (req: Request, res: Response, next: NextFunct
   }
 
   const urlsNotInOriginalUrl = (notProtectedUrls: string[]) => {
-    // isHtmx => is partial hx request
+    // isPartialHtmx => is partial hx request
     // in originalUrl (which is a partial request from htmx)
     // not any of in not_protected_urls like: nav, login, about pages
 
@@ -44,14 +45,12 @@ export const handleGlobals = async (req: Request, res: Response, next: NextFunct
     // ==>
     //    hx-current-url == /daily-course, but we dont want this when /navbar calling
     // thats why we use originalUrl here
-    return req.isHtmx && !notProtectedUrls.some(v => req.originalUrl.includes(v))
+    return req.isPartialHtmx && !notProtectedUrls.some(v => req.originalUrl.includes(v))
   }
 
-  if (!req.isHtmx) {
+  if (!req.isPartialHtmx) {
     console.log("Full page loading ...", req.currentUrl)
-    render.file = htmxFolderConfigMap.main
-    render.ops = { ...render.ops, layout: 'index' }
-    res.render(render.file, { ...render.ops, ...req.GlobalTemplates })
+    res.status(200).send(`<script>document.cookie="redirUrl=${req.currentUrl}"; window.location.href="/"</script>`)
     return
   }
 
@@ -68,8 +67,10 @@ export const handleGlobals = async (req: Request, res: Response, next: NextFunct
 export const handleAuth = async (req: Request, res: Response, next: NextFunction) => {
   const accessToken = req.headers.access_token === "undefined" ? undefined : req.headers.access_token;
   const refreshToken = req.cookies.refreshToken;
+  req.pageReloadRedirUrl = req.cookies.redirUrl || ""
+  if (req.pageReloadRedirUrl.length > 0) res.clearCookie("redirUrl")
 
-  req.isHtmx = req.headers['hx-request'] === "true"
+  req.isPartialHtmx = req.headers['hx-request'] === "true"
 
   if (accessToken === undefined) {
     if (refreshToken === undefined || refreshToken.length < 0) {
