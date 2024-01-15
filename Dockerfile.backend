@@ -5,15 +5,15 @@ WORKDIR /home/node/app
 RUN apk add --update --no-cache openssl1.1-compat
 USER node
 COPY --chown=node:node package*.json ./
-# RUN npm config set unsafe-perm true
-# RUN npm install typescript
-# RUN npm install ts-node
-# RUN npm install prisma
 RUN npm install
+
+ARG PRISMA_ENV=cloud
 
 COPY --chown=node:node . .
 # RUN npx prisma generate --schema prisma.cloud/schema.prisma
-RUN npx prisma generate --schema prisma.local/schema.prisma
+# RUN npx prisma generate --schema prisma.local/schema.prisma
+RUN echo ${PRISMA_ENV}
+RUN npx prisma generate --schema prisma.${PRISMA_ENV}/schema.prisma
 RUN npm run build
 COPY --chown=node:node src/views /home/node/app/dist/src/views
 
@@ -28,11 +28,6 @@ COPY --chown=node:node package*.json ./
 RUN npm install --production
 COPY --from=builder /home/node/app/dist ./dist
 COPY --from=builder /home/node/app/node_modules/.prisma ./node_modules/.prisma
-# COPY --from=builder /home/node/app/prisma.local ./dist/prisma.local
-# RUN npx prisma migrate dev --schema ./node_modules/.prisma/client/schema.prisma
-# RUN npx prisma migrate dev --schema prisma.local/schema.prisma
 
 EXPOSE 8081
 CMD [ "node", "dist/server.js" ]
-# CMD [ "cd", "dist", "node", "server.js" ]
-# CMD [ "/bin/ash", "-c", "cd /home/node/app/dist && node server.js" ]

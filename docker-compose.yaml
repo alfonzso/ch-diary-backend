@@ -1,22 +1,18 @@
 version: '3'
 services:
-  # backend:
-  #   image: nginx
   backend:
-    # image: ch-diary-backend
     build:
       context: .
       dockerfile: Dockerfile.backend
+      args:
+          PRISMA_ENV: local
     volumes:
-      # - .env.prod:/home/node/app/.env
       - .env:/home/node/app/.env
-      - ./prisma.local:/home/node/app/dist/prisma.local
       - ./prisma.local:/home/node/app/prisma.local
     ports:
       - "8890:8888"
 
   frontend:
-    # image: ch-diary-backend
     build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
