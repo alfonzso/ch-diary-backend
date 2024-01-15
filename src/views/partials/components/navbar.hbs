@@ -16,7 +16,7 @@
       <div id="untilTokenExpired"></div>
     </div>
     <button class="navbar-toggler" type="button" data-bs-target="#navbarToggler" aria-controls="navbarToggler"
-      aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse" {{! data-bs-toggle="offcanvas" }}>
+      aria-expanded="false" aria-label="Toggle navigation" data-bs-toggle="collapse">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -29,12 +29,14 @@
         </li>
         {{#if isLoggedIn}}
         <li class="nav-item">
-          <a class="nav-link" href="/diary" hx-target="#home" hx-swap="outerHTML">
+          <a class="nav-link" href="/diary" hx-target="#home" hx-swap="outerHTML" data-bs-target="#navbarToggler"
+            data-bs-toggle="collapse">
             All Diaries
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/daily-course" hx-target="#home" hx-swap="outerHTML">
+          <a class="nav-link" href="/daily-course" hx-target="#home" hx-swap="outerHTML" data-bs-target="#navbarToggler"
+            data-bs-toggle="collapse">
             Daily courses
           </a>
         </li>
@@ -46,21 +48,24 @@
         </li>
         {{/if}}
         <li class="nav-item">
-          <a class="nav-link" href="/about">
+          <a class="nav-link" href="/about" data-bs-target="#navbarToggler" data-bs-toggle="collapse">
             About
           </a>
         </li>
         <li class="nav-item">
           <div id="authContainer" class="d-flex gap-4">
             {{#if isLoggedIn}}
-            <a class="nav-link" href="/logout" hx-target="#home" hx-replace-url="/">
+            <a class="nav-link" href="/logout" hx-target="#home" hx-replace-url="/" data-bs-target="#navbarToggler"
+              data-bs-toggle="collapse">
               Logout
             </a>
             {{else}}
-            <a class="nav-link" href="/login" hx-target="#home">
+            <a class="nav-link" href="/login" hx-target="#home" data-bs-target="#navbarToggler"
+              data-bs-toggle="collapse">
               Login
             </a>
-            <a class="nav-link" href="/register" hx-target="#home">
+            <a class="nav-link" href="/register" hx-target="#home" data-bs-target="#navbarToggler"
+              data-bs-toggle="collapse">
               Register
             </a>
             {{/if}}
