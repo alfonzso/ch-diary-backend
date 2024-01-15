@@ -20,14 +20,15 @@ declare global {
   }
 }
 
-// const protocolWithHost = (req: Request) => {
-//   console.log("ffffffffffff ", req.protocol + "://" + (req.get('host') || "") + "/")
-//   return req.protocol + "://" + (req.get('host') || "") + "/"
-// }
+const getOnlyHostPath = (currentUrl: string) => {
+  currentUrl = currentUrl.replace(/http.?:\/\//, "")
+  return currentUrl.split("/").slice(1).join("/")
+}
 
 export const handleGlobals = async (req: Request, res: Response, next: NextFunction) => {
   let render = { file: "", ops: {} }
-  req.currentUrl = req.get("hx-current-url") || req.originalUrl
+  req.currentUrl = getOnlyHostPath(req.get("hx-current-url") || req.originalUrl || "")
+
   req.GlobalTemplates = {
     isLoggedIn: req.isLoggedIn,
     user: req.user,

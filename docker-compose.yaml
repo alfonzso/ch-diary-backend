@@ -1,11 +1,12 @@
 version: '3'
 services:
   backend:
+    image: alfonzso/chdiary-be:htmx.v0.0.3
     build:
       context: .
       dockerfile: Dockerfile.backend
-      args:
-          PRISMA_ENV: local
+      # args:
+      #     PRISMA_ENV: local
     volumes:
       - .env:/home/node/app/.env
       - ./prisma.local:/home/node/app/prisma.local
@@ -13,6 +14,7 @@ services:
       - "8890:8888"
 
   frontend:
+    image: alfonzso/chdiary-fe:htmx.v0.0.1
     build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
