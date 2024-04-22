@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      # args:
-      #     PRISMA_ENV: local
+      args:
+          PRISMA_ENV: local
     volumes:
       - .env:/home/node/app/.env
       - ./prisma.local:/home/node/app/prisma.local

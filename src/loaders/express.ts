@@ -9,6 +9,8 @@ import { engine } from 'express-handlebars';
 import html from "../routes/html";
 import { htmxFolderConfigMap } from "../../config/htmxFolderConfigMap";
 import path from "path";
+import routes from "../routes";
+import api from "../routes/api";
 
 
 export default ({ app }: { app: express.Application }) => {
@@ -58,7 +60,11 @@ export default ({ app }: { app: express.Application }) => {
     res.status(200).end();
   });
 
+  app.use(config.api.prefix, api())
   app.use('/', html())
+
+  // add our routes
+  // app.use(config.api.prefix, routes())
 
   // catch all route
   app.all('*', (req, res) => {

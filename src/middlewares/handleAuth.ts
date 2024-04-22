@@ -26,6 +26,9 @@ const getOnlyHostPath = (currentUrl: string) => {
 }
 
 export const handleGlobals = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.url.match("/api/") || req.url.match("/status")) {
+    return next()
+  }
   let render = { file: "", ops: {} }
   req.currentUrl = getOnlyHostPath(req.get("hx-current-url") || req.originalUrl || "")
 
@@ -36,6 +39,7 @@ export const handleGlobals = async (req: Request, res: Response, next: NextFunct
   }
 
   const urlsNotInOriginalUrl = (notProtectedUrls: string[]) => {
+
     // isPartialHtmx => is partial hx request
     // in originalUrl (which is a partial request from htmx)
     // not any of in not_protected_urls like: nav, login, about pages
@@ -66,6 +70,9 @@ export const handleGlobals = async (req: Request, res: Response, next: NextFunct
 }
 
 export const handleAuth = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.url.match("/api/") || req.url.match("/status")) {
+    return next()
+  }
   const accessToken = req.headers.access_token === "undefined" ? undefined : req.headers.access_token;
   const refreshToken = req.cookies.refreshToken;
   req.pageReloadRedirUrl = req.cookies.redirUrl || ""

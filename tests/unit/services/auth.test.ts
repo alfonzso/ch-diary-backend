@@ -53,7 +53,8 @@ describe('User', () => {
         .spyOn(jwt, 'verify')
         .mockImplementation((): any => {
           return {
-            userId: "1bbd258b-4599-4406-bbc3-9a2ad569fbae",
+            // userId: "1bbd258b-4599-4406-bbc3-9a2ad569fbae",
+            user: { id: "1bbd258b-4599-4406-bbc3-9a2ad569fbae" },
             jti: '2065db60-f4e0-431b-871c-ebb784a41f55'
           }
         });
@@ -79,11 +80,12 @@ describe('User', () => {
 
       expect(jwtVerifyMock).toHaveBeenCalledTimes(1);
       expect(jwtVerifyMock).toReturnWith({
-        userId: "1bbd258b-4599-4406-bbc3-9a2ad569fbae",
+        user: { id: "1bbd258b-4599-4406-bbc3-9a2ad569fbae" },
         jti: '2065db60-f4e0-431b-871c-ebb784a41f55'
       })
 
-      expect(userRecord.length).not.toEqual(0)
+      // expect(userRecord!.length).not.toEqual(0)
+      expect(userRecord).not.toBeNull()
 
     });
   })
