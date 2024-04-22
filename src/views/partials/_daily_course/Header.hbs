@@ -1,0 +1,83 @@
+<div id="DailyCourseContainerHeader" class="">
+  <h5 class="text-center">
+    Sum Ch: {{sumCh}}
+  </h5>
+  <h5 class="text-center">
+    Left Ch: {{leftCh}}
+  </h5>
+  {{! class="d-flex gap-5 justify-content-center p-4"  style="display: flex" }}
+  <nav id="DateChanger" class="p-4">
+    <ul class="pagination justify-content-center gap-3">
+      <li class="page-item w-25 text-center">
+        <a
+          class="page-link align-items-center d-flex h-100 justify-content-center chd-button-toast-shadow"
+          aria-label="Previous"
+          hx-get="/daily-course/date/{{pager.yesterDay}}"
+          hx-swap="outerHTML"
+          hx-target="#DailyCourseContainer"
+        >
+          <span aria-hidden="true">
+            &laquo;
+          </span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a
+          class="page-link d-flex flex-column text-center chd-button-toast-shadow rounded"
+          hx-get="/daily-course/date/{{pager.now}}"
+          hx-swap="outerHTML"
+          hx-target="#DailyCourseContainer"
+        >
+          <span>
+            {{pager.todayName}}
+          </span>
+          <span>
+            {{pager.todayFromParams}}
+          </span>
+        </a>
+      </li>
+      <li class="page-item w-25 text-center">
+        <a
+          class="page-link align-items-center d-flex h-100 justify-content-center chd-button-toast-shadow"
+          aria-label="Next"
+          hx-get="/daily-course/date/{{pager.nextDay}}"
+          hx-swap="outerHTML"
+          hx-target="#DailyCourseContainer"
+        >
+          <span aria-hidden="true">
+            &raquo;
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  {{!-- <div id="DateChanger" class="d-flex gap-5 justify-content-center p-2">
+    <div id="PreviousDay">
+      <button
+        hx-get="/daily-course/date/{{pager.yesterDay}}"
+        hx-swap="outerHTML"
+        hx-target="#DailyCourseContainer"
+      >
+        &lt;
+      </button>
+    </div>
+    <div id="TodayDay">
+      <button
+        hx-get="/daily-course/date/{{pager.now}}"
+        hx-swap="outerHTML"
+        hx-target="#DailyCourseContainer"
+      >
+        {{pager.todayFromParams}}
+      </button>
+    </div>
+    <div id="NextDay">
+      <button
+        hx-get="/daily-course/date/{{pager.nextDay}}"
+        hx-swap="outerHTML"
+        hx-target="#DailyCourseContainer"
+      >
+        &gt;
+      </button>
+    </div>
+  </div> --}}
+</div>

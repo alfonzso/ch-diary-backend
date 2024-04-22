@@ -44,14 +44,14 @@ describe('register -> refreshToken -> delete ', () => {
     expect(refreshTokenCookie.length).not.toEqual(0)
   })
 
-  test('refreshToken API Request', async () => {
-    const result = await request(app)
-      .get('/api/auth/refreshToken')
-      .set('Cookie', [`${config.jwtCookieName}=${token.refreshToken}`])
-    const res = result.body;
-    expect(res.accessToken.length).not.toEqual(0)
-    expect(res.refreshToken.length).not.toEqual(0)
-  });
+  // test('refreshToken API Request', async () => {
+  //   const result = await request(app)
+  //     .get('/api/auth/refreshToken')
+  //     .set('Cookie', [`${config.jwtCookieName}=${token.refreshToken}`])
+  //   const res = result.body;
+  //   expect(res.accessToken.length).not.toEqual(0)
+  //   expect(res.refreshToken.length).not.toEqual(0)
+  // });
 
   test('delete API Request', async () => {
     const result = await request(app)

@@ -1,17 +1,17 @@
 import { User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
-import { jwtUserPayload } from '../types/jwt';
+import { JWTUserPayload } from '../types/jwt';
 
 class TokenManager {
 
-  generateAccessToken(usr: User) {
-    const userData: jwtUserPayload = {
+  generateAccessToken(usr: User, jti: string) {
+    const userData: JWTUserPayload = {
       user: {
         id: usr.id,
         email: usr.email,
         nickname: usr.nickname
-      }
+      }, jti
     }
     return jwt.sign({ user: userData.user }, config.jwtAccessToken, {
       expiresIn: config.jwtAccessTokenExpIn,
@@ -24,10 +24,7 @@ class TokenManager {
   // You can change this value depending on your app logic.
   // I would go for a maximum of 7 days, and make him login again after 7 days of inactivity.
   generateRefreshToken(user: User, jti: string) {
-    return jwt.sign({
-      userId: user.id,
-      jti
-    }, config.jwtRefreshToken, {
+    return jwt.sign({ user: { id: user.id }, jti }, config.jwtRefreshToken, {
       expiresIn: config.jwtRefreshTokenExpIn,
       // expiresIn: '15s',
       // expiresIn: '10m',
@@ -35,12 +32,9 @@ class TokenManager {
   }
 
   generateTokens(user: User, jti: string): { accessToken: string; refreshToken: string; } {
-    const accessToken = this.generateAccessToken(user);
-    const refreshToken = this.generateRefreshToken(user, jti);
-
     return {
-      accessToken,
-      refreshToken,
+      accessToken: this.generateAccessToken(user, jti),
+      refreshToken: this.generateRefreshToken(user, jti),
     };
 
   }

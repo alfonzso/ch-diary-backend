@@ -17,12 +17,8 @@ model User {
   password      String
   refreshTokens RefreshToken[]
   ChDiary       ChDiary[]
-  // ChDiary       ChDiary?       @relation(fields: [chDiaryId], references: [id])
-  // chDiaryId     String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  // ChDiary       ChDiary?       @relation(fields: [chDiaryId], references: [id])
-  // chDiaryId     String?
 }
 
 model RefreshToken {
@@ -65,6 +61,7 @@ model FoodProperty {
   protein Float
   fat     Float
   ch      Float
+
   Food    Food[]
 }
 
@@ -72,26 +69,23 @@ model Food {
   id             String       @id @unique @default(uuid())
   name           String
   portion        Float
-  // Interfood     Interfood[]
-  // FoodProperite FoodProperite[]
-  // chDiaryId     String
-  // ChDiary       ChDiary         @relation(fields: [chDiaryId], references: [id])
-  ChDiary        ChDiary[]
+
   foodPropertyId String
-  FoodProperty   FoodProperty @relation(fields: [foodPropertyId], references: [id], onDelete: Cascade)
   interfoodId    String
+
+  FoodProperty   FoodProperty @relation(fields: [foodPropertyId], references: [id], onDelete: Cascade)
   Interfood      Interfood    @relation(fields: [interfoodId], references: [id])
-  // Interfood     Interfood[]
-  // FoodProperite FoodProperite[]
+
+  ChDiary        ChDiary[]
 }
 
 model ChDiary {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
-  // User User[]
+
   userId    String
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  // Food   Food[]
   foodId    String
+
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   Food      Food     @relation(fields: [foodId], references: [id])
 }

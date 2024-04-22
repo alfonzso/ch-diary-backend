@@ -1,8 +1,24 @@
 version: '3'
 services:
-  web:
-    image: ch-diary-backend
+  backend:
+    image: alfonzso/chdiary-be:htmx.v0.0.3
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          PRISMA_ENV: local
     volumes:
-      - .env.prod:/home/node/app/.env
+      - .env:/home/node/app/.env
+      - ./prisma.local:/home/node/app/prisma.local
     ports:
-      - "8081:8081"
+      - "8890:8888"
+
+  frontend:
+    image: alfonzso/chdiary-fe:htmx.v0.0.1
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8889:80"

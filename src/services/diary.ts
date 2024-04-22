@@ -91,8 +91,6 @@ export default class DiaryService {
     }
   }
 
-
-
   async Test() {
     try {
       return { success: true, message: 'sucsucsuc' }

@@ -1,40 +1,33 @@
 # STAGE 1
-FROM node:16-alpine3.16 as builder
+FROM node:21-alpine3.18 as builder
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
+RUN apk add --update --no-cache openssl1.1-compat
 USER node
 COPY --chown=node:node package*.json ./
-RUN npm config set unsafe-perm true
-# RUN npm install typescript
-# RUN npm install ts-node
-# RUN npm install prisma
 RUN npm install
 
+ARG PRISMA_ENV=cloud
+
 COPY --chown=node:node . .
-RUN npx prisma generate --schema prisma.cloud/schema.prisma
+# RUN npx prisma generate --schema prisma.cloud/schema.prisma
+# RUN npx prisma generate --schema prisma.local/schema.prisma
+RUN echo ${PRISMA_ENV}
+RUN npx prisma generate --schema prisma.${PRISMA_ENV}/schema.prisma
 RUN npm run build
+COPY --chown=node:node src/views /home/node/app/dist/src/views
 
 # STAGE 2
-FROM node:16-alpine3.16
-RUN apk add --no-cache tzdata
+FROM node:21-alpine3.18
+RUN apk add --update --no-cache openssl1.1-compat tzdata
 RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 USER node
 COPY --chown=node:node package*.json ./
-# RUN npm install --save-dev sequelize-cli
+
 RUN npm install --production
 COPY --from=builder /home/node/app/dist ./dist
 COPY --from=builder /home/node/app/node_modules/.prisma ./node_modules/.prisma
-
-# COPY --chown=node:node .env .
-# # COPY --chown=node:node .sequelizerc .
-# COPY --chown=node:node  /config ./config
-# COPY --chown=node:node  /public ./public
-
-
-# RUN npm run migrate
-# RUN npx sequelize db:seed:all; exit 0
-# RUN npm un sequelize-cli
 
 EXPOSE 8081
 CMD [ "node", "dist/server.js" ]

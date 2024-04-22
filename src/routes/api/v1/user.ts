@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { body } from 'express-validator';
 import { Prisma, User } from '@prisma/client';
-import { validateRequest, isAuthenticated } from '../middlewares';
-import { UserService } from '../services/';
+import { validateRequest, isAuthenticated } from '../../../middlewares';
+import { UserService } from '../../../services/';
 
 import { Container } from 'typedi';
 import { Logger } from 'winston';
-import { UserPayload } from '../types';
+import { UserPayload } from '../../../types';
 
 const route = Router();
 

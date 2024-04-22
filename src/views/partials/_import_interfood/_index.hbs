@@ -1,0 +1,31 @@
+<div class="modal-dialog modal-dialog-centered h-50">
+  <div class="modal-content h-50">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        Import Interfood courses
+      </h5>
+    </div>
+    <div class="modal-body">
+      <form
+        hx-post="/import"
+        hx-swap="none"
+        method="post"
+        class="text-center d-flex flex-column h-100 gap-2"
+      >
+        <textarea id="importText" name="data" class="col"></textarea>
+
+        <button
+          type="submit"
+          name="action"
+          class="btn btn-primary btn-block w-100"
+          data-bs-dismiss="modal"
+        >
+          Send
+        </button>
+        {{! <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button> }}
+      </form>
+    </div>
+  </div>
+</div>

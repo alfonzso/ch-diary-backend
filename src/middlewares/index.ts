@@ -1,11 +1,11 @@
-import { checkUsers } from './checkUser';
+// import { checkUsers } from './checkUser';
 import { errorHandler } from './errorHandler';
-import { isAuthenticated } from './isAuthenticated';
+import { isAuthenticated } from './jwtHandler';
 import { validateRequest } from './validateRequest';
 
 export {
   errorHandler,
-  checkUsers,
+  // checkUsers,
   isAuthenticated,
   validateRequest
 }

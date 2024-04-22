@@ -5,5 +5,6 @@ export abstract class CustomError extends Error {
   }
 
   abstract statusCode: number;
-  abstract serializeErrors(): { message: string; field?: string };
+  // abstract reason: string;
+  abstract serializeErrors(): { message: string; field?: string; reason?: string };
 }
