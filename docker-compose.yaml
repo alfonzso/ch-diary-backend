@@ -4,7 +4,7 @@ services:
     image: alfonzso/chdiary-be:htmx.v0.0.3
     build:
       context: .
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile
       # args:
       #     PRISMA_ENV: local
     volumes:
@@ -17,7 +17,7 @@ services:
     image: alfonzso/chdiary-fe:htmx.v0.0.1
     build:
       context: ./frontend
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile
     volumes:
       - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
