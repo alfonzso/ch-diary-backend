@@ -103,6 +103,7 @@ export default (app: Router) => {
 
 
         const mappedEntry = (entriesByDate?.data || []).map((v) => {
+          const sumCh = ((v.Food.portion / 100) * v.Food.FoodProperty.ch)
           return {
             id: v.id,
             FoodName: v.Food.name,
@@ -111,15 +112,17 @@ export default (app: Router) => {
             FoodProp: {
               names: Object.keys(v.Food.FoodProperty),
               values: Object.values(v.Food.FoodProperty),
-              calculatedValues: Object.values(v.Food.FoodProperty).map(vv => vv * (v.Food.portion / 100)),
+              calculatedValues: Object.values(v.Food.FoodProperty).map(vv =>
+                (vv * (v.Food.portion / 100)).toPrecision(2)
+              ),
             },
             ChRatio: {
-              ch: (v.Food.portion / 100) * v.Food.FoodProperty.ch,
+              ch: sumCh.toPrecision(2),
               insulinRation: INSULIN_RATIO,
               ratiosWhInsulin: {
                 ratio: configedRange,
                 insulin: configedRange.map(num => {
-                  return ((v.Food.portion / 100) * v.Food.FoodProperty.ch / num).toPrecision(2)
+                  return (sumCh / num).toPrecision(2)
                 })
               },
             }
