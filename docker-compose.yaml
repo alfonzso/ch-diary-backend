@@ -1,20 +1,32 @@
 version: '3'
 services:
   backend:
-    image: alfonzso/chdiary-be:htmx.v0.0.3
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-          PRISMA_ENV: local
+    # image: alfonzso/chdiary-be:latest
+    image: node:21-alpine3.18
+    entrypoint: 'ash -c'
+    command:
+    - |
+      apk add --update --no-cache bash openssl1.1-compat
+      ls /home/node/app/
+      cd /home/node/app/
+      npm run dev
+
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    #   args:
+    #       PRISMA_ENV: local
+    # volumes:
+    #   - .env:/home/node/app/.env
+    #   - ./prisma.local:/home/node/app/prisma.local
     volumes:
-      - .env:/home/node/app/.env
-      - ./prisma.local:/home/node/app/prisma.local
+      - ./:/home/node/app/
+      # - ./prisma.local:/home/node/app/prisma.local
     ports:
       - "8890:8888"
 
   frontend:
-    image: alfonzso/chdiary-fe:htmx.v0.0.1
+    image: alfonzso/chdiary-fe:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile

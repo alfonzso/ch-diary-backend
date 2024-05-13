@@ -4,17 +4,25 @@
   <div id="FoodPropContainer" class="d-flex flex-column col-12">
     <div id="FoodPropName" class="d-flex justify-content-around">
       {{#each entry.FoodProp.names as |FoodPropName|}}
-        <div class="col">
-          {{FoodPropName}}
-        </div>
+      <div class="col">
+        {{FoodPropName}}
+      </div>
       {{/each}}
     </div>
 
     <div id="FoodPropValue" class="d-flex justify-content-around">
       {{#each entry.FoodProp.values as |FoodPropValue|}}
-        <div class="col">
-          {{FoodPropValue}}
-        </div>
+      <div class="col">
+        {{FoodPropValue}}
+      </div>
+      {{/each}}
+    </div>
+
+    <div id="FoodPropValue" class="d-flex justify-content-around">
+      {{#each entry.FoodProp.calculatedValues as |FoodPropValue|}}
+      <div class="col">
+        {{FoodPropValue}}
+      </div>
       {{/each}}
     </div>
   </div>

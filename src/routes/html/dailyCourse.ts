@@ -8,7 +8,7 @@ import { validateRequest } from "../../middlewares";
 import { toYYYYMMDD, datePlusXDay, range, tzDate, getDayName } from "../../utils/common";
 import { htmxFolderConfigMap } from "../../../config/htmxFolderConfigMap";
 
-const INSULIN_RATIO = 4
+const INSULIN_RATIO = 6
 const MAX_CH_PER_DAY = 180
 const configedRange = range(INSULIN_RATIO - 2, INSULIN_RATIO + 1)
 
@@ -111,14 +111,15 @@ export default (app: Router) => {
             FoodProp: {
               names: Object.keys(v.Food.FoodProperty),
               values: Object.values(v.Food.FoodProperty),
+              calculatedValues: Object.values(v.Food.FoodProperty).map(vv => vv * (v.Food.portion / 100)),
             },
             ChRatio: {
-              ch: v.Food.FoodProperty.ch,
+              ch: (v.Food.portion / 100) * v.Food.FoodProperty.ch,
               insulinRation: INSULIN_RATIO,
               ratiosWhInsulin: {
                 ratio: configedRange,
                 insulin: configedRange.map(num => {
-                  return (v.Food.FoodProperty.ch / num).toPrecision(2)
+                  return ((v.Food.portion / 100) * v.Food.FoodProperty.ch / num).toPrecision(2)
                 })
               },
             }
