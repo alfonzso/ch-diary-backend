@@ -112,17 +112,20 @@ export default (app: Router) => {
             FoodProp: {
               names: Object.keys(v.Food.FoodProperty),
               values: Object.values(v.Food.FoodProperty),
-              calculatedValues: Object.values(v.Food.FoodProperty).map(vv =>
-                (vv * (v.Food.portion / 100)).toPrecision(2)
+              calculatedValues: Object.values(v.Food.FoodProperty).map(vv => {
+                console.log('-----> ', vv, v.Food.portion, 100, vv * (v.Food.portion / 100))
+                return (vv * (v.Food.portion / 100)).toFixed(0)
+                // .toPrecision(2)
+              }
               ),
             },
             ChRatio: {
-              ch: sumCh.toPrecision(2),
+              ch: sumCh.toFixed(0),
               insulinRation: INSULIN_RATIO,
               ratiosWhInsulin: {
                 ratio: configedRange,
                 insulin: configedRange.map(num => {
-                  return (sumCh / num).toPrecision(2)
+                  return (sumCh / num).toFixed(2)
                 })
               },
             }

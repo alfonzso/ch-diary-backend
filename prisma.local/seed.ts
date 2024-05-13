@@ -21,7 +21,7 @@ const randNums = () => {
 }
 
 const randNumsBetween = (from: number, until: number) => {
-  return Math.floor(Math.random() * (until - from) + from );
+  return Math.floor(Math.random() * (until - from) + from);
 }
 
 const randNumBetwen1_5 = () => {
@@ -57,15 +57,17 @@ async function food(_user: Promise<User>, count: number = 1) {
   let user = await _user
   for (let index = 0; index < count; index++) {
     for (let i = 0; i < randNumBetwen1_5(); i++) {
+
+      let foodPropData = {
+        ch: randNumsBetween(12.4, 20.5), energy: randNums(), fat: randNums(), gramm: 100, protein: randNums()
+      }
+      if (index === 0) {
+        foodPropData = {
+          ch: 25.16, energy: 266.22, fat: 10.71, gramm: 100, protein: 16.27,
+        }
+      }
       const foodProp = await prisma.foodProperty.create({
-        data: {
-          // ch: 40 + randNumsBetween(0, 60),
-          ch: randNumsBetween(12.4, 20.5),
-          energy: randNums(),
-          fat: randNums(),
-          gramm: 100,
-          protein: randNums(),
-        },
+        data: foodPropData,
       })
       // _.sample(['January', 'February', 'March']);
       let interFType = { name: sample(["DKM", "D7", "D1", "RK2"]) as string }
